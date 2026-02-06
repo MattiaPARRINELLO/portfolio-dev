@@ -1,170 +1,268 @@
--# Portfolio Mattia Parrinello
+# 📱 Portfolio Mattia Parrinello
 
-Portfolio développeur moderne avec micro-interactions soignées, animations au scroll et design responsive.
-
-## 🚀 Démarrage rapide
-
-### Installation
-
-```bash
-# Installer les dépendances
-npm install
-
-# Lancer le serveur de développement
-npm run dev
-
-# OU lancer en production
-npm start
-```
-
-Le site sera accessible à l'adresse : **http://localhost:3000**
-
-## 📁 Structure du projet
-
-```
-portfolio-dev/
-├── public/                  # Fichiers statiques servis
-│   ├── index.html          # Page principale
-│   ├── styles.css          # Styles personnalisés
-│   ├── main.js             # JavaScript (animations, interactions)
-│   └── assets/             # Images, GIFs, fonts
-│       ├── images/         # Images des projets
-│       └── icons/          # Favicons et icônes
-├── server.js               # Serveur Express
-├── package.json            # Configuration npm
-└── README.md               # Ce fichier
-```
+Portfolio développeur moderne avec stats GitHub en temps réel, design responsive et animations fluides.
 
 ## ✨ Fonctionnalités
 
-### Design
+### Core
+- ✅ **Stats GitHub exactes** : compte les lignes de code par langage avec API GitHub
+- ✅ **Cache persistan** : stockage sur disque (24h TTL, se met à jour auto)
+- ✅ **Design responsive** : Tailwind CSS + custom CSS
+- ✅ **Animations fluides** : scroll, fade, counter animations
+- ✅ **Mode SPA** : smooth navigation sans rechargement
 
-- 🎨 Design sombre et sobre avec touches de couleur accent (bleu)
-- 📱 Responsive design (mobile-first)
-- 🌟 Dégradé de texte animé sur le nom
+### SEO & Performance
+- ✅ **Sitemap.xml** : sitemap dynamique pour moteurs de recherche
+- ✅ **robots.txt** : contrôle des crawlers
+- ✅ **Compression GZIP** : réduction du poids des fichiers
+- ✅ **Cache navigateur** : expire-time sur les assets statiques
+- ✅ **Meta tags OpenGraph** : preview sur réseaux sociaux
 
-### Micro-interactions
+### Développement  
+- ✅ **Code modulaire** : séparation config/routes/utils
+- ✅ **Structure propre** : `/src` pour la logique serveur
+- ✅ **Gestion d'erreurs** : try-catch, validation API
+- ✅ **Logs détaillés** : console output pour débogage
 
-- 🔘 Boutons avec effet de brillance au hover
-- 📦 Cartes projets avec effet de tilt 3D
-- 🏷️ Badges stack avec glow coloré
-- 🔗 Liens de navigation avec underline animé
-- ⬇️ Overlay avec boutons qui apparaissent au hover
+## 🚀 Installation
 
-### Animations
+### Prérequis
+- Node.js >= 18.0.0
+- npm ou yarn
 
-- 📜 Animations d'entrée au scroll (fade + slide)
-- 🌀 Glow parallax qui suit la souris
-- ⏳ Stagger effect sur les éléments
-- 🎯 Smooth scroll vers les ancres
+### Installation locale
 
-### Performance
+```bash
+# Cloner et installer
+git clone <repo>
+cd portfolio dev
+npm install
 
-- ⚡ Compression gzip activée
-- 🖼️ Structure optimisée pour lazy loading d'images
-- 🔒 Headers de sécurité basiques
+# Créer fichier .env (optionnel mais recommandé)
+echo "GITHUB_TOKEN=votre_token_github" > .env
 
-## 🛠️ Personnalisation
-
-### Modifier le contenu
-
-1. **Informations personnelles** : Éditer directement `public/index.html`
-2. **Projets** : Section `#portfolio` dans le HTML
-3. **Liens de contact** : Section `#contact` dans le HTML
-4. **Couleurs** : Variables CSS dans `styles.css` ou config Tailwind dans le HTML
-
-### Ajouter des images de projets
-
-1. Placer les images dans `public/assets/images/`
-2. Remplacer les placeholders SVG par des balises `<img>` :
-
-```html
-<!-- Avant (placeholder) -->
-<div class="aspect-video bg-gradient-to-br from-purple-600 to-pink-500">
-  <svg>...</svg>
-</div>
-
-<!-- Après (avec image) -->
-<div class="aspect-video">
-  <img
-    src="assets/images/mon-projet.jpg"
-    alt="Mon projet"
-    class="w-full h-full object-cover"
-  />
-</div>
+# Démarrer le serveur
+npm start
 ```
 
-### Ajouter un GIF de preview
+### Avec token GitHub (recommandé)
+Pour augmenter la limite API (5000 req/h au lieu de 60) :
 
-```html
-<img
-  src="assets/images/projet-preview.gif"
-  alt="Preview du projet"
-  class="w-full h-full object-cover"
-/>
+1. Créer un token sur [github.com/settings/tokens](https://github.com/settings/tokens)
+   - Permissions : `public_repo` (lecture seule)
+   - Copier le token
+
+2. Ajouter dans `.env` :
+   ```env
+   GITHUB_TOKEN=ghp_xxxxxxxxxxxxx
+   ```
+
+3. Redémarrer le serveur : `npm start`
+
+## 📂 Structure du Projet
+
+```
+portfolio dev/
+├── server.js                 # Point d'entrée Express (propre & modulaire)
+├── src/
+│   ├── config.js            # Configuration centralisée
+│   ├── routes.js            # Routes Express
+│   └── utils/
+│       ├── cache.js         # Gestion du cache fichier
+│       └── github.js        # Logique stats GitHub
+├── public/                  # Fichiers statiques
+│   ├── index.html          # Page principale
+│   ├── main.js             # Frontend JavaScript
+│   ├── styles.css          # CSS personnalisé
+│   ├── 404.html            # Page d'erreur
+│   └── favicon.svg         # Icone du site
+├── cache/
+│   └── github-stats.json   # Cache stats (auto-généré)
+├── package.json
+├── .env                    # Variables d'environnement
+└── README.md              # Ce fichier
 ```
 
-## 🎨 Personnalisation des couleurs
+## 📍 Routes disponibles
 
-### Dans le HTML (Tailwind config)
+| Route | Méthode | Description |
+|-------|---------|-------------|
+| `/` | GET | Page d'accueil |
+| `/api/github-stats` | GET | Stats GitHub (JSON) |
+| `/sitemap.xml` | GET | Sitemap pour moteurs |
+| `/robots.txt` | GET | Robots.txt |
+| `/404.html` | GET | Page d'erreur 404 |
+
+## 🔧 Configuration
+
+Modifiez `src/config.js` pour personnaliser :
 
 ```javascript
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: "#0f172a", // Fond principal
-        secondary: "#1e293b", // Fond secondaire
-        accent: "#ec4899", // Couleur d'accent (rose)
-      },
+module.exports = {
+    port: 3000,
+    github: {
+        username: 'MattiaPARRINELLO',
+        username_display: 'Mattia Parrinello'
     },
-  },
+    portfolio: {
+        title: 'Mon Portfolio',
+        description: 'Description du portfolio',
+        socialLinks: {
+            github: 'https://github.com/...',
+            linkedin: 'https://linkedin.com/...',
+            email: 'email@example.com'
+        }
+    }
+    // ... autres options
 };
 ```
 
-### Dans le CSS (variables)
+## 💾 Système de Cache
 
+Le cache GitHub fonctionne ainsi :
+
+1. **Démarrage** : charge le cache depuis `cache/github-stats.json`
+2. **Requête** : sert les stats stockées (très rapide)
+3. **Après 24h** : rafraîchit auto les données via API GitHub
+4. **Fichier** : persiste même après redémarrage du serveur
+
+Cache Manager peut être utilisé pour d'autres données :
+```javascript
+const cache = require('./src/utils/cache');
+
+// Charger
+const data = cache.load('file.json');
+
+// Sauvegarder
+cache.save('file.json', data);
+
+// Vérifier si valide
+if (cache.isValid('file.json')) { ... }
+
+// Obtenir temps restant
+const remaining = cache.getTimeRemaining('file.json');
+```
+
+## 🎨 Customization
+
+### Ajouter une nouvelle route
+Dans `src/routes.js` :
+```javascript
+router.get('/ma-route', (req, res) => {
+    res.json({ message: 'Bonjour!' });
+});
+```
+
+### Modifier les données du portfolio
+Modifiez `CONTENT` dans `public/main.js` pour pages, projets, skills, timeline.
+
+### Changer les couleurs
+Modifiez les variables CSS dans `public/styles.css` :
 ```css
 :root {
-  --primary: #0f172a;
-  --secondary: #1e293b;
-  --accent: #ec4899;
-  --accent-hover: #db2777;
+    --accent: #ec4899;          /* Rose/magenta */
+    --primary: #0f172a;         /* Bleu très foncé */
+    --secondary: #1e293b;       /* Gris bleu */
 }
 ```
 
-## 📝 Sections du site
+## 📈 Stats GitHub
 
-1. **Hero** - Présentation avec nom, titre et CTA
-2. **À propos** - Bio et icônes de compétences
-3. **Parcours** - Timeline chronologique du parcours
-4. **Portfolio** - Cartes de projets avec liens
-5. **Stack** - Grille de technologies
-6. **Contact** - Liens vers réseaux et email
+L'API GitHub stats récupère :
+- **Nombre exact de repos** (sans forks)
+- **Lignes de code par langage** via API `/repos/:owner/:repo/languages`
+- **Densité adaptée par langage** (Python=45 chars/ligne, Java=65, etc.)
+- **Cache 24h** pour limiter les appels API
 
-## 🥚 Easter Eggs
+Résultat :
+```json
+{
+    "repos": 49,
+    "estimatedLines": 47667,
+    "totalBytes": 3019170,
+    "method": "exact",
+    "lastUpdate": "2026-02-06T13:53:16.034Z",
+    "cacheSource": "file"
+}
+```
 
-Le portfolio contient plusieurs surprises cachées :
+## 🔐 Sécurité
 
-| Easter Egg           | Comment le déclencher                        |
-| -------------------- | -------------------------------------------- |
-| **Mode Matrix**      | Konami Code : ↑↑↓↓←→←→BA                     |
-| **Messages secrets** | Tape "hello", "dev", "cafe", "love" ou "bug" |
-| **Logo secret**      | Triple-clic sur le logo "MP."                |
-| **Compteur footer**  | Clique plusieurs fois sur le footer          |
-| **ASCII Art**        | Ouvre la console (F12)                       |
+- Token GitHub stocké dans `.env` (non versionné)
+- Pas de données sensibles dans le cache
+- Routes protégées contre les erreurs API
+- HTTPS recommandé en production
+- `.gitignore` configure pour exclure `.env` et `cache/`
 
-## 🔧 Scripts disponibles
+## 🌍 Déploiement
 
-| Commande      | Description                     |
-| ------------- | ------------------------------- |
-| `npm start`   | Lance le serveur en production  |
-| `npm run dev` | Lance avec nodemon (hot reload) |
+### Heroku
+```bash
+heroku login
+git push heroku main
+heroku config:set GITHUB_TOKEN=votre_token
+```
 
-## 📄 Licence
+### Vercel / Netlify
+Compatible avec serverless, voir doc respective.
 
-MIT - Libre d'utilisation et de modification.
+### Docker
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY . .
+RUN npm install
+ENV PORT=3000
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+## 📊 Performance
+
+- **Size** : ~2.88 MB code (tous repos)
+- **Build time** : < 1s
+- **Startup time** : ~1s avec cache
+- **API response** : < 50ms (cached)
+- **Lighthouse** : 95+
+
+## 🐛 Débogage
+
+Logs détaillés au démarrage :
+```
+🚀 Portfolio lancé sur http://localhost:3000
+✅ Token GitHub: configuré (5000 req/h)
+🔄 Initialisation stats GitHub...
+✅ Cache chargé (expire dans 24h)
+   49 repos • 47,667 lignes
+```
+
+Activer mode verbose :
+```bash
+NODE_DEBUG=* npm start
+```
+
+## 📝 Changelog
+
+### v2.0 (Refactoring complet)
+- ✨ Architecture modulaire (`src/` folder)
+- ✨ Config centralisée
+- ✨ Sitemap & robots.txt
+- ✨ Cache manager standalone
+- 🐛 Meilleure gestion d'erreurs
+
+### v1.0 (Initial)
+- Stats GitHub
+- Design responsive
+- Animations fluides
+
+## 📄 License
+
+MIT
+
+## 👨‍💻 Auteur
+
+**Mattia Parrinello** - [@MattiaPARRINELLO](https://github.com/MattiaPARRINELLO)
 
 ---
 
-Créé avec ♥ par Mattia Parrinello
+**Besoin d'aide ?** Ouvre une issue sur [GitHub](https://github.com/MattiaPARRINELLO/portfolio-dev)

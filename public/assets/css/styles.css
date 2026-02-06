@@ -147,50 +147,93 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   4. HERO SECTION
-   Styles pour la section d'accueil
+   4. TIMELINE / PARCOURS
+   Styles pour la frise chronologique
 ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Effet de glow subtil derrière le hero */
-.hero-glow {
+/* Point sur la timeline */
+.timeline-dot {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(
-    circle,
-    rgba(236, 72, 153, 0.15) 0%,
-    transparent 70%
-  );
-  pointer-events: none;
-  animation: pulse-glow 4s ease-in-out infinite;
+  left: 0;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.2);
+  z-index: 10;
+  transition: all var(--transition-normal) ease;
 }
 
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.5;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: translate(-50%, -50%) scale(1.1);
+/* Position alternée sur desktop */
+@media (min-width: 768px) {
+  .timeline-dot {
+    left: auto;
+    right: -8px;
+    transform: translateX(50%);
   }
 }
 
-/* Dégradé de texte pour le nom */
-.gradient-text {
-  background: linear-gradient(
-    135deg,
-    var(--accent) 0%,
-    #8b5cf6 50%,
-    #ec4899 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Hover sur le dot */
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 8px rgba(236, 72, 153, 0.3);
+}
+
+@media (min-width: 768px) {
+  .timeline-item:hover .timeline-dot {
+    transform: translateX(50%) scale(1.3);
+  }
+}
+
+/* Carte de la timeline */
+.timeline-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all var(--transition-normal) var(--ease-out-expo);
+}
+
+.timeline-card:hover {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(236, 72, 153, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+}
+
+/* Date de la timeline */
+.timeline-date {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: rgba(236, 72, 153, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+/* Animation d'entrée pour les items de timeline */
+.timeline-item {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s var(--ease-out-expo) forwards;
+}
+
+.timeline-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.timeline-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.timeline-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.timeline-item:nth-child(4) {
+  animation-delay: 0.4s;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -200,7 +243,7 @@ body {
 
 /* --- BOUTONS --- */
 
-/* Bouton primaire avec micro-interaction */
+/* Bouton primaire avec micro-interaction améliorée */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -234,8 +277,8 @@ body {
 
 .btn-primary:hover {
   background-color: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px -10px rgba(236, 72, 153, 0.5);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 40px -10px rgba(236, 72, 153, 0.6);
 }
 
 .btn-primary:hover::before {
@@ -243,10 +286,10 @@ body {
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(1.02);
 }
 
-/* Bouton secondaire avec bordure */
+/* Bouton secondaire avec bordure amélioré */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -255,58 +298,38 @@ body {
   background-color: transparent;
   color: white;
   font-weight: 600;
-  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 0.5rem;
+  border: 2px solid var(--accent);
   transition: all var(--transition-normal) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-secondary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  opacity: 0.15;
+  transition: left var(--transition-slow) ease;
+  z-index: -1;
 }
 
 .btn-secondary:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 40px -10px rgba(236, 72, 153, 0.4);
+  border-color: var(--accent-hover);
+}
+
+.btn-secondary:hover::before {
+  left: 0;
 }
 
 .btn-secondary:active {
-  transform: translateY(0);
-}
-
-/* --- CARTES STATISTIQUES --- */
-.stat-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  background-color: rgba(30, 41, 59, 0.5);
-  border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all var(--transition-normal) ease;
-}
-
-.stat-card:hover {
-  border-color: rgba(236, 72, 153, 0.3);
-  transform: translateY(-4px);
-}
-
-/* --- CARTES COMPÉTENCES (icônes) --- */
-.skill-icon-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background-color: rgba(30, 41, 59, 0.3);
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all var(--transition-normal) var(--ease-out-expo);
-  cursor: default;
-}
-
-/* Hover : léger lift et bordure colorée */
-.skill-icon-card:hover {
-  background-color: rgba(30, 41, 59, 0.6);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px) scale(1.02);
 }
 
 /* --- CARTES PROJETS --- */
@@ -418,38 +441,6 @@ body {
   filter: drop-shadow(0 0 8px var(--badge-color));
 }
 
-/* --- CARTES CONTACT --- */
-.contact-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1.5rem;
-  background-color: rgba(30, 41, 59, 0.3);
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all var(--transition-normal) var(--ease-out-expo);
-  text-align: center;
-  gap: 0.5rem;
-}
-
-.contact-card:hover {
-  background-color: rgba(30, 41, 59, 0.6);
-  border-color: rgba(236, 72, 153, 0.3);
-  transform: translateY(-6px);
-}
-
-.contact-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  transition: all var(--transition-normal) ease;
-  margin-bottom: 0.5rem;
-}
-
 /* ═══════════════════════════════════════════════════════════════════════════
    6. ANIMATIONS & TRANSITIONS
    Keyframes et classes d'animation
@@ -484,30 +475,6 @@ body {
   transform: translateY(0);
 }
 
-/* Animation de fade in depuis la gauche */
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Animation de fade in depuis la droite */
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 /* Animation de scale */
 @keyframes scaleIn {
   from {
@@ -540,33 +507,12 @@ body {
    Ajustements pour différentes tailles d'écran
 ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Tablette */
-@media (max-width: 768px) {
-  .hero-glow {
-    width: 400px;
-    height: 400px;
-  }
-
-  .skill-icon-card {
-    padding: 1rem;
-  }
-
-  .stack-badge {
-    padding: 1rem 0.75rem;
-  }
-}
-
 /* Mobile */
 @media (max-width: 640px) {
   .btn-primary,
   .btn-secondary {
     width: 100%;
     justify-content: center;
-  }
-
-  .hero-glow {
-    width: 300px;
-    height: 300px;
   }
 
   .project-overlay {
@@ -600,16 +546,6 @@ body {
    Classes utilitaires supplémentaires
 ═══════════════════════════════════════════════════════════════════════════ */
 
-/* Hide scrollbar but keep functionality */
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
 /* Focus visible pour accessibilité */
 *:focus-visible {
   outline: 2px solid var(--accent);
@@ -628,102 +564,7 @@ a {
   object-fit: cover;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   9. TIMELINE / PARCOURS
-   Styles pour la frise chronologique
-═══════════════════════════════════════════════════════════════════════════ */
-
-/* Point sur la timeline */
-.timeline-dot {
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 16px;
-  height: 16px;
-  background: var(--accent);
-  border-radius: 50%;
-  border: 3px solid var(--primary);
-  box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.2);
-  z-index: 10;
-  transition: all var(--transition-normal) ease;
-}
-
-/* Position alternée sur desktop */
-@media (min-width: 768px) {
-  .timeline-dot {
-    left: auto;
-    right: -8px;
-    transform: translateX(50%);
-  }
-}
-
-/* Hover sur le dot */
-.timeline-item:hover .timeline-dot {
-  transform: scale(1.3);
-  box-shadow: 0 0 0 8px rgba(236, 72, 153, 0.3);
-}
-
-@media (min-width: 768px) {
-  .timeline-item:hover .timeline-dot {
-    transform: translateX(50%) scale(1.3);
-  }
-}
-
-/* Carte de la timeline */
-.timeline-card {
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  transition: all var(--transition-normal) var(--ease-out-expo);
-}
-
-.timeline-card:hover {
-  background: rgba(30, 41, 59, 0.8);
-  border-color: rgba(236, 72, 153, 0.3);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
-}
-
-/* Date de la timeline */
-.timeline-date {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  background: rgba(236, 72, 153, 0.1);
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-}
-
-/* Animation d'entrée pour les items de timeline */
-.timeline-item {
-  opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInUp 0.6s var(--ease-out-expo) forwards;
-}
-
-.timeline-item:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.timeline-item:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.timeline-item:nth-child(3) {
-  animation-delay: 0.3s;
-}
-.timeline-item:nth-child(4) {
-  animation-delay: 0.4s;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   10. EASTER EGGS STYLES
-   Styles pour les easter eggs
-═══════════════════════════════════════════════════════════════════════════ */
-
-/* Animation de spin pour le logo */
+/* Easter eggs */
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -733,12 +574,10 @@ a {
   }
 }
 
-/* Toast notification easter egg */
 .easter-toast {
   font-family: "Inter", system-ui, sans-serif;
 }
 
-/* Matrix canvas fade */
 #matrix-canvas {
   animation: matrixFadeIn 1s ease forwards;
 }

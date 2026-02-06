@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page introuvable | Mattia Parrinello</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        primary: '#0f172a',
+                        secondary: '#1e293b',
+                        accent: '#ec4899',
+                        'accent-hover': '#db2777'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glitch {
+            animation: glitch 1s linear infinite;
+        }
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px, 0) skew(0deg); }
+            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+            62% { transform: translate(0, 0) skew(5deg); }
+        }
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="bg-primary text-gray-100 font-sans antialiased min-h-screen flex items-center justify-center">
+    <div class="text-center px-6">
+        <!-- 404 animé -->
+        <div class="float mb-8">
+            <span class="text-[150px] md:text-[200px] font-black text-transparent bg-clip-text bg-gradient-to-r from-accent via-purple-500 to-accent glitch">
+                404
+            </span>
+        </div>
+        
+        <!-- Message -->
+        <h1 class="text-2xl md:text-4xl font-bold mb-4">
+            Oups ! Cette page s'est perdue dans le code...
+        </h1>
+        <p class="text-gray-400 mb-8 max-w-md mx-auto">
+            La page que tu cherches n'existe pas ou a été déplacée. 
+            Pas de panique, ça arrive même aux meilleurs !
+        </p>
+        
+        <!-- Boutons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="px-6 py-3 bg-accent hover:bg-accent-hover text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105">
+                Retour à l'accueil
+            </a>
+            <a href="/#contact" class="px-6 py-3 border border-gray-600 hover:border-accent text-gray-300 hover:text-accent font-semibold rounded-lg transition-all duration-300">
+                Me contacter
+            </a>
+        </div>
+        
+        <!-- Easter egg -->
+        <p class="mt-12 text-gray-600 text-sm">
+            Erreur 404 • <span class="text-accent">MP</span>.
+        </p>
+    </div>
+</body>
+</html>

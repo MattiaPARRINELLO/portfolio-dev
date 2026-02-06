@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test GitHub API</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #0f172a;
+            color: #fff;
+        }
+        pre {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .stat {
+            font-size: 24px;
+            margin: 10px 0;
+            padding: 15px;
+            background: #1e293b;
+            border-radius: 8px;
+        }
+        .value {
+            color: #ec4899;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test GitHub API</h1>
+    
+    <h2>Résultat du fetch:</h2>
+    <pre id="result">Chargement...</pre>
+    
+    <h2>Stats affichées:</h2>
+    <div class="stat">
+        Lignes de code: <span class="value" id="lines">-</span>
+    </div>
+    <div class="stat">
+        Dépôts: <span class="value" id="repos">-</span>
+    </div>
+
+    <script>
+        console.log('🚀 Démarrage test GitHub API...');
+        
+        async function testGitHubAPI() {
+            try {
+                console.log('📡 Fetch /api/github-stats...');
+                const response = await fetch('/api/github-stats');
+                
+                console.log('📦 Response:', response);
+                console.log('✓ Status:', response.status);
+                console.log('✓ OK:', response.ok);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('📊 Data:', data);
+                
+                // Afficher le JSON brut
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                
+                // Vérifier les erreurs
+                if (data.error) {
+                    console.warn('⚠️ Erreur API:', data.error);
+                    document.getElementById('result').textContent += '\n\n❌ ERREUR: ' + data.error;
+                    return;
+                }
+                
+                // Afficher les stats
+                if (data.estimatedLines > 0) {
+                    const formatted = new Intl.NumberFormat('fr-FR').format(data.estimatedLines);
+                    document.getElementById('lines').textContent = formatted + '+';
+                    console.log('✅ Lignes:', formatted);
+                } else {
+                    console.warn('⚠️ Aucune ligne estimée');
+                }
+                
+                if (data.repos > 0) {
+                    document.getElementById('repos').textContent = data.repos;
+                    console.log('✅ Repos:', data.repos);
+                } else {
+                    console.warn('⚠️ Aucun dépôt');
+                }
+                
+                console.log('✅ Test terminé avec succès!');
+                
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                document.getElementById('result').textContent = '❌ ERREUR:\n' + error.message + '\n\n' + error.stack;
+            }
+        }
+        
+        // Lancer le test
+        testGitHubAPI();
+    </script>
+</body>
+</html>
