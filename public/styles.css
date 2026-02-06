@@ -1,0 +1,753 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * PORTFOLIO MATTIA PARRINELLO - STYLES PERSONNALISÉS
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 
+ * Ce fichier contient les styles personnalisés qui complètent Tailwind CSS.
+ * Chaque section est documentée pour faciliter la maintenance.
+ * 
+ * Structure :
+ * 1. Variables CSS
+ * 2. Styles de base
+ * 3. Navigation
+ * 4. Hero Section
+ * 5. Composants réutilisables
+ * 6. Animations & Transitions
+ * 7. Responsive adjustments
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. VARIABLES CSS
+   Centralise les valeurs pour faciliter les modifications
+═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --primary: #0f172a;
+  --secondary: #1e293b;
+  --accent: #ec4899;
+  --accent-hover: #db2777;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --transition-fast: 150ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. STYLES DE BASE
+   Reset et styles fondamentaux
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Smooth scroll pour les ancres */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Amélioration du scroll sur mobile */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sélection de texte personnalisée */
+::selection {
+  background-color: var(--accent);
+  color: white;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. NAVIGATION
+   Styles pour la barre de navigation fixe
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Effet de blur au scroll - géré par JS */
+.nav-scrolled {
+  background-color: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Liens de navigation avec micro-interaction */
+.nav-link {
+  position: relative;
+  color: #94a3b8;
+  font-weight: 500;
+  transition: color var(--transition-normal) ease;
+  padding: 0.5rem 0;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width var(--transition-normal) var(--ease-out-expo);
+}
+
+/* Hover : la ligne s'étend sous le texte */
+.nav-link:hover {
+  color: white;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Menu hamburger */
+.hamburger-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: white;
+  transition: all var(--transition-normal) ease;
+}
+
+/* Animation du menu hamburger lors de l'ouverture */
+.menu-open .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-open .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-open .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Menu mobile */
+.mobile-menu {
+  max-height: 0;
+  overflow: hidden;
+  background-color: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: max-height var(--transition-slow) var(--ease-out-expo);
+}
+
+.mobile-menu.active {
+  max-height: 400px;
+}
+
+.mobile-nav-link {
+  display: block;
+  color: #94a3b8;
+  font-size: 1.125rem;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: color var(--transition-normal) ease;
+}
+
+.mobile-nav-link:hover {
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. HERO SECTION
+   Styles pour la section d'accueil
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Effet de glow subtil derrière le hero */
+.hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(
+    circle,
+    rgba(236, 72, 153, 0.15) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* Dégradé de texte pour le nom */
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    #8b5cf6 50%,
+    #ec4899 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. COMPOSANTS RÉUTILISABLES
+   Boutons, cartes et autres éléments UI
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* --- BOUTONS --- */
+
+/* Bouton primaire avec micro-interaction */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  background-color: var(--accent);
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: all var(--transition-normal) ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Effet de brillance au hover */
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left var(--transition-slow) ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px rgba(236, 72, 153, 0.5);
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Bouton secondaire avec bordure */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  background-color: transparent;
+  color: white;
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  transition: all var(--transition-normal) ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* --- CARTES STATISTIQUES --- */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background-color: rgba(30, 41, 59, 0.5);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-normal) ease;
+}
+
+.stat-card:hover {
+  border-color: rgba(236, 72, 153, 0.3);
+  transform: translateY(-4px);
+}
+
+/* --- CARTES COMPÉTENCES (icônes) --- */
+.skill-icon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: rgba(30, 41, 59, 0.3);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-normal) var(--ease-out-expo);
+  cursor: default;
+}
+
+/* Hover : léger lift et bordure colorée */
+.skill-icon-card:hover {
+  background-color: rgba(30, 41, 59, 0.6);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- CARTES PROJETS --- */
+.project-card {
+  background-color: var(--secondary);
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-normal) var(--ease-out-expo);
+}
+
+/* Hover : lift et ombre */
+.project-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4);
+  border-color: rgba(236, 72, 153, 0.2);
+}
+
+/* Overlay qui apparaît au hover sur l'image */
+.project-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-normal) ease;
+}
+
+.project-card:hover .project-overlay {
+  opacity: 1;
+}
+
+/* Boutons dans l'overlay */
+.project-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  color: var(--primary);
+  border-radius: 50%;
+  transition: all var(--transition-fast) ease;
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.project-card:hover .project-link {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.project-card:hover .project-link:nth-child(1) {
+  transition-delay: 50ms;
+}
+
+.project-card:hover .project-link:nth-child(2) {
+  transition-delay: 100ms;
+}
+
+.project-link:hover {
+  background-color: var(--accent);
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Tags de technologies */
+.tech-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(236, 72, 153, 0.1);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  transition: all var(--transition-fast) ease;
+}
+
+.tech-tag:hover {
+  background-color: rgba(236, 72, 153, 0.2);
+}
+
+/* --- BADGES STACK --- */
+.stack-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background-color: rgba(30, 41, 59, 0.3);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-normal) var(--ease-out-expo);
+  cursor: default;
+  color: var(--badge-color, #94a3b8);
+}
+
+/* Hover : couleur et effet */
+.stack-badge:hover {
+  background-color: rgba(30, 41, 59, 0.6);
+  border-color: var(--badge-color);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+.stack-badge:hover svg {
+  filter: drop-shadow(0 0 8px var(--badge-color));
+}
+
+/* --- CARTES CONTACT --- */
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background-color: rgba(30, 41, 59, 0.3);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all var(--transition-normal) var(--ease-out-expo);
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.contact-card:hover {
+  background-color: rgba(30, 41, 59, 0.6);
+  border-color: rgba(236, 72, 153, 0.3);
+  transform: translateY(-6px);
+}
+
+.contact-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  transition: all var(--transition-normal) ease;
+  margin-bottom: 0.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. ANIMATIONS & TRANSITIONS
+   Keyframes et classes d'animation
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Animation d'entrée fade + slide up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+}
+
+/* Animation pour les éléments au scroll (gérée par JS) */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s var(--ease-out-expo);
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animation de fade in depuis la gauche */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation de fade in depuis la droite */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation de scale */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Bounce léger pour l'indicateur de scroll */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-50%);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. RESPONSIVE ADJUSTMENTS
+   Ajustements pour différentes tailles d'écran
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Tablette */
+@media (max-width: 768px) {
+  .hero-glow {
+    width: 400px;
+    height: 400px;
+  }
+
+  .skill-icon-card {
+    padding: 1rem;
+  }
+
+  .stack-badge {
+    padding: 1rem 0.75rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-glow {
+    width: 300px;
+    height: 300px;
+  }
+
+  .project-overlay {
+    opacity: 1;
+    background: rgba(15, 23, 42, 0.7);
+  }
+
+  .project-link {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Préférence pour les animations réduites */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8. UTILITAIRES PERSONNALISÉS
+   Classes utilitaires supplémentaires
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Focus visible pour accessibilité */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Transition par défaut pour les liens */
+a {
+  transition: color var(--transition-normal) ease;
+}
+
+/* Image responsive avec object-fit */
+.img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9. TIMELINE / PARCOURS
+   Styles pour la frise chronologique
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Point sur la timeline */
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.2);
+  z-index: 10;
+  transition: all var(--transition-normal) ease;
+}
+
+/* Position alternée sur desktop */
+@media (min-width: 768px) {
+  .timeline-dot {
+    left: auto;
+    right: -8px;
+    transform: translateX(50%);
+  }
+}
+
+/* Hover sur le dot */
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 8px rgba(236, 72, 153, 0.3);
+}
+
+@media (min-width: 768px) {
+  .timeline-item:hover .timeline-dot {
+    transform: translateX(50%) scale(1.3);
+  }
+}
+
+/* Carte de la timeline */
+.timeline-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all var(--transition-normal) var(--ease-out-expo);
+}
+
+.timeline-card:hover {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(236, 72, 153, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+}
+
+/* Date de la timeline */
+.timeline-date {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: rgba(236, 72, 153, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+/* Animation d'entrée pour les items de timeline */
+.timeline-item {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s var(--ease-out-expo) forwards;
+}
+
+.timeline-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.timeline-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.timeline-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.timeline-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   10. EASTER EGGS STYLES
+   Styles pour les easter eggs
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Animation de spin pour le logo */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Toast notification easter egg */
+.easter-toast {
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* Matrix canvas fade */
+#matrix-canvas {
+  animation: matrixFadeIn 1s ease forwards;
+}
+
+@keyframes matrixFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.15;
+  }
+}
