@@ -28,11 +28,11 @@ const GitHubStats = {
     async fetchStats() {
         try {
             const response = await fetch('/api/github-stats');
-            
+
             if (!response.ok) {
                 throw new Error(`API returned ${response.status}`);
             }
-            
+
             const data = await response.json();
             console.log('📊 GitHub stats:', data);
 

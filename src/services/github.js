@@ -36,7 +36,7 @@ class GitHubStats {
             const headers = {
                 'User-Agent': 'Portfolio-GithubStats'
             };
-            
+
             if (config.github.token) {
                 headers['Authorization'] = `Bearer ${config.github.token}`;
             }
@@ -95,7 +95,7 @@ class GitHubStats {
             const headers = {
                 'User-Agent': 'Portfolio-GithubStats'
             };
-            
+
             if (config.github.token) {
                 headers['Authorization'] = `Bearer ${config.github.token}`;
             }
@@ -195,7 +195,7 @@ class GitHubStats {
 
             cache.save(config.cache.files.github, result);
             console.log(`✅ GitHub stats: ${stats.repos} repos, ${stats.estimatedLines.toLocaleString()} lignes (${stats.totalMB} MB)`);
-            
+
             return result;
         } catch (error) {
             console.error('❌ Erreur GitHub stats:', error.message);

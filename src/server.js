@@ -58,7 +58,7 @@ const server = app.listen(config.port, async () => {
     console.log('╔════════════════════════════════════════════════════════════╗');
     console.log('║          🚀 Portfolio de Mattia Parrinello               ║');
     console.log('╚════════════════════════════════════════════════════════════╝\n');
-    
+
     console.log(`🌐 Serveur lancé sur http://localhost:${config.port}\n`);
 
     // Afficher config GitHub
