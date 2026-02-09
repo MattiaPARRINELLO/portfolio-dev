@@ -1,0 +1,81 @@
+{
+  "timestamp": 1770642601818,
+  "data": {
+    "totalRepos": 50,
+    "totalLanguages": 14,
+    "estimatedLines": 98022,
+    "languages": [
+      {
+        "language": "HTML",
+        "bytes": 1204632,
+        "percentage": "33.70"
+      },
+      {
+        "language": "JavaScript",
+        "bytes": 919212,
+        "percentage": "25.71"
+      },
+      {
+        "language": "CSS",
+        "bytes": 674220,
+        "percentage": "18.86"
+      },
+      {
+        "language": "TypeScript",
+        "bytes": 238882,
+        "percentage": "6.68"
+      },
+      {
+        "language": "Python",
+        "bytes": 192041,
+        "percentage": "5.37"
+      },
+      {
+        "language": "EJS",
+        "bytes": 168764,
+        "percentage": "4.72"
+      },
+      {
+        "language": "SCSS",
+        "bytes": 79489,
+        "percentage": "2.22"
+      },
+      {
+        "language": "Less",
+        "bytes": 78481,
+        "percentage": "2.20"
+      },
+      {
+        "language": "Jupyter Notebook",
+        "bytes": 14857,
+        "percentage": "0.42"
+      },
+      {
+        "language": "Batchfile",
+        "bytes": 3789,
+        "percentage": "0.11"
+      },
+      {
+        "language": "Pug",
+        "bytes": 275,
+        "percentage": "0.01"
+      },
+      {
+        "language": "Shell",
+        "bytes": 90,
+        "percentage": "0.00"
+      },
+      {
+        "language": "Ruby",
+        "bytes": 72,
+        "percentage": "0.00"
+      },
+      {
+        "language": "Makefile",
+        "bytes": 69,
+        "percentage": "0.00"
+      }
+    ],
+    "lastUpdate": "2026-02-09T13:10:01.817Z"
+  }
+}

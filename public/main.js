@@ -616,6 +616,9 @@ function initializeApp() {
         console.log('✅ Effets visuels initialisés');
     }
 
+    // Stats GitHub
+    GitHubStats.init();
+
     // Easter eggs 🥚
     EasterEggs.init();
 
@@ -657,7 +660,173 @@ window.addEventListener('load', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// 8. EASTER EGGS 🥚
+// 8. STATS GITHUB
+// Récupération et affichage des statistiques de code GitHub
+// ═══════════════════════════════════════════════════════════════════════════
+
+const GitHubStats = {
+    isExpanded: false,
+    data: null,
+    colors: {
+        JavaScript: '#f7df1e',
+        TypeScript: '#3178c6',
+        Python: '#3776ab',
+        Java: '#007396',
+        'C++': '#00599c',
+        C: '#A8B9CC',
+        'C#': '#239120',
+        PHP: '#777bb4',
+        Ruby: '#cc342d',
+        Go: '#00add8',
+        Rust: '#dea584',
+        Swift: '#ffac45',
+        Kotlin: '#7f52ff',
+        HTML: '#e34c26',
+        CSS: '#563d7c',
+        SCSS: '#c6538c',
+        Vue: '#42b883',
+        Svelte: '#ff3e00',
+        Dart: '#0175c2',
+        Shell: '#89e051',
+        default: '#ec4899'
+    },
+
+    init() {
+        const container = document.getElementById('github-stats-content');
+        if (!container) return;
+        this.setupToggle();
+        this.loadStats(container);
+    },
+
+    setupToggle() {
+        const btn = document.getElementById('github-stats-toggle');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            this.isExpanded = !this.isExpanded;
+            this.render();
+        });
+    },
+
+    async loadStats(container) {
+        try {
+            const response = await fetch('/api/github-stats');
+            if (!response.ok) {
+                throw new Error('API GitHub indisponible');
+            }
+            this.data = await response.json();
+            this.render();
+        } catch (error) {
+            this.renderError(container);
+        }
+    },
+
+    render() {
+        const container = document.getElementById('github-stats-content');
+        if (!container || !this.data) return;
+        const btn = document.getElementById('github-stats-toggle');
+        if (btn) {
+            btn.textContent = this.isExpanded ? 'Voir moins' : 'Voir plus';
+        }
+
+        container.innerHTML = this.isExpanded
+            ? this.renderExpanded(this.data)
+            : this.renderCompact(this.data);
+    },
+
+    renderCompact(data) {
+        const formattedLines = data.estimatedLines.toLocaleString('fr-FR');
+        const topLanguages = data.languages.slice(0, 3);
+
+        return `
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                ${topLanguages.map((lang) => {
+                    const color = this.colors[lang.language] || this.colors.default;
+                    return `
+                        <div class="flex items-center gap-1.5 px-2.5 py-1 bg-primary/50 rounded text-xs">
+                            <div class="w-2 h-2 rounded-full" style="background-color: ${color};"></div>
+                            <span class="text-gray-300">${lang.language}</span>
+                            <span class="text-gray-500 font-medium">${lang.percentage}%</span>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-center p-2 bg-primary/50 rounded">
+                    <div class="text-xl font-bold text-accent">${formattedLines}</div>
+                    <div class="text-xs text-gray-400">Lignes</div>
+                </div>
+                <div class="text-center p-2 bg-primary/50 rounded">
+                    <div class="text-xl font-bold text-accent">${data.totalLanguages}</div>
+                    <div class="text-xs text-gray-400">Langages</div>
+                </div>
+            </div>
+        `;
+    },
+
+    renderExpanded(data) {
+        const formattedLines = data.estimatedLines.toLocaleString('fr-FR');
+        const filteredLanguages = data.languages.filter(lang => lang.percentage > 1);
+
+        return `
+            <div class="space-y-4">
+                <div class="flex flex-wrap items-center gap-2">
+                    ${filteredLanguages.map((lang) => {
+                        const color = this.colors[lang.language] || this.colors.default;
+                        return `
+                            <div class="flex items-center gap-1.5 px-2.5 py-1 bg-primary/50 rounded text-xs">
+                                <div class="w-2 h-2 rounded-full" style="background-color: ${color};"></div>
+                                <span class="text-gray-300">${lang.language}</span>
+                                <span class="text-gray-500 font-medium">${lang.percentage}%</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center p-3 bg-primary/50 rounded-lg">
+                        <div class="text-2xl font-bold text-accent">${formattedLines}</div>
+                        <div class="text-xs text-gray-400 mt-1">Lignes de code</div>
+                    </div>
+                    <div class="text-center p-3 bg-primary/50 rounded-lg">
+                        <div class="text-2xl font-bold text-accent">${data.totalLanguages}</div>
+                        <div class="text-xs text-gray-400 mt-1">Langages utilisés</div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    ${filteredLanguages.map((lang) => {
+                        const color = this.colors[lang.language] || this.colors.default;
+                        return `
+                            <div class="flex items-center justify-between text-sm">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-3 h-3 rounded-full" style="background-color: ${color};"></div>
+                                    <span class="text-gray-300">${lang.language}</span>
+                                </div>
+                                <span class="text-gray-400">${lang.percentage}%</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div class="text-xs text-gray-500 pt-2 border-t border-gray-800 text-center">
+                    Basé sur ${data.totalRepos} repos publics
+                </div>
+            </div>
+        `;
+    },
+
+    renderError(container) {
+        container.innerHTML = `
+            <div class="text-center py-4 text-gray-400">
+                <p class="text-sm">Impossible de charger les stats GitHub</p>
+            </div>
+        `;
+    }
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 9. EASTER EGGS 🥚
 // Parce qu'un bon dev cache toujours des surprises
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -947,7 +1116,7 @@ const EasterEggs = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// 9. EXPORTS (pour utilisation en modules ES6 si nécessaire)
+// 10. EXPORTS (pour utilisation en modules ES6 si nécessaire)
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Expose les modules globalement pour le debugging (optionnel)
@@ -958,6 +1127,7 @@ if (typeof globalThis !== 'undefined') {
         SmoothScroll,
         VisualEffects,
         Utils,
+        GitHubStats,
         EasterEggs,
         CONFIG
     };
