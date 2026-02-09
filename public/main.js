@@ -740,15 +740,15 @@ const GitHubStats = {
         return `
             <div class="flex flex-wrap items-center gap-2 mb-4">
                 ${topLanguages.map((lang) => {
-                    const color = this.colors[lang.language] || this.colors.default;
-                    return `
+            const color = this.colors[lang.language] || this.colors.default;
+            return `
                         <div class="flex items-center gap-1.5 px-2.5 py-1 bg-primary/50 rounded text-xs">
                             <div class="w-2 h-2 rounded-full" style="background-color: ${color};"></div>
                             <span class="text-gray-300">${lang.language}</span>
                             <span class="text-gray-500 font-medium">${lang.percentage}%</span>
                         </div>
                     `;
-                }).join('')}
+        }).join('')}
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -772,15 +772,15 @@ const GitHubStats = {
             <div class="space-y-4">
                 <div class="flex flex-wrap items-center gap-2">
                     ${filteredLanguages.map((lang) => {
-                        const color = this.colors[lang.language] || this.colors.default;
-                        return `
+            const color = this.colors[lang.language] || this.colors.default;
+            return `
                             <div class="flex items-center gap-1.5 px-2.5 py-1 bg-primary/50 rounded text-xs">
                                 <div class="w-2 h-2 rounded-full" style="background-color: ${color};"></div>
                                 <span class="text-gray-300">${lang.language}</span>
                                 <span class="text-gray-500 font-medium">${lang.percentage}%</span>
                             </div>
                         `;
-                    }).join('')}
+        }).join('')}
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -796,8 +796,8 @@ const GitHubStats = {
 
                 <div class="space-y-2">
                     ${filteredLanguages.map((lang) => {
-                        const color = this.colors[lang.language] || this.colors.default;
-                        return `
+            const color = this.colors[lang.language] || this.colors.default;
+            return `
                             <div class="flex items-center justify-between text-sm">
                                 <div class="flex items-center gap-2">
                                     <div class="w-3 h-3 rounded-full" style="background-color: ${color};"></div>
@@ -806,7 +806,7 @@ const GitHubStats = {
                                 <span class="text-gray-400">${lang.percentage}%</span>
                             </div>
                         `;
-                    }).join('')}
+        }).join('')}
                 </div>
 
                 <div class="text-xs text-gray-500 pt-2 border-t border-gray-800 text-center">
