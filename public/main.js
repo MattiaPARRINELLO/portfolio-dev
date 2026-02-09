@@ -728,9 +728,19 @@ const GitHubStats = {
             btn.textContent = this.isExpanded ? 'Voir moins' : 'Voir plus';
         }
 
+        container.classList.add('stats-toggling');
+        
         container.innerHTML = this.isExpanded
             ? this.renderExpanded(this.data)
             : this.renderCompact(this.data);
+
+        container.classList.remove('stats-reveal');
+        void container.offsetWidth;
+        container.classList.add('stats-reveal');
+        
+        setTimeout(() => {
+            container.classList.remove('stats-toggling');
+        }, 450);
     },
 
     renderCompact(data) {
@@ -739,10 +749,10 @@ const GitHubStats = {
 
         return `
             <div class="flex flex-wrap items-center gap-2 mb-4">
-                ${topLanguages.map((lang) => {
+                ${topLanguages.map((lang, index) => {
             const color = this.colors[lang.language] || this.colors.default;
             return `
-                        <div class="flex items-center gap-1.5 px-2.5 py-1 bg-primary/50 rounded text-xs">
+                        <div class="stats-chip flex items-center gap-1.5 px-2.5 py-1 bg-primary/50 rounded text-xs" style="animation-delay: ${index * 70}ms;">
                             <div class="w-2 h-2 rounded-full" style="background-color: ${color};"></div>
                             <span class="text-gray-300">${lang.language}</span>
                             <span class="text-gray-500 font-medium">${lang.percentage}%</span>
@@ -752,11 +762,11 @@ const GitHubStats = {
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div class="text-center p-2 bg-primary/50 rounded">
+                <div class="stats-tile text-center p-2 bg-primary/50 rounded" style="animation-delay: 210ms;">
                     <div class="text-xl font-bold text-accent">${formattedLines}</div>
                     <div class="text-xs text-gray-400">Lignes</div>
                 </div>
-                <div class="text-center p-2 bg-primary/50 rounded">
+                <div class="stats-tile text-center p-2 bg-primary/50 rounded" style="animation-delay: 280ms;">
                     <div class="text-xl font-bold text-accent">${data.totalLanguages}</div>
                     <div class="text-xs text-gray-400">Langages</div>
                 </div>
@@ -771,10 +781,10 @@ const GitHubStats = {
         return `
             <div class="space-y-4">
                 <div class="flex flex-wrap items-center gap-2">
-                    ${filteredLanguages.map((lang) => {
+                    ${filteredLanguages.map((lang, index) => {
             const color = this.colors[lang.language] || this.colors.default;
             return `
-                            <div class="flex items-center gap-1.5 px-2.5 py-1 bg-primary/50 rounded text-xs">
+                            <div class="stats-chip flex items-center gap-1.5 px-2.5 py-1 bg-primary/50 rounded text-xs" style="animation-delay: ${index * 60}ms;">
                                 <div class="w-2 h-2 rounded-full" style="background-color: ${color};"></div>
                                 <span class="text-gray-300">${lang.language}</span>
                                 <span class="text-gray-500 font-medium">${lang.percentage}%</span>
@@ -784,21 +794,21 @@ const GitHubStats = {
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="text-center p-3 bg-primary/50 rounded-lg">
+                    <div class="stats-tile text-center p-3 bg-primary/50 rounded-lg" style="animation-delay: 220ms;">
                         <div class="text-2xl font-bold text-accent">${formattedLines}</div>
                         <div class="text-xs text-gray-400 mt-1">Lignes de code</div>
                     </div>
-                    <div class="text-center p-3 bg-primary/50 rounded-lg">
+                    <div class="stats-tile text-center p-3 bg-primary/50 rounded-lg" style="animation-delay: 290ms;">
                         <div class="text-2xl font-bold text-accent">${data.totalLanguages}</div>
                         <div class="text-xs text-gray-400 mt-1">Langages utilisés</div>
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    ${filteredLanguages.map((lang) => {
+                    ${filteredLanguages.map((lang, index) => {
             const color = this.colors[lang.language] || this.colors.default;
             return `
-                            <div class="flex items-center justify-between text-sm">
+                            <div class="stats-row flex items-center justify-between text-sm" style="animation-delay: ${index * 50}ms;">
                                 <div class="flex items-center gap-2">
                                     <div class="w-3 h-3 rounded-full" style="background-color: ${color};"></div>
                                     <span class="text-gray-300">${lang.language}</span>
