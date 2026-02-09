@@ -729,7 +729,7 @@ const GitHubStats = {
         }
 
         container.classList.add('stats-toggling');
-        
+
         container.innerHTML = this.isExpanded
             ? this.renderExpanded(this.data)
             : this.renderCompact(this.data);
@@ -737,7 +737,7 @@ const GitHubStats = {
         container.classList.remove('stats-reveal');
         void container.offsetWidth;
         container.classList.add('stats-reveal');
-        
+
         setTimeout(() => {
             container.classList.remove('stats-toggling');
         }, 450);
