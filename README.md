@@ -1,5 +1,7 @@
 -# Portfolio Mattia Parrinello
 
+![OG Cover](public/assets/images/og-cover.svg)
+
 Portfolio développeur moderne avec micro-interactions soignées, animations au scroll et design responsive.
 
 ## 🚀 Démarrage rapide
