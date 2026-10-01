@@ -107,12 +107,37 @@ const LINES_PER_KB = {
 // Compression middleware
 app.use(compression());
 
+// Bloquer l'accès aux fichiers sensibles AVANT le middleware statique.
+// Express ne sert que public/, mais Passenger sert le dossier de l'app via
+// Apache : un .env placé à la racine resterait sinon téléchargeable.
+const BLOCKED_PATHS = ['.env', '.env.local', '.env.production', 'package.json', 'package-lock.json', 'server.js', '.gitignore', 'README.md'];
+
+app.use((req, res, next) => {
+  const requested = decodeURIComponent(req.path.split('?')[0]);
+  const basename = path.posix.basename(requested);
+
+  if (
+    basename.startsWith('.env') ||
+    BLOCKED_PATHS.includes(basename) ||
+    requested.startsWith('/.git') ||
+    requested.startsWith('/cache') ||
+    requested.startsWith('/src')
+  ) {
+    res.status(404).send('Not found');
+    return;
+  }
+
+  next();
+});
+
 // Servir les fichiers statiques du dossier public
 // Le HTML et le JS sont revalidés à chaque requête ; les images, polices et
 // assets stables sont mises en cache longuement.
 app.use(
   express.static(path.join(__dirname, 'public'), {
     etag: true,
+    dotfiles: 'deny',
+    index: ['index.html'],
     setHeaders(res, filePath) {
       const isStaticAsset = /\.(webp|png|jpg|jpeg|svg|ico|woff2?)$/i.test(filePath);
       res.setHeader(
