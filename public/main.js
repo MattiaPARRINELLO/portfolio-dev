@@ -421,77 +421,6 @@ const ScrollReveal = {
 };
 
 /* =========================================================
-   PROJECTEURS DE SCÈNE
-   Deux faisceaux croisés sur le titre. La souris déplace la source
-   de lumière ; c'est le h1 qui s'éclaire, jamais un calque posé
-   par-dessus — le texte ne bouge pas d'un pixel.
-   ========================================================= */
-
-const Spotlight = {
-    init() {
-        this.hero = document.getElementById('hero');
-        if (!this.hero) return;
-
-        // Sans mouvement, on garde une lumière centrée et fixe :
-        // la page reste propre, sans être à jamais immobile.
-        if (prefersReducedMotion) {
-            this.hero.style.setProperty('--mx', '50%');
-            this.hero.style.setProperty('--my', '34%');
-            return;
-        }
-
-        this.target = { x: 0.5, y: 0.34 };
-        this.current = { x: 0.5, y: 0.34 };
-        this.raf = null;
-
-        this.onMove = (event) => {
-            const rect = this.hero.getBoundingClientRect();
-            this.target.x = (event.clientX - rect.left) / rect.width;
-            this.target.y = (event.clientY - rect.top) / rect.height;
-
-            if (this.raf === null) this.tick();
-        };
-
-        this.onLeave = () => {
-            // Le regard revient au centre : la lumière se recentre
-            this.target.x = 0.5;
-            this.target.y = 0.34;
-            if (this.raf === null) this.tick();
-        };
-
-        window.addEventListener('pointermove', this.onMove, { passive: true });
-        document.addEventListener('pointerleave', this.onLeave);
-    },
-
-    // Interpolation exponentielle : le faisceau suit la souris avec
-    // un léger retard, comme un vrai projecteur sur un bras articulé.
-    tick() {
-        const dx = this.target.x - this.current.x;
-        const dy = this.target.y - this.current.y;
-
-        // Ressort un peu plus lâche : à 0,09 la lumière mettait plusieurs
-        // secondes à rejoindre la souris, le décalage se voyait.
-        this.current.x += dx * 0.14;
-        this.current.y += dy * 0.14;
-
-        const style = this.hero.style;
-        style.setProperty('--mx', `${(this.current.x * 100).toFixed(2)}%`);
-        style.setProperty('--my', `${(this.current.y * 100).toFixed(2)}%`);
-        style.setProperty(
-            '--spot-tilt',
-            `${((this.current.x - 0.5) * 7).toFixed(2)}deg`
-        );
-
-        // Tant que la lumière n'est pas arrivée, on continue la boucle
-        if (Math.abs(dx) > 0.0004 || Math.abs(dy) > 0.0004) {
-            this.raf = requestAnimationFrame(() => this.tick());
-        } else {
-            this.raf = null;
-        }
-    },
-};
-
-/* =========================================================
    DÉMARRAGE
    ========================================================= */
 
@@ -501,7 +430,6 @@ function init() {
     renderStack();
     Navigation.init();
     ScrollReveal.init();
-    Spotlight.init();
 }
 
 if (document.readyState === 'loading') {
