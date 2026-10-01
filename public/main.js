@@ -40,20 +40,32 @@ const CONFIG = {
 
 const CONTENT = {
     timeline: [
-        // {
-        //     date: '2026 - Présent',
-        //     title: '💻 Freelance & Projets',
-        //     description: 'Développement de portfolios, sites web et applications. Toujours en apprentissage, toujours en évolution.',
-        //     tags: [
-        //         { label: 'Node.js', className: 'text-xs px-2 py-1 bg-accent/20 text-accent rounded' },
-        //         { label: 'TypeScript', className: 'text-xs px-2 py-1 bg-accent/20 text-accent rounded' },
-        //         { label: 'React', className: 'text-xs px-2 py-1 bg-accent/20 text-accent rounded' }
-        //     ]
-        // },
+        {
+            date: '2026 - présent',
+            title: '💻 Backstage — second cerveau IA',
+            description: "Conception et développement en solo d'une PWA full-stack déployée en production : chat IA à mémoire persistante, agenda, rappels synchronisés, notifications push. Passkey (WebAuthn), OAuth Google, JWT, streaming SSE, 34 routes API. ~32 000 lignes, 46 fichiers de tests.",
+            tags: [
+                { label: 'Next.js', className: 'text-xs px-2 py-1 bg-accent/20 text-accent rounded' },
+                { label: 'React', className: 'text-xs px-2 py-1 bg-accent/20 text-accent rounded' },
+                { label: 'TypeScript', className: 'text-xs px-2 py-1 bg-accent/20 text-accent rounded' },
+                { label: 'Vitest', className: 'text-xs px-2 py-1 bg-accent/20 text-accent rounded' }
+            ]
+        },
+        {
+            date: '2026',
+            title: '🤖 Gymshark-Sync — assistant sur LLM local',
+            description: "Projet de groupe : serveur Node.js / Express relié à un LLM local (Ollama) pour des synthèses, de la planification et un historique de conversations. Tests Jest et documentation Swagger.",
+            tags: [
+                { label: 'Node.js', className: 'text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded' },
+                { label: 'Express', className: 'text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded' },
+                { label: 'Ollama', className: 'text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded' },
+                { label: 'Jest', className: 'text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded' }
+            ]
+        },
         {
             date: '2025 - présent',
             title: '🎓 Études en Informatique',
-            description: "Formation en développement et programmation. Découverte du backend, des bases de données et de l'architecture logicielle.",
+            description: "Bachelor Informatique. Développement web, bases de données et architecture logicielle.",
             tags: [
                 { label: 'PHP', className: 'text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded' },
                 { label: 'Python', className: 'text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded' },
@@ -72,9 +84,19 @@ const CONTENT = {
             ]
         },
         {
+            date: '2022 - 2023',
+            title: '🏢 Stages développeur — INOVSHOP Group',
+            description: "Application web d'affichage en temps réel de l'occupation des salles, puis planification des jours de télétravail sur écrans e-ink. JavaScript et serveur Node.js.",
+            tags: [
+                { label: 'Node.js', className: 'text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded' },
+                { label: 'JavaScript', className: 'text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded' },
+                { label: 'API e-ink', className: 'text-xs px-2 py-1 bg-blue-500/20 text-blue-400 rounded' }
+            ]
+        },
+        {
             date: '2021',
             title: '🚀 Premiers Projets Perso',
-            description: 'Lanceent de mes premiers projets, entre autre un bot Discord en Python. Apprentissage de Git, GitHub et des bases du développement web.',
+            description: 'Lancement de mes premiers projets, entre autres un bot Discord en Python. Apprentissage de Git, GitHub et des bases du développement web.',
             tags: [
                 { label: 'HTML/CSS', className: 'text-xs px-2 py-1 bg-orange-500/20 text-orange-400 rounded' },
                 { label: 'JavaScript', className: 'text-xs px-2 py-1 bg-orange-500/20 text-orange-400 rounded' },
@@ -92,6 +114,26 @@ const CONTENT = {
         }
     ],
     projects: [
+        {
+            category: 'Full-Stack · IA',
+            title: 'Backstage',
+            description: "PWA installable déployée en production : chat IA à mémoire persistante, agenda, emploi du temps, rappels synchronisés et notifications push. Passkey (WebAuthn), OAuth Google, JWT, streaming SSE, 34 routes API. ~32 000 lignes couvertes par 46 fichiers de tests.",
+            tags: ['Next.js', 'React', 'TypeScript', 'Vitest'],
+            gradientClass: 'bg-gradient-to-br from-pink-600 to-violet-600',
+            liveUrl: 'https://brain.mprnl.fr',
+            codeUrl: 'https://github.com/MattiaPARRINELLO/backstage',
+            icon: '<svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>'
+        },
+        {
+            category: 'IA · Backend',
+            title: 'Gymshark-Sync',
+            description: "Assistant interne relié à un LLM local (Ollama) : synthèses, planification et historique de conversations. API Node.js / Express, tests Jest et documentation Swagger. Projet de groupe.",
+            tags: ['Node.js', 'Express', 'Ollama', 'Jest'],
+            gradientClass: 'bg-gradient-to-br from-amber-500 to-orange-600',
+            liveUrl: '',
+            codeUrl: 'https://github.com/mattia-school/gymshark-sync',
+            icon: '<svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>'
+        },
         {
             category: 'Photographie',
             title: 'Portfolio Photo',
@@ -148,6 +190,16 @@ const CONTENT = {
             name: 'Node.js',
             color: '#339933',
             icon: '<path d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z"/>'
+        },
+        {
+            name: 'React',
+            color: '#61dafb',
+            icon: '<path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365 3.039-.933 5.017-2.438 5.017-4.024 0-1.591-1.99-3.098-5.043-4.031.704-3.113.39-5.588-.988-6.38-.32-.187-.69-.275-1.102-.275zm-9.773.966c.166-.095.36-.144.582-.144 1.123 0 2.606.79 4.197 2.245-1.479 1.575-2.9 3.435-3.994 5.366-2.727-.752-4.604-1.898-4.604-2.733 0-.865 1.61-1.878 3.82-2.734zm-1.288 7.107c.166-1.06.398-2.153.705-3.264.934 1.947 2.094 3.86 3.452 5.673-.657.29-1.283.522-1.853.68-1.324-.401-2.306-.972-2.304-3.089zm9.773 6.657c-.222 0-.416-.048-.582-.143-1.34-.733-2.624-2.755-3.396-5.348 1.06-.266 2.153-.398 3.264-.705 1.947-.934 3.86-2.094 5.673-3.452.29.657.522 1.283.68 1.853-.401 1.324-.972 2.306-3.089 2.304-1.06-.166-2.153-.398-3.264-.705zm3.396-5.348c-1.111-.307-2.204-.439-3.264-.705.772-2.593 2.056-4.615 3.396-5.348.166-.095.36-.143.582-.143 2.117-.002 2.688.98 3.089 2.304-.158.57-.39 1.196-.68 1.853-1.813-1.358-3.726-2.518-5.673-3.452zm3.82 2.734c2.21.856 3.82 1.869 3.82 2.734 0 .835-1.877 1.981-4.604 2.733-1.094-1.931-2.515-3.791-3.994-5.366 1.591-1.455 3.074-2.245 4.197-2.245.222 0 .416.048.582.143z"/>'
+        },
+        {
+            name: 'Next.js',
+            color: '#000000',
+            icon: '<path d="M11.2148 0C4.61523 0 0 4.7619 0 11.2381c0 6.4762 4.61523 11.2381 11.2148 11.2381 1.8652 0 3.5469-.4318 5.0547-1.2195L7.8125 7.5714v9.1617H6.1875V5.1429h1.8496l8.3066 12.7627c2.4219-1.6741 4.0127-4.5207 4.0127-7.6675C20.3564 4.7619 15.8143 0 11.2148 0zm2.7246 14.8571l-1.625-2.5V5.1429h1.625v9.7142z"/>'
         },
         {
             name: 'Tailwind',
