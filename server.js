@@ -108,10 +108,20 @@ const LINES_PER_KB = {
 app.use(compression());
 
 // Servir les fichiers statiques du dossier public
-app.use(express.static(path.join(__dirname, 'public'), {
-  maxAge: '1d',
-  etag: true
-}));
+// Le HTML et le JS sont revalidés à chaque requête ; les images, polices et
+// assets stables sont mises en cache longuement.
+app.use(
+  express.static(path.join(__dirname, 'public'), {
+    etag: true,
+    setHeaders(res, filePath) {
+      const isStaticAsset = /\.(webp|png|jpg|jpeg|svg|ico|woff2?)$/i.test(filePath);
+      res.setHeader(
+        'Cache-Control',
+        isStaticAsset ? 'public, max-age=30d, immutable' : 'no-cache'
+      );
+    }
+  })
+);
 
 async function readCache() {
   try {
