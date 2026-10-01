@@ -1155,6 +1155,76 @@ ul {
   color: var(--accent);
 }
 
+/* ---------- Intro 3D ---------- */
+
+/* La scène est un calque non bloquant : le site reste lisible derrière. */
+.intro-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 201;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.55s var(--ease-out);
+}
+
+/* Assombrit légèrement la scène sans masquer le site */
+.intro-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    #a5b4fc0d 0%,
+    transparent 70%
+  );
+  transition: opacity 0.55s var(--ease-out);
+}
+
+.intro-overlay.is-leaving {
+  opacity: 0;
+}
+
+.intro-overlay.is-leaving::before {
+  opacity: 0;
+}
+
+/* Le bouton de passage reste cliquable */
+.intro-skip {
+  position: absolute;
+  bottom: 2.25rem;
+  right: 2.25rem;
+  pointer-events: auto;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-3);
+  border-radius: 999px;
+  background: #0a0a0bcc;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text-3);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+
+.intro-skip:hover {
+  color: var(--text-1);
+  border-color: var(--accent);
+}
+
 /* ---------- Utilitaires ---------- */
 
 .reveal {
@@ -1286,5 +1356,14 @@ ul {
 
   .scroll-hint {
     animation: none;
+  }
+}
+
+/* L'intro 3D n'est jamais chargée sur mobile ni en mouvement réduit,
+   mais le calque doit disparaître si le script se déclenche par erreur. */
+@media (max-width: 1023px), (prefers-reduced-motion: reduce) {
+  .intro-canvas,
+  .intro-overlay {
+    display: none !important;
   }
 }
