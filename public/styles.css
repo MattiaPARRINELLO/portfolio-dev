@@ -164,6 +164,82 @@ ul {
 }
 
 /* Eyebrow mono — signature récurrente */
+/* ---------- Projecteurs de scène ---------- */
+
+/* Le hero reçoit la position de la souris ; le h1 s'éclaire avec lui. */
+.hero {
+  --mx: 50%;
+  --my: 34%;
+  --spot-tilt: 0deg;
+}
+
+.spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.spotlight__beam {
+  position: absolute;
+  top: 50%;
+  width: 78vw;
+  height: 15rem;
+  transform-origin: center;
+  opacity: 0.62;
+  /* Cône : large côté public, resserré vers le point de fuite */
+  filter: blur(10px);
+}
+
+.spotlight__beam--left {
+  left: -46vw;
+  transform: translateY(-50%) rotate(-13deg) rotate(var(--spot-tilt));
+  clip-path: polygon(100% 50%, 22% 6%, 0 0, 0 100%, 22% 94%);
+  background: linear-gradient(
+    90deg,
+    #a5b4fc00 0%,
+    #a5b4fc2e 22%,
+    #a5b4fc59 55%,
+    #c7d2fe8c 82%,
+    #ffffff00 100%
+  );
+}
+
+.spotlight__beam--right {
+  right: -46vw;
+  transform: translateY(-50%) rotate(13deg) rotate(calc(var(--spot-tilt) * -1));
+  clip-path: polygon(0 50%, 78% 6%, 100% 0, 100% 100%, 78% 94%);
+  background: linear-gradient(
+    270deg,
+    #a5b4fc00 0%,
+    #a5b4fc2e 22%,
+    #a5b4fc59 55%,
+    #c7d2fe8c 82%,
+    #ffffff00 100%
+  );
+}
+
+/* Nappe de lumière au croisement des deux faisceaux */
+.spotlight__pool {
+  position: absolute;
+  left: var(--mx);
+  top: var(--my);
+  width: 44rem;
+  height: 30rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #c7d2fe24 0%,
+    #a5b4fc12 42%,
+    transparent 70%
+  );
+  filter: blur(6px);
+  opacity: 0.85;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+/* Eyebrow mono — signature récurrente */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
@@ -501,10 +577,53 @@ ul {
   line-height: 0.98;
   letter-spacing: -0.045em;
   margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+
+  /* Le titre est une surface traversée par la lumière : le dégradé
+     reproduit les deux faisceaux qui se croisent au point --mx/--my
+     et n'éclaire que la zone réellement touchée. */
+  background-image:
+    radial-gradient(
+      ellipse 34rem 20rem at var(--mx) var(--my),
+      #ffffff 0%,
+      #f5f5f4 14%,
+      #dcdcfb 30%,
+      #a8aecd 50%,
+      #6a6f8c 72%,
+      #464a5e 100%
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Sans WebGL/clipping (ou en mouvement réduit), le titre reste lisible */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero__title {
+    background-image: none;
+    color: var(--text-1);
+    -webkit-text-fill-color: currentColor;
+  }
 }
 
 .hero__title .dim {
-  color: var(--text-3);
+  /* Même surface que le reste du titre, mais un cran plus sombre :
+     il reste une seconde zone dans le faisceau, pas une couleur à part. */
+  background-image:
+    radial-gradient(
+      ellipse 34rem 20rem at var(--mx) var(--my),
+      #dfe3ff 0%,
+      #c3c9ef 16%,
+      #9aa1c8 32%,
+      #6b7192 56%,
+      #454a63 100%
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero__subtitle {
@@ -1286,5 +1405,27 @@ ul {
 
   .scroll-hint {
     animation: none;
+  }
+}
+/* ---------- Projecteurs sans souris ---------- */
+
+/* Sans pointeur, les projecteurs n'ont rien à suivre : on retire les
+   faisceaux et on garde une lumière fixe. Le titre reste traité, mais
+   avec un dégradé centré plutôt qu'un dégradé piloté. */
+@media (hover: none), (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .spotlight {
+    display: none;
+  }
+
+  .hero__title,
+  .hero__title .dim {
+    background-image: radial-gradient(
+      ellipse 40rem 26rem at 50% 34%,
+      #ffffff 0%,
+      #e8e8f5 20%,
+      #b3b8dd 46%,
+      #71768f 74%,
+      #3d4049 100%
+    );
   }
 }
