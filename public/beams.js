@@ -81,22 +81,75 @@ const BEAM_CONFIG = {
     hazeScale: 1.4,
     hazeSpeed: 0.05,
 
-    /* Pointeur — range = amplitude du basculement (unités écran),
-       response = réactivité du ressort (1/s). */
+    /* Pointeur — chaque bras a son propre ressort amorti : la key est
+       raide, elle répond ; le fill est plus souple, il traîne. Deux
+       projecteurs tenus par deux personnes ne basculent jamais
+       ensemble, et c'est ce décalage qui enlève le côté robot.
+       stiffness = raideur (1/s²), damping = frottement (1/s) :
+       sous l'amortissement critique, le bras dépasse puis se cale.
+       range = amplitude du basculement (unités écran). */
     pointerRange: 0.07,
-    pointerResponse: 3.4,
-    drift: 0.022,
+    keyStiffness: 17.0,
+    keyDamping: 5.1,
+    fillStiffness: 9.0,
+    fillDamping: 3.95,
 
-    /* Introduction (ms) — allumage, ouverture du cône, rotation des
-       sources, durée totale (le balayage est fini vers 2200 ms :
-       au-delà, la boucle n'a plus rien à recalculer). */
-    introIgnite: 520,
-    introOpen: 700,
-    introSweep: 1650,
-    introStagger: 190,
-    introTotal: 2350,
+    /* Dérive du plateau — faite de bruit, pas de sinus. Un sinus se
+       repère au bout de deux cycles : on sent la boucle s'installer.
+       amplitude en unités écran, speed en cellules de bruit par
+       seconde (0.055 ≈ une cellule toutes les 18 s). */
+    drift: 0.022,
+    driftSpeed: 0.055,
+
+    /* Introduction (ms) — chaque source suit sa propre partition :
+       mêmes gestes, deux mains différentes. C'est le déséquilibre des
+       timings qui fait deux projecteurs, là où un seul jeu de valeurs
+       joué deux fois se lit comme une animation.
+       ignite = montée de la lampe, open = ouverture de l'iris,
+       sweepAt = départ de la rotation du bras, sweepDur = durée de
+       cette rotation, sputter/sputterFreq = crachotement de l'allumage
+       (bruit, donc irrégulier), introStagger = retard global du fill. */
     introFlash: 1.35,
     introBurst: 0.5,
+    introSputter: 0.24,
+    introBow: 0.03,
+    introStagger: 190,
+    introTotal: 2500,
+    keyIntro: { ignite: 460, open: 640, sweepAt: 320, sweepDur: 1500, sputter: 6.5, sputterFreq: 0.028 },
+    fillIntro: { ignite: 580, open: 800, sweepAt: 470, sweepDur: 1720, sputter: 4.6, sputterFreq: 0.022 },
+
+    /* Rotations d'introduction — paramètres de l'oscillateur amorti
+       (voir swingEase) : w fixe la pulsation du dépassement, k la
+       vitesse à laquelle le bras se cale. Le fill dépasse davantage
+       et met plus longtemps à retomber. */
+    keySwing: { k: 4.6, w: 5.8 },
+    fillSwing: { k: 5.0, w: 4.6 },
+
+    /* Chorégraphie de scroll — le plateau ne bouge plus seulement au
+       pointeur : il est aussi mis en scène le long de la page. Chaque
+       pose est un décalage ajouté à la visée de repos (x/y), un facteur
+       d'intensité (boost) et un facteur d'iris (opening). Le scroll est
+       amorti comme le pointeur, donc les deux mouvements se superposent
+       au lieu de se remplacer : la scène reste vivante à l'arrêt et
+       démarre en même temps qu'on descend.
+
+       `at` accepte une ancre (#id) résolue au moment du layout, ou un
+       pourcentage de la course. L'ancre suit la section : si le contenu
+       change de hauteur, les poses restent sur les mêmes blocs.
+       Les deux bras ne partagent pas les mêmes valeurs, donc jamais le
+       même geste des deux côtés. */
+    scroll: {
+        stiffness: 8.5,
+        damping: 4.4,
+        keys: [
+            { at: '#hero',    key: { x:  0.10, y:  0.05, boost: 1.00, opening: 0.92 }, fill: { x: -0.09, y: -0.04, boost: 1.00, opening: 0.92 } },
+            { at: '#about',   key: { x: -0.06, y:  0.10, boost: 0.96, opening: 1.00 }, fill: { x:  0.07, y:  0.08, boost: 1.02, opening: 1.06 } },
+            { at: '#work',    key: { x:  0.08, y: -0.02, boost: 1.06, opening: 1.12 }, fill: { x: -0.10, y:  0.03, boost: 0.96, opening: 1.02 } },
+            { at: '#journey', key: { x: -0.02, y:  0.18, boost: 1.02, opening: 0.86 }, fill: { x:  0.05, y: -0.16, boost: 1.06, opening: 1.16 } },
+            { at: '#stack',   key: { x:  0.12, y: -0.10, boost: 0.94, opening: 1.16 }, fill: { x: -0.06, y: -0.12, boost: 1.00, opening: 0.88 } },
+            { at: '#contact', key: { x:  0.02, y:  0.16, boost: 1.10, opening: 1.08 }, fill: { x: -0.02, y: -0.14, boost: 1.14, opening: 1.18 } },
+        ],
+    },
 
     /* Rendu — ratio de pixels max, cadence au repos (ms).
        Le voile est si diffus qu'un agrandissement par le CSS passe
@@ -342,15 +395,29 @@ const BeamLight = {
     /* Animation */
     rafId: 0,
     idleId: 0,
+    reducedFrame: 0,
     lastFrame: 0,
     time: 0,
     elapsed: 0,
     introDone: true,
     settled: false,
 
-    /* Pointeur */
+    /* Pointeur — un ressort amorti par bras, position + vitesse.
+       Deux états séparés : c'est ce qui fait que les deux fûts ne se
+       déplacent pas comme un seul objet rigide. */
     pointerTarget: 0,
-    pointer: 0,
+    springs: {
+        key: { pos: 0, vel: 0 },
+        fill: { pos: 0, vel: 0 },
+    },
+
+    /* Scroll — même ressort amorti, mais sur la progression de la page
+       (0 = haut, 1 = bas) et non sur une position de pointeur. La
+       progression est lissée par le ressort, donc un scroll à la molette
+       ne se lit jamais comme une secousse. */
+    scrollTarget: 0,
+    scrollSpring: { pos: 0, vel: 0 },
+    scrollAnchors: [],
 
     /* Géométrie à l'échelle de la fenêtre */
     originLeft: [0, 0],
@@ -360,6 +427,12 @@ const BeamLight = {
     restLeft: [-0.5, 0.18],
     restRight: [0.48, -0.04],
     pixelRatio: 1,
+
+    /* Sortie de layoutTargets, lue par draw() */
+    openingKey: 1,
+    openingFill: 1,
+    boostKey: 1,
+    boostFill: 1,
 
     init() {
         if (this.destroyed) return;
@@ -391,6 +464,11 @@ const BeamLight = {
 
         this.listen();
         this.layout();
+
+        /* La progression de page est lue après layout : les ancres de la
+           chorégraphie ne sont justes qu'une fois les sections mesurées.
+           Un rechargement au milieu de la page s'ouvre donc déjà posé. */
+        this.onScroll();
 
         if (this.reduced) {
             this.introDone = true;
@@ -520,7 +598,7 @@ const BeamLight = {
             if (this.reduced) {
                 this.introDone = true;
                 this.pointerTarget = 0;
-                this.pointer = 0;
+                this.restSprings();
                 this.stop();
                 this.draw();
             } else {
@@ -528,6 +606,31 @@ const BeamLight = {
             }
         };
         this.motionQuery.addEventListener('change', this.onMotionChange);
+
+        /* Le scroll met le plateau en scène : il réveille la boucle et
+           prend la main sur les visées, en plus du pointeur. */
+        this.onScroll = () => {
+            const doc = document.documentElement;
+            const range = Math.max(doc.scrollHeight - window.innerHeight, 1);
+            this.scrollTarget = Math.min(Math.max(window.scrollY / range, 0), 1);
+
+            if (this.reduced) {
+                /* Sans mouvement, le scroll ne redessine pas une image
+                   par événement : une seule par frame, au plus. */
+                this.scrollSpring.pos = this.scrollTarget;
+                this.scrollSpring.vel = 0;
+                if (!this.reducedFrame) {
+                    this.reducedFrame = requestAnimationFrame(() => {
+                        this.reducedFrame = 0;
+                        this.draw();
+                    });
+                }
+                return;
+            }
+
+            this.requestActive();
+        };
+        window.addEventListener('scroll', this.onScroll, { passive: true });
 
         /* Pas de curseur simulé en tactile : le balayage de lumière
            reste, la parallaxe disparaît. */
@@ -601,6 +704,33 @@ const BeamLight = {
         const reach = Math.min(aspect, 1.15);
         this.restLeft = [-0.44 * reach, 0.18];
         this.restRight = [0.42 * reach, -0.04];
+
+        this.resolveScrollAnchors();
+    },
+
+    /* Chaque pose est calée sur le haut de sa section : une ancre
+       '#work' est vraie tant que #work existe, où qu'elle tombe dans la
+       course. Une ancre introuvable retombe sur la position précédente,
+       donc une section renommée ne vide pas la chorégraphie. */
+    resolveScrollAnchors() {
+        const keys = BEAM_CONFIG.scroll.keys;
+        const doc = document.documentElement;
+        const range = Math.max(doc.scrollHeight - window.innerHeight, 1);
+
+        this.scrollAnchors = keys.map((key, index) => {
+            if (typeof key.at === 'number') return key.at;
+
+            const el = document.querySelector(key.at);
+            if (!el) {
+                return this.scrollAnchors[index - 1] ?? index / (keys.length - 1);
+            }
+
+            /* On vise le moment où la section atteint le tiers haut de
+               l'écran : c'est là que le contenu entre dans le cadre et
+               que la pose a lieu de jouer. */
+            const top = el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.34;
+            return clamp01(top / range);
+        });
     },
 
     /* ---------- Boucle ---------- */
@@ -636,19 +766,40 @@ const BeamLight = {
         this.time = Math.min(this.time + dt, BEAM_TIME_CAP);
         this.elapsed += dt * 1000;
 
-        /* Ressort exponentiel : indépendant de la fréquence d'images,
-           donc le mouvement ne saute jamais d'une image à l'autre. */
-        const response = BEAM_CONFIG.pointerResponse;
-        const ease = 1 - Math.exp(-response * dt);
-        this.pointer += (this.pointerTarget - this.pointer) * ease;
+        /* Chaque bras est un ressort amorti (position + vitesse),
+           intégré en semi-implicite : stable quel que soit le pas de
+           temps. Un lissage exponentiel colle à la souris — ça se voit
+           tout de suite. Le dépassement, lui, donne le poids : le bras
+           part, dépasse sa cible, revient. */
+        const config = BEAM_CONFIG;
+        const step = (spring, stiffness, damping, target) => {
+            const accel = (target - spring.pos) * stiffness
+                - spring.vel * damping;
+            spring.vel += accel * dt;
+            spring.pos += spring.vel * dt;
+        };
+        step(this.springs.key, config.keyStiffness, config.keyDamping, this.pointerTarget);
+        step(this.springs.fill, config.fillStiffness, config.fillDamping, this.pointerTarget);
+
+        /* La progression de page est amortie elle aussi : le scroll
+           pousse le plateau, il ne le téléporte pas. */
+        const scroll = BEAM_CONFIG.scroll;
+        step(this.scrollSpring, scroll.stiffness, scroll.damping, this.scrollTarget);
 
         const intro = this.introProgress();
         this.draw();
 
         /* La boucle ne s'arrête que lorsque l'introduction est terminée
-           ET que le ressort a convergé. */
-        this.settled =
-            !intro.active && Math.abs(this.pointerTarget - this.pointer) <= 0.0005;
+           et que les deux bras sont retombés — position ET vitesse. Le
+           ressort de scroll compte aussi : sinon la pose resterait en
+           vol dès que la page s'arrête. */
+        const atRest = (spring, target) =>
+            Math.abs(target - spring.pos) <= 0.003
+            && Math.abs(spring.vel) <= 0.006;
+        this.settled = !intro.active
+            && atRest(this.springs.key, this.pointerTarget)
+            && atRest(this.springs.fill, this.pointerTarget)
+            && atRest(this.scrollSpring, this.scrollTarget);
 
         if (this.settled) {
             this.lastFrame = 0;
@@ -658,8 +809,17 @@ const BeamLight = {
         }
     },
 
+    /* Repos immédiat des deux bras : utilisé quand l'animation est
+       coupée (mouvement réduit), où l'on dessine une seule image. */
+    restSprings() {
+        this.springs.key.pos = 0;
+        this.springs.key.vel = 0;
+        this.springs.fill.pos = 0;
+        this.springs.fill.vel = 0;
+    },
+
     /* Retour au repos : reprend une boucle active tant que
-       l'introduction ou le ressort n'est pas terminé. */
+       l'introduction ou les ressorts ne sont pas terminés. */
     settle() {
         this.elapsed = this.introDone ? BEAM_CONFIG.introTotal : 0;
         this.settled = false;
@@ -667,11 +827,11 @@ const BeamLight = {
         this.requestActive();
     },
 
-    /* Chorégraphie d'introduction. Chaque source s'allume, s'ouvre,
-       puis pivote jusqu'à sa position de repos avec un léger
-       dépassement : un projecteur sur bras, pas une diapositive.
-       Les deux jeux de valeurs sont décalés pour que les sources ne
-       bougent jamais en même temps. */
+    /* Chorégraphie d'introduction. Chaque source suit sa propre
+       partition : la key s'allume et se cale plus vite, le fill traîne
+       derrière. Un seul jeu de valeurs joué deux fois se lit comme une
+       animation ; deux partitionnements distincts se lisent comme deux
+       projecteurs. */
     introProgress() {
         const config = BEAM_CONFIG;
         const elapsed = this.elapsed;
@@ -684,37 +844,50 @@ const BeamLight = {
             };
         }
 
-        const stage = (offset) => {
+        const stage = (profile, seed, offset) => {
             const t = Math.max(elapsed - offset, 0);
 
-            const ignite = Math.min(t / config.introIgnite, 1);
-            const open = Math.min(Math.max((t - config.introIgnite * 0.3) / config.introOpen, 0), 1);
-            const sweep = Math.min(
-                Math.max((t - config.introIgnite * 0.7 - config.introStagger) / config.introSweep, 0),
-                1
-            );
+            const ignite = clamp01(t / profile.ignite);
 
-            /* Le faisceau droit s'allume juste après le gauche. */
+            /* Allumage d'une lampe à décharge : elle prend d'un coup,
+               puis crachote quelques centaines de millisecondes. Le
+               tremblement vient d'un bruit irrégulier et non d'une
+               sinusoïde — un scintillement sinusoïdal scintille
+               proprement, et ça n'existe pas. */
+            const sputter = Math.exp(-profile.sputter * (t / 1000))
+                * driftNoise(t * profile.sputterFreq, seed);
+
+            /* Iris : les lamelles s'écartent puis se calent. */
+            const open = clamp01((t - profile.ignite * 0.3) / profile.open);
+
+            /* Bras : rotation relâchée, dépassement amorti (swingEase). */
+            const sweep = clamp01((t - profile.sweepAt) / profile.sweepDur);
+
             const fade = 1 - Math.pow(1 - ignite, 3);
 
-            /* Pic bref à l'allumage : la décharge d'une lampe qui
-               prend, puis l'équilibre. */
-            const flash = 1 + (config.introFlash - 1) * Math.pow(1 - ignite, 2.2);
+            /* Détente de la lampe : pic bref à l'allumage, puis
+               équilibre, bruité par le crachotement. */
+            const flash = 1
+                + (config.introFlash - 1) * Math.pow(1 - ignite, 2.2)
+                + sputter * config.introSputter;
 
-            /* Coup de brume quand la source balaie le contenu. */
+            /* Coup de brume quand le fût balaie le contenu. */
             const burst = 1 + config.introBurst * Math.sin(Math.PI * sweep);
 
             return {
-                boost: fade * flash * burst,
-                opening: 0.3 + 0.7 * (1 - Math.pow(1 - open, 2.4)),
+                boost: fade * burst * flash,
+                /* L'iris tremble aussi : le crachotement se voit sur le
+                   cône, pas seulement sur l'intensité. */
+                opening: 0.3 + 0.7 * (1 - Math.pow(1 - open, 2.4))
+                    - sputter * config.introSputter * 0.5,
                 sweep,
             };
         };
 
         return {
             active: elapsed < config.introTotal,
-            left: stage(0),
-            right: stage(config.introStagger),
+            left: stage(config.keyIntro, 0, 0),
+            right: stage(config.fillIntro, 13.7, config.introStagger),
         };
     },
 
@@ -725,10 +898,9 @@ const BeamLight = {
         if (!gl || this.contextLost || !this.program) return;
 
         const config = BEAM_CONFIG;
-        const intro = this.introProgress();
         const narrow = this.narrow ? 0.95 : 1;
 
-        this.layoutTargets(intro);
+        this.layoutTargets(this.introProgress());
 
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.useProgram(this.program);
@@ -757,10 +929,10 @@ const BeamLight = {
         gl.uniform1f(uniforms.uHalo, config.halo);
         gl.uniform1f(uniforms.uTopLight, config.topLight * narrow);
         gl.uniform1f(uniforms.uFloorLight, config.floorLight * narrow);
-        gl.uniform1f(uniforms.uOpeningLeft, intro.left.opening);
-        gl.uniform1f(uniforms.uOpeningRight, intro.right.opening * config.fillSpread);
-        gl.uniform1f(uniforms.uLeftBoost, intro.left.boost * config.keyGain);
-        gl.uniform1f(uniforms.uRightBoost, intro.right.boost * config.fillGain);
+        gl.uniform1f(uniforms.uOpeningLeft, this.openingKey);
+        gl.uniform1f(uniforms.uOpeningRight, this.openingFill * config.fillSpread);
+        gl.uniform1f(uniforms.uLeftBoost, this.boostKey * config.keyGain);
+        gl.uniform1f(uniforms.uRightBoost, this.boostFill * config.fillGain);
         gl.uniform2f(uniforms.uOriginLeft, this.originLeft[0], this.originLeft[1]);
         gl.uniform2f(uniforms.uAimLeft, this.aimLeft[0], this.aimLeft[1]);
         gl.uniform2f(uniforms.uOriginRight, this.originRight[0], this.originRight[1]);
@@ -771,33 +943,100 @@ const BeamLight = {
         gl.drawArrays(gl.TRIANGLES, 0, 3);
     },
 
-    /* Position des visées : rotation d'introduction puis parallaxe.
-       Le dépassement du bras est faible et amorti — la source
-       dépasse sa position de repos puis y revient, comme un
-       projecteur qu'on lâche après l'avoir orienté. */
+    /* Pose de scroll : lecture de la chorégraphie à la progression
+       courante. Les deux keyframes encadrantes sont interpolées avec
+       un ease — un lerp brut fait suivre les poses en ligne droite et
+       ça se lit comme une interpolation d'animation, pas comme un
+       projecteur qu'on déplace. La dernière pose tient jusqu'en bas :
+       le pied de page n'a pas de clé à lui, mais la scène ne retombe
+       pas pour autant. */
+    scrollPose() {
+        const keys = BEAM_CONFIG.scroll.keys;
+        const anchors = this.scrollAnchors;
+        const p = clamp01(this.scrollSpring.pos);
+
+        if (!anchors.length) {
+            return { key: keys[0].key, fill: keys[0].fill, t: 0 };
+        }
+
+        let index = anchors.length - 1;
+        for (let i = 0; i < anchors.length - 1; i += 1) {
+            if (p <= anchors[i + 1]) {
+                index = i;
+                break;
+            }
+        }
+
+        const from = keys[index];
+        const to = keys[Math.min(index + 1, keys.length - 1)];
+        const span = anchors[index + 1] !== undefined
+            ? anchors[index + 1] - anchors[index]
+            : 0;
+
+        /* Hors course (avant la première ancre ou après la dernière),
+           la pose tient : aucune extrapolations vers le vide. */
+        if (span <= 0) return { key: from.key, fill: from.fill, t: 0 };
+
+        const t = easeInOut(clamp01((p - anchors[index]) / span));
+        return {
+            key: mixPose(from.key, to.key, t),
+            fill: mixPose(from.fill, to.fill, t),
+            t,
+        };
+    },
+
+    /* Position des visées : rotation d'introduction, parallaxe, dérive,
+       pose de scroll. Chaque source a son propre ressort, donc ses
+       propres décalage et dépassement ; rien ne bouge en miroir. */
     layoutTargets(intro) {
-        const range = BEAM_CONFIG.pointerRange;
-        const leftSweep = swingEase(intro.left.sweep);
-        const rightSweep = swingEase(intro.right.sweep);
+        const config = BEAM_CONFIG;
 
-        const pointerLeft = this.pointer * range;
-        const pointerRight = this.pointer * range * 0.85;
+        const pointerLeft = this.springs.key.pos * config.pointerRange;
+        const pointerRight = this.springs.fill.pos * config.pointerRange * 0.9;
 
-        /* Dérive propre du plateau : périodes de 70 à 110 s, donc
-           jamais perçue comme une animation, seulement comme une
-           respiration du décor. Les deux sources sont déphasées. */
-        const swayX = Math.sin(this.time * 0.072) * BEAM_CONFIG.drift;
-        const swayY = Math.cos(this.time * 0.057) * BEAM_CONFIG.drift * 0.8;
-        const swayX2 = Math.sin(this.time * 0.043 + 2.1) * BEAM_CONFIG.drift;
-        const swayY2 = Math.cos(this.time * 0.061 + 1.3) * BEAM_CONFIG.drift * 0.8;
+        /* Le scroll vient s'ajouter au pointeur, pas le remplacer : les
+           deux se cumulent et c'est ce cumul qui fait la transition —
+           on lance la page et les projecteurs sont déjà en place. */
+        const pose = this.scrollPose();
+
+        /* Dérive du plateau : du bruit, donc jamais deux fois le même
+           trajet. Les deux sources dérivent à des vitesses différentes,
+           avec des octaves différentes, pour qu'elles ne se recroisent
+           jamais aux mêmes instants. */
+        const speed = config.driftSpeed;
+        const d = config.drift;
+        const swayXL = driftNoise(this.time * speed, 3.1) * d;
+        const swayYL = driftNoise(this.time * speed * 0.83, 11.7) * d * 0.8;
+        const swayXR = driftNoise(this.time * speed * 0.71, 27.3) * d;
+        const swayYR = driftNoise(this.time * speed * 1.09, 41.9) * d * 0.8;
+
+        /* Trajet d'introduction : une rotation de bras décrit un arc,
+           pas une droite. Le bombé est porté par l'axe horizontal —
+           c'est là qu'on gagne à rester en marge du texte — avec une
+           petite composante verticale pour que ce soit une rotation et
+           non une translation. Nul aux deux bouts : une fois le bras
+           calé, plus rien ne bouge. Volontairement plus faible que le
+           dépassement du ressort, sinon il le masquerait. */
+        const bowL = Math.sin(Math.PI * intro.left.sweep) * config.introBow;
+        const bowR = Math.sin(Math.PI * intro.right.sweep) * config.introBow * 0.75;
+
+        const dropL = 1 - swingEase(intro.left.sweep, config.keySwing.k, config.keySwing.w);
+        const dropR = 1 - swingEase(intro.right.sweep, config.fillSwing.k, config.fillSwing.w);
+
+        /* L'iris et l'intensité suivent aussi la pose : une section
+          change la mise en scène, pas seulement l'orientation. */
+        this.openingKey = intro.left.opening * pose.key.opening;
+        this.openingFill = intro.right.opening * pose.fill.opening;
+        this.boostKey = intro.left.boost * pose.key.boost;
+        this.boostFill = intro.right.boost * pose.fill.boost;
 
         this.aimLeft = [
-            this.restLeft[0] - 0.2 * (1 - leftSweep) + pointerLeft + swayX,
-            this.restLeft[1] + 0.46 * (1 - leftSweep) + pointerLeft * 0.35 + swayY,
+            this.restLeft[0] - 0.2 * dropL + pointerLeft + swayXL - bowL + pose.key.x,
+            this.restLeft[1] + 0.46 * dropL + pointerLeft * 0.35 + swayYL + bowL * 0.3 + pose.key.y,
         ];
         this.aimRight = [
-            this.restRight[0] + 0.2 * (1 - rightSweep) + pointerRight + swayX2,
-            this.restRight[1] - 0.38 * (1 - rightSweep) + pointerRight * 0.3 + swayY2,
+            this.restRight[0] + 0.2 * dropR + pointerRight + swayXR + bowR + pose.fill.x,
+            this.restRight[1] - 0.38 * dropR + pointerRight * 0.3 + swayYR - bowR * 0.3 + pose.fill.y,
         ];
     },
 
@@ -832,6 +1071,10 @@ const BeamLight = {
             clearTimeout(this.idleId);
             this.idleId = 0;
         }
+        if (this.reducedFrame) {
+            cancelAnimationFrame(this.reducedFrame);
+            this.reducedFrame = 0;
+        }
         this.lastFrame = 0;
     },
 
@@ -842,6 +1085,7 @@ const BeamLight = {
             this.motionQuery.removeEventListener('change', this.onMotionChange);
         }
         window.removeEventListener('resize', this.onResize);
+        window.removeEventListener('scroll', this.onScroll);
         document.removeEventListener('visibilitychange', this.onVisibility);
         document.removeEventListener('pointerleave', this.onPointerLeave);
         window.removeEventListener('pointermove', this.onPointerMove);
@@ -870,17 +1114,60 @@ const BeamLight = {
     },
 };
 
-function easeInOut(t) {
-    return t * t * (3 - 2 * t);
+function clamp01(t) {
+    return t < 0 ? 0 : t > 1 ? 1 : t;
 }
 
-/* Rotation d'un bras mécanique : accélération douce, dépassement
-   léger, retour amorti. Le dépassement reste sous les 3 % pour
-   qu'on le sente sans le voir. */
-function swingEase(t) {
-    const damped = easeInOut(t);
+/* Quintique : pente nulle aux deux bouts, donc la pose ne démarre ni
+   ne s'arrête net entre deux sections. */
+function easeInOut(t) {
+    return t * t * t * (t * (t * 6 - 15) + 10);
+}
+
+/* Interpolation d'une pose de keyframe. Les deux bras gardent leurs
+   propres valeurs : aucune symmetry à reconstruire ici. */
+function mixPose(a, b, t) {
+    return {
+        x: a.x + (b.x - a.x) * t,
+        y: a.y + (b.y - a.y) * t,
+        boost: a.boost + (b.boost - a.boost) * t,
+        opening: a.opening + (b.opening - a.opening) * t,
+    };
+}
+
+/* Bruit de valeur 1D, même famille que celui du shader : continu, et
+   surtout sans période. C'est lui qui remplace les sinus de dérive. */
+function hash11(x) {
+    const s = Math.sin(x * 127.1) * 43758.5453123;
+    return s - Math.floor(s);
+}
+
+function noise1(x) {
+    const i = Math.floor(x);
+    const f = x - i;
+    const u = f * f * f * (f * (f * 6 - 15) + 10);
+    return (hash11(i) * (1 - u) + hash11(i + 1) * u) * 2 - 1;
+}
+
+/* Deux octaves : une dérive longue et une respiration plus courte.
+   Le rapport des fréquences est volontairement non entier, sinon les
+   deux octaves se recroiseraient toujours au même endroit et le
+   motif se répéterait. */
+function driftNoise(x, seed) {
+    return noise1(x + seed) * 0.66
+        + noise1(x * 2.17 + seed * 1.7 + 19.7) * 0.34;
+}
+
+/* Rotation d'un bras qu'on oriente puis qu'on lâche : le geste part
+   vite, dépasse sa cible, puis se cale. C'est la réponse d'un
+   oscillateur amorti — un easeInOut se pose net et se lit comme une
+   animation, pas comme un objet.
+   k = vitesse d'amortissement, w = pulsation du dépassement.
+   Le premier pic tombe vers pi/w et culmine à exp(-k·pi/w). */
+function swingEase(t, k, w) {
+    if (t <= 0) return 0;
     if (t >= 1) return 1;
-    return damped + Math.sin(t * Math.PI) * 0.045 * (1 - t);
+    return 1 - Math.exp(-k * t) * (Math.cos(w * t) + (k / w) * Math.sin(w * t));
 }
 
 /* Démarrage après le DOM : le calque ne doit jamais retarder le
