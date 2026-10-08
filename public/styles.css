@@ -1155,6 +1155,53 @@ ul {
   color: var(--accent);
 }
 
+/* ---------- Faisceaux lumineux (WebGL) ---------- */
+
+/* Calque fixe, devant les fonds de section mais derrière le texte
+   (dernier enfant de body, z-index 0). Le mélange "screen" est
+   additif : il ne peut qu'éclairer le fond, jamais l'assombrir.
+   Le texte clair, déjà proche du blanc, garde son contraste. */
+.beam-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  -webkit-mix-blend-mode: screen;
+}
+
+/* Repli : sans WebGL ou en cas d'échec d'initialisation, deux halos
+   CSS très diffus. Aucun mouvement, aucun coût GPU. */
+.beams-fallback body::before,
+.beams-fallback body::after {
+  content: "";
+  position: fixed;
+  top: -12%;
+  width: 52vw;
+  height: 78vh;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  -webkit-mix-blend-mode: screen;
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    #f3e7cf1a 0%,
+    #f3e7cf0a 40%,
+    transparent 72%
+  );
+}
+
+.beams-fallback body::before {
+  left: -16vw;
+}
+
+.beams-fallback body::after {
+  right: -16vw;
+  top: 18%;
+}
+
 /* ---------- Utilitaires ---------- */
 
 .reveal {
