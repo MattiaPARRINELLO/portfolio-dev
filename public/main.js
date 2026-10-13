@@ -295,7 +295,7 @@ function renderJourney() {
             ${CONTENT.journey
                 .map(
                     (item) => `
-            <li class="gitlog__row reveal">
+            <li class="gitlog__row gitlog__row--${item.branch} reveal">
                 <span class="gitlog__hash" aria-hidden="true">${shortHash(item.title)}</span>
                 <span class="gitlog__ref gitlog__ref--${item.branch}">${BRANCH_LABEL[item.branch]}</span>
                 <span class="gitlog__date">${escapeHtml(item.date)}</span>
@@ -317,6 +317,7 @@ function renderJourney() {
                 )
                 .join('')}
             <li class="gitlog__head reveal">
+                <span class="gitlog__rail" aria-hidden="true"></span>
                 <span class="gitlog__dot" aria-hidden="true"></span>
                 <span class="gitlog__head-label">HEAD — aujourd’hui</span>
             </li>

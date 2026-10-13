@@ -672,15 +672,50 @@ ul {
 }
 
 .gitlog__row {
+  position: relative;
   display: grid;
   grid-template-columns: 4.75rem 5rem 8rem 1fr;
   gap: 0 1.5rem;
   align-items: start;
   padding-block: 1.05rem;
+  /* Laisse la place au rail de branche, à gauche du contenu */
+  padding-left: 1.5rem;
   border-bottom: 1px solid var(--border-1);
   transition:
     background-color var(--dur) var(--ease-out),
     border-color var(--dur) var(--ease-out);
+}
+
+/* Le rail de la branche : il descend sur toute la ligne et recouvre le
+   filet de séparation, si bien que deux lignes de la même branche se
+   suivent sans coupure — la lecture du log se fait d'un coup d'œil. */
+.gitlog__row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* -1px : le rail avale le filet du dessous, donc pas de couture */
+  bottom: -1px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--border-2);
+  transition: filter var(--dur) var(--ease-out);
+}
+
+.gitlog__row--main::before {
+  background: var(--accent);
+}
+
+.gitlog__row--perso::before {
+  background: var(--warm);
+}
+
+.gitlog__row--school::before {
+  background: var(--success);
+}
+
+.gitlog__row:hover::before {
+  filter: brightness(1.3);
 }
 
 .gitlog__row:hover {
@@ -763,13 +798,26 @@ ul {
 
 /* Le HEAD referme le log, comme la position courante du dépôt */
 .gitlog__head {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding-top: 1.25rem;
+}
+
+/* Le tronc descend du dernier commit jusqu'au point HEAD, pas plus loin */
+.gitlog__rail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 50%;
+  border-radius: 1px;
+  background: var(--accent);
 }
 
 .gitlog__dot {
+  /* Recentré sur le rail : son centre tombe sur l'axe du rail */
+  margin-left: -3.5px;
   width: 9px;
   height: 9px;
   border-radius: 50%;
