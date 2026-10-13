@@ -29,3 +29,6 @@ build/
 .cache/
 .npm/
 cache
+
+# Outils
+.playwright-cli/

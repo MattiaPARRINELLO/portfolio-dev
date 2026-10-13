@@ -1,81 +1,319 @@
 {
-  "timestamp": 1770642601818,
+  "timestamp": 1791888318835,
   "data": {
-    "totalRepos": 50,
-    "totalLanguages": 14,
-    "estimatedLines": 98022,
+    "totalRepos": 29,
+    "totalLanguages": 9,
+    "estimatedLines": 159685,
     "languages": [
       {
-        "language": "HTML",
-        "bytes": 1204632,
-        "percentage": "33.70"
+        "language": "TypeScript",
+        "bytes": 1898745,
+        "percentage": "32.87"
       },
       {
         "language": "JavaScript",
-        "bytes": 919212,
-        "percentage": "25.71"
+        "bytes": 1675034,
+        "percentage": "29.00"
+      },
+      {
+        "language": "HTML",
+        "bytes": 1434463,
+        "percentage": "24.83"
       },
       {
         "language": "CSS",
-        "bytes": 674220,
-        "percentage": "18.86"
-      },
-      {
-        "language": "TypeScript",
-        "bytes": 238882,
-        "percentage": "6.68"
-      },
-      {
-        "language": "Python",
-        "bytes": 192041,
-        "percentage": "5.37"
+        "bytes": 537884,
+        "percentage": "9.31"
       },
       {
         "language": "EJS",
-        "bytes": 168764,
-        "percentage": "4.72"
+        "bytes": 97588,
+        "percentage": "1.69"
       },
       {
-        "language": "SCSS",
-        "bytes": 79489,
-        "percentage": "2.22"
+        "language": "MDX",
+        "bytes": 78869,
+        "percentage": "1.37"
       },
       {
-        "language": "Less",
-        "bytes": 78481,
-        "percentage": "2.20"
-      },
-      {
-        "language": "Jupyter Notebook",
-        "bytes": 14857,
-        "percentage": "0.42"
-      },
-      {
-        "language": "Batchfile",
-        "bytes": 3789,
-        "percentage": "0.11"
-      },
-      {
-        "language": "Pug",
-        "bytes": 275,
-        "percentage": "0.01"
+        "language": "Python",
+        "bytes": 39443,
+        "percentage": "0.68"
       },
       {
         "language": "Shell",
-        "bytes": 90,
-        "percentage": "0.00"
+        "bytes": 11599,
+        "percentage": "0.20"
       },
       {
-        "language": "Ruby",
-        "bytes": 72,
-        "percentage": "0.00"
-      },
-      {
-        "language": "Makefile",
-        "bytes": 69,
-        "percentage": "0.00"
+        "language": "PHP",
+        "bytes": 3028,
+        "percentage": "0.05"
       }
     ],
-    "lastUpdate": "2026-02-09T13:10:01.817Z"
+    "repos": [
+      {
+        "name": "autologin",
+        "stars": 4,
+        "language": "JavaScript",
+        "pushedAt": "2026-10-08T12:42:17Z",
+        "description": "Extension Chrome - Automatisation du pointage CESAR Emineo",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/autologin",
+        "fork": false
+      },
+      {
+        "name": "photography-portfolio",
+        "stars": 1,
+        "language": "JavaScript",
+        "pushedAt": "2026-10-07T08:48:39Z",
+        "description": "Fork d'un portfolio statique, rendu totalement dynamique et quasiment 100% personalisable a travers une interface admin.",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/photography-portfolio",
+        "fork": true
+      },
+      {
+        "name": "anniversaire-interactif-template",
+        "stars": 0,
+        "language": "TypeScript",
+        "pushedAt": "2026-06-10T22:59:21Z",
+        "description": "Template de site d'anniversaire interactif avec animations, timeline, polaroids, chasse au trésor et lettres personnalisables",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/anniversaire-interactif-template",
+        "fork": false
+      },
+      {
+        "name": "backend-sorrybut",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:33:00Z",
+        "description": "Backend API - Paiements Stripe, auth OTP, contenu premium",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/backend-sorrybut",
+        "fork": false
+      },
+      {
+        "name": "backstage",
+        "stars": 0,
+        "language": "TypeScript",
+        "pushedAt": "2026-10-01T12:10:29Z",
+        "description": "Second cerveau IA personnel — chat IA à mémoire persistante, passkey, streaming temps réel, rappels synchronisés. PWA Next.js 16 en production.",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/backstage",
+        "fork": false
+      },
+      {
+        "name": "class-time",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:04:36Z",
+        "description": "Outil scolaire - Suivi de cours en temps réel (Web + CLI)",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/class-time",
+        "fork": false
+      },
+      {
+        "name": "coupe-feu-xz",
+        "stars": 0,
+        "language": "EJS",
+        "pushedAt": "2026-06-02T21:05:04Z",
+        "description": "Site de vente - Prods musicales (beats) avec upload",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/coupe-feu-xz",
+        "fork": false
+      },
+      {
+        "name": "danse-association",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:33:21Z",
+        "description": "Site vitrine - Association de danse avec panneau d'administration",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/danse-association",
+        "fork": false
+      },
+      {
+        "name": "departure-viewer-idfm",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:33:27Z",
+        "description": "Visualiseur transports - Départs de train Île-de-France Mobilités",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/departure-viewer-idfm",
+        "fork": false
+      },
+      {
+        "name": "FFSW",
+        "stars": 0,
+        "language": "CSS",
+        "pushedAt": "2026-06-02T21:33:18Z",
+        "description": null,
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/FFSW",
+        "fork": false
+      },
+      {
+        "name": "idfm-python",
+        "stars": 0,
+        "language": "Python",
+        "pushedAt": "2026-06-02T21:05:15Z",
+        "description": "Application desktop - Départs de train Île-de-France",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/idfm-python",
+        "fork": false
+      },
+      {
+        "name": "life-progress-tracker",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:05:18Z",
+        "description": "Outil web - Compteur de vie temps réel avec barres animées",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/life-progress-tracker",
+        "fork": false
+      },
+      {
+        "name": "link-shortener",
+        "stars": 0,
+        "language": "EJS",
+        "pushedAt": "2026-06-02T21:04:41Z",
+        "description": "Outil web - Raccourcisseur d'URL auto-hébergé",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/link-shortener",
+        "fork": false
+      },
+      {
+        "name": "love-letter-interactive",
+        "stars": 0,
+        "language": "HTML",
+        "pushedAt": "2026-06-02T21:04:14Z",
+        "description": "Site web - Lettre d'amour interactive animée (GSAP)",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/love-letter-interactive",
+        "fork": false
+      },
+      {
+        "name": "MattiaPARRINELLO",
+        "stars": 0,
+        "language": null,
+        "pushedAt": "2026-10-12T09:54:32Z",
+        "description": "Profil GitHub - Développeur web JavaScript/Node.js",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/MattiaPARRINELLO",
+        "fork": false
+      },
+      {
+        "name": "minesweeper-js",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:24:04Z",
+        "description": "Jeu web - Démineur en JavaScript",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/minesweeper-js",
+        "fork": false
+      },
+      {
+        "name": "night-light",
+        "stars": 0,
+        "language": null,
+        "pushedAt": "2026-09-22T17:46:44Z",
+        "description": null,
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/night-light",
+        "fork": false
+      },
+      {
+        "name": "night-light-v2",
+        "stars": 0,
+        "language": null,
+        "pushedAt": "2026-10-11T12:08:30Z",
+        "description": "L'autre était nulle",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/night-light-v2",
+        "fork": false
+      },
+      {
+        "name": "portfolio-dev",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-10-08T14:04:13Z",
+        "description": "Portfolio développeur - Stats GitHub temps réel, micro-interactions",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/portfolio-dev",
+        "fork": false
+      },
+      {
+        "name": "smart-budget",
+        "stars": 0,
+        "language": "TypeScript",
+        "pushedAt": "2026-06-02T21:32:57Z",
+        "description": "Plateforme de contenu - Blog Next.js 14 optimisé SEO",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/smart-budget",
+        "fork": false
+      },
+      {
+        "name": "stellaris",
+        "stars": 0,
+        "language": "HTML",
+        "pushedAt": "2026-06-02T21:33:12Z",
+        "description": "API Backend - Réservation de rendez-vous avec auth par clé",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/stellaris",
+        "fork": false
+      },
+      {
+        "name": "student-money",
+        "stars": 0,
+        "language": "TypeScript",
+        "pushedAt": "2026-06-25T00:18:37Z",
+        "description": "Blog étudiant avec génération IA d'articles",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/student-money",
+        "fork": false
+      },
+      {
+        "name": "suivi-rapstar",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:04:33Z",
+        "description": "Application web - Gestion d'accréditations photo concerts",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/suivi-rapstar",
+        "fork": false
+      },
+      {
+        "name": "super-morpion-v2",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:33:09Z",
+        "description": "Jeu multijoueur - Super Tic-Tac-Toe en temps réel avec Socket.IO",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/super-morpion-v2",
+        "fork": false
+      },
+      {
+        "name": "tab-dashboard",
+        "stars": 0,
+        "language": "HTML",
+        "pushedAt": "2026-09-15T14:07:27Z",
+        "description": "Dashboard temps réel - Météo, musique, paroles synchronisées",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/tab-dashboard",
+        "fork": false
+      },
+      {
+        "name": "terminal-portfolio",
+        "stars": 0,
+        "language": "CSS",
+        "pushedAt": "2026-06-02T21:04:05Z",
+        "description": "Portfolio - Thème terminal VS Code, commandes CLI interactives",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/terminal-portfolio",
+        "fork": false
+      },
+      {
+        "name": "timer-thriller",
+        "stars": 0,
+        "language": "HTML",
+        "pushedAt": "2026-06-02T21:04:02Z",
+        "description": "Application web - Compte à rebours thème thriller",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/timer-thriller",
+        "fork": false
+      },
+      {
+        "name": "tri-google",
+        "stars": 0,
+        "language": null,
+        "pushedAt": "2026-10-09T16:43:13Z",
+        "description": null,
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/tri-google",
+        "fork": false
+      },
+      {
+        "name": "undercover",
+        "stars": 0,
+        "language": "JavaScript",
+        "pushedAt": "2026-06-02T21:33:06Z",
+        "description": "Jeu multijoueur - Déduction sociale Undercover en version web mobile PWA",
+        "htmlUrl": "https://github.com/MattiaPARRINELLO/undercover",
+        "fork": false
+      }
+    ],
+    "lastUpdate": "2026-10-13T10:45:18.833Z"
   }
 }

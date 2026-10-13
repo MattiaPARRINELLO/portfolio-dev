@@ -21,12 +21,13 @@ const CONTENT = {
             tags: ['Next.js', 'React', 'TypeScript', 'Vitest', 'Playwright'],
             facts: [
                 { value: '32k', label: 'lignes' },
-                { value: '46', label: 'fichiers de tests' },
-                { value: '34', label: 'routes API' },
+                { value: '46', label: 'tests' },
+                { value: '34', label: 'routes' },
             ],
             image: '/assets/projects/backstage-console.webp',
             imageAlt:
                 'Console de Backstage : accueil IA avec le prochain événement affiché',
+            caption: 'En production — utilisée tous les jours',
             url: 'https://brain.mprnl.fr',
             repo: 'https://github.com/MattiaPARRINELLO/backstage',
         },
@@ -37,42 +38,31 @@ const CONTENT = {
                 "Projet de groupe : un serveur Node.js / Express relié à un modèle local via Ollama, pour produire synthèses, planifications et historiques. Réponses en streaming SSE, persistance JSON, neuf workflows métier prêts à l'emploi. API documentée avec Swagger, tests Jest.",
             tags: ['Node.js', 'Express', 'Ollama', 'Jest', 'Swagger'],
             facts: [
-                { value: '9', label: 'workflows métier' },
+                { value: '9', label: 'workflows' },
                 { value: '100%', label: 'local' },
-                { value: 'REST', label: 'documentée' },
+                { value: 'REST', label: 'API doc' },
             ],
             image: '/assets/projects/gymshark-workflows.webp',
             imageAlt:
                 'Interface de Gymshark-Sync : les neuf workflows de l’assistant',
+            caption: 'Projet de groupe — LLM local via Ollama',
             url: '',
             repo: 'https://github.com/mattia-school/gymshark-sync',
             reverse: true,
         },
     ],
 
+    /* Le parcours lu comme un `git log` : du plus ancien au plus récent,
+       chaque étape est un commit. `branch` colore la ref — le tronc
+       (formation et stages), les projets perso, les projets scolaires. */
     journey: [
         {
-            date: '2026',
-            title: 'Backstage — de l’idée à la production',
+            date: '2020',
+            title: 'Premiers pas',
             description:
-                "Conception, développement et mise en ligne d'une PWA full-stack utilisée au quotidien. Authentification passkey, streaming SSE, persistance, tests de bout en bout.",
-            tags: ['Next.js', 'React', 'TypeScript', 'Postgres', 'Docker'],
-            current: true,
-        },
-        {
-            date: '2026',
-            title: 'Gymshark-Sync — assistant d’entreprise',
-            description:
-                "Projet de groupe : API Node.js branchée sur un LLM local, avec neuf workflows métier, streaming SSE et documentation Swagger.",
-            tags: ['Node.js', 'Express', 'Ollama'],
-        },
-        {
-            date: '2025 — aujourd’hui',
-            title: 'Sup de Vinci — Bachelor Informatique',
-            description:
-                "Licence en informatique : développement web, bases de données, réseaux et architecture logicielle.",
-            tags: ['Web', 'BDD', 'Réseaux'],
-            current: true,
+                "Premier programme, puis un bot Discord en Python. Compréhension progressive de Git et des fondamentaux du développement web.",
+            tags: ['Python', 'Git'],
+            branch: 'main',
         },
         {
             date: '2022 — 2023',
@@ -80,6 +70,7 @@ const CONTENT = {
             description:
                 "Application web d’affichage en temps réel de l’occupation des salles, puis mise en place du planning des jours de télétravail sur écrans e-ink via une API Node.js.",
             tags: ['JavaScript', 'Node.js', 'API'],
+            branch: 'main',
         },
         {
             date: '2025',
@@ -87,13 +78,31 @@ const CONTENT = {
             description:
                 "Conception d’un portfolio de photographie de concert. Optimisation du chargement, gestion des images, design responsive. Première accréditation et premiers clients.",
             tags: ['HTML', 'CSS', 'JavaScript'],
+            branch: 'perso',
         },
         {
-            date: '2020',
-            title: 'Premiers pas',
+            date: '2025 — aujourd’hui',
+            title: 'Sup de Vinci — Bachelor Informatique',
             description:
-                "Premier programme, puis un bot Discord en Python. Compréhension progressive de Git et des fondamentaux du développement web.",
-            tags: ['Python', 'Git'],
+                "Licence en informatique : développement web, bases de données, réseaux et architecture logicielle.",
+            tags: ['Web', 'BDD', 'Réseaux'],
+            branch: 'main',
+        },
+        {
+            date: '2026',
+            title: 'Backstage — de l’idée à la production',
+            description:
+                "Conception, développement et mise en ligne d'une PWA full-stack utilisée au quotidien. Authentification passkey, streaming SSE, persistance, tests de bout en bout.",
+            tags: ['Next.js', 'React', 'TypeScript', 'Postgres', 'Docker'],
+            branch: 'perso',
+        },
+        {
+            date: '2026',
+            title: 'Gymshark-Sync — assistant d’entreprise',
+            description:
+                "Projet de groupe : API Node.js branchée sur un LLM local, avec neuf workflows métier, streaming SSE et documentation Swagger.",
+            tags: ['Node.js', 'Express', 'Ollama'],
+            branch: 'school',
         },
     ],
 
@@ -202,19 +211,10 @@ function renderProjects() {
                 .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
                 .join('');
 
+            // La capture d'abord : le produit est la preuve, le texte commente
             const shot = `
                 <figure class="project__media">
                     <div class="shot">
-                        <div class="shot__bar">
-                            <span></span><span></span><span></span>
-                            <span class="shot__url">${
-                                project.url
-                                    ? escapeHtml(
-                                          new URL(project.url).host
-                                      )
-                                    : 'gymshark-sync'
-                            }</span>
-                        </div>
                         <img
                             class="shot__img"
                             src="${escapeHtml(project.image)}"
@@ -226,6 +226,17 @@ function renderProjects() {
                         />
                         <div class="shot__glow" aria-hidden="true"></div>
                     </div>
+                    <figcaption class="project__caption">
+                        <span class="project__url">${
+                            project.url
+                                ? escapeHtml(new URL(project.url).host)
+                                : 'gymshark-sync'
+                        }</span>
+                        <span class="project__live" data-repo="${
+                            project.repo ? escapeHtml(project.repo.split('/').pop()) : ''
+                        }"></span>
+                        <span>${escapeHtml(project.caption)}</span>
+                    </figcaption>
                 </figure>`;
 
             const links = [
@@ -243,37 +254,57 @@ function renderProjects() {
                 .join('');
 
             return `
-                <article class="project${project.reverse ? ' project--reverse' : ''} reveal">
-                    <div class="project__body">
-                        <span class="project__index">${number} / ${escapeHtml(project.subtitle)}</span>
-                        <h3 class="project__title">${escapeHtml(project.title)}</h3>
-                        <p class="project__desc">${escapeHtml(project.description)}</p>
-                        <div class="project__facts">${facts}</div>
-                        <div class="project__tags">${tags}</div>
-                        <div class="project__links">${links}</div>
-                    </div>
+                <article id="project-${index + 1}" class="project${project.reverse ? ' project--reverse' : ''} reveal">
                     ${shot}
+                    <div class="project__body">
+                        <div class="project__intro">
+                            <span class="project__index">${number} / ${escapeHtml(project.subtitle)}</span>
+                            <h3 class="project__title">${escapeHtml(project.title)}</h3>
+                            <p class="project__desc">${escapeHtml(project.description)}</p>
+                        </div>
+                        <aside class="project__meta">
+                            <div class="project__facts">${facts}</div>
+                            <div class="project__tags">${tags}</div>
+                            <div class="project__links">${links}</div>
+                        </aside>
+                    </div>
                 </article>`;
         })
         .join('');
 }
 
+/* Un hash court et stable, dérivé du titre : c'est de la texture de
+   `git log`, pas une donnée — il ne doit pas bouger d'un rendu à l'autre. */
+function shortHash(seed) {
+    let h = 2166136261;
+    for (let i = 0; i < seed.length; i += 1) {
+        h ^= seed.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+    }
+    return (h >>> 0).toString(16).padStart(8, '0').slice(0, 7);
+}
+
+const BRANCH_LABEL = { main: 'main', perso: 'perso', school: 'scolaire' };
+
 function renderJourney() {
     const container = document.getElementById('timeline');
     if (!container) return;
 
-    container.innerHTML = CONTENT.journey
-        .map(
-            (item) => `
-            <article class="tl-item${item.current ? ' tl-item--current' : ''} reveal">
-                <span class="tl-item__dot" aria-hidden="true"></span>
-                <div class="tl-item__card">
-                    <span class="tl-item__date">${escapeHtml(item.date)}</span>
-                    <h3 class="tl-item__title">${escapeHtml(item.title)}</h3>
-                    <p class="tl-item__desc">${escapeHtml(item.description)}</p>
+    container.innerHTML = `
+        <ol class="gitlog">
+            ${CONTENT.journey
+                .map(
+                    (item) => `
+            <li class="gitlog__row reveal">
+                <span class="gitlog__hash" aria-hidden="true">${shortHash(item.title)}</span>
+                <span class="gitlog__ref gitlog__ref--${item.branch}">${BRANCH_LABEL[item.branch]}</span>
+                <span class="gitlog__date">${escapeHtml(item.date)}</span>
+                <div class="gitlog__body">
+                    <h3 class="gitlog__title">${escapeHtml(item.title)}</h3>
+                    <p class="gitlog__desc">${escapeHtml(item.description)}</p>
                     ${
                         item.tags && item.tags.length
-                            ? `<div class="tl-item__meta">${item.tags
+                            ? `<div class="gitlog__tags">${item.tags
                                   .map(
                                       (tag) =>
                                           `<span class="chip">${escapeHtml(tag)}</span>`
@@ -282,9 +313,15 @@ function renderJourney() {
                             : ''
                     }
                 </div>
-            </article>`
-        )
-        .join('');
+            </li>`
+                )
+                .join('')}
+            <li class="gitlog__head reveal">
+                <span class="gitlog__dot" aria-hidden="true"></span>
+                <span class="gitlog__head-label">HEAD — aujourd’hui</span>
+            </li>
+        </ol>
+    `;
 }
 
 function renderStack() {
@@ -294,16 +331,16 @@ function renderStack() {
     container.innerHTML = CONTENT.stack
         .map(
             (item) => `
-            <div class="stack-card reveal">
+            <div class="stack-item reveal">
                 <svg
-                    class="stack-card__icon"
+                    class="stack-item__icon"
                     viewBox="0 0 24 24"
                     fill="${escapeHtml(item.color)}"
                     aria-hidden="true"
                 >
                     ${item.icon}
                 </svg>
-                <span class="stack-card__name">${escapeHtml(item.name)}</span>
+                <span class="stack-item__name">${escapeHtml(item.name)}</span>
             </div>`
         )
         .join('');
@@ -421,6 +458,62 @@ const ScrollReveal = {
 };
 
 /* =========================================================
+   PREUVE VIVANTE — activité réelle des dépôts
+   L'API du serveur expose déjà les dépôts (récupérés pour les
+   statistiques de langages) : aucune requête supplémentaire.
+   On affiche le dernier push daté ; les étoiles seulement
+   s'il y en a — un zéro n'est une preuve de rien.
+   ========================================================= */
+
+const GitHubActivity = {
+    /* Le serveur exige un utilisateur explicite : GITHUB_USERNAME n'est
+       pas dans l'environnement de production. Le compte est public. */
+    owner: 'MattiaPARRINELLO',
+
+    async init() {
+        const slots = [...document.querySelectorAll('.project__live[data-repo]')];
+        if (!slots.length) return;
+
+        let repos = [];
+        try {
+            const response = await fetch(`/api/github-stats/${this.owner}`);
+            if (!response.ok) return;
+            repos = (await response.json()).repos || [];
+        } catch (error) {
+            return;
+        }
+
+        slots.forEach((slot) => {
+            const repo = repos.find((item) => item.name === slot.dataset.repo);
+            if (!repo || repo.fork) return;
+
+            const parts = [];
+            if (repo.stars > 0) parts.push(`★ ${repo.stars}`);
+            parts.push(`dernier push ${formatRelativeDate(repo.pushedAt)}`);
+            if (repo.language) parts.push(repo.language);
+
+            slot.textContent = parts.join(' · ');
+        });
+    },
+};
+
+function formatRelativeDate(iso) {
+    if (!iso) return '';
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return '';
+
+    const days = Math.round((Date.now() - date.getTime()) / 86400000);
+    if (days <= 1) return "aujourd'hui";
+    if (days < 31) return `il y a ${days} jours`;
+
+    return date.toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    });
+}
+
+/* =========================================================
    DÉMARRAGE
    ========================================================= */
 
@@ -430,6 +523,7 @@ function init() {
     renderStack();
     Navigation.init();
     ScrollReveal.init();
+    GitHubActivity.init();
 }
 
 if (document.readyState === 'loading') {

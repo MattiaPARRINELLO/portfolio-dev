@@ -50,13 +50,25 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Polices auto-hébergées : plus de DNS/TLS externe au premier écran -->
+    <link rel="stylesheet" href="/assets/fonts/fonts.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/assets/fonts/space-grotesk-700-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/inter-400-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
     <link rel="stylesheet" href="styles.css" />
 
@@ -67,7 +79,41 @@
         "name": "Mattia Parrinello",
         "jobTitle": "Développeur Full-Stack",
         "url": "https://dev.mprnl.fr/",
-        "description": "Portfolio de Mattia Parrinello, développeur full-stack JS/TS. Applications Next.js, React, TypeScript et Node.js : Backstage, un second cerveau IA en production."
+        "description": "Portfolio de Mattia Parrinello, développeur full-stack JS/TS. Applications Next.js, React, TypeScript et Node.js : Backstage, un second cerveau IA en production.",
+        "knowsAbout": ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL", "WebAuthn", "SSE"],
+        "sameAs": [
+          "https://github.com/MattiaPARRINELLO",
+          "https://www.linkedin.com/in/mattia-parrinello-015382208/",
+          "https://photo.mprnl.fr"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Projets",
+        "itemListElement": [
+          {
+            "@type": "SoftwareSourceCode",
+            "position": 1,
+            "name": "Backstage — second cerveau IA personnel",
+            "description": "PWA installable : chat IA à mémoire persistante, agenda synchronisé, rappels, notifications push, authentification passkey, streaming SSE. Déployée en production.",
+            "programmingLanguage": ["TypeScript", "React", "Next.js", "Node.js"],
+            "codeRepository": "https://github.com/MattiaPARRINELLO/backstage",
+            "url": "https://brain.mprnl.fr",
+            "author": { "@type": "Person", "name": "Mattia Parrinello" }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "position": 2,
+            "name": "Gymshark-Sync — assistant interne sur LLM local",
+            "description": "Serveur Node.js / Express relié à un modèle local via Ollama : neuf workflows métier, streaming SSE, API documentée avec Swagger.",
+            "programmingLanguage": ["JavaScript", "Node.js", "Express"],
+            "codeRepository": "https://github.com/mattia-school/gymshark-sync",
+            "author": { "@type": "Person", "name": "Mattia Parrinello" }
+          }
+        ]
       }
     </script>
   </head>
@@ -87,6 +133,7 @@
           <li><a href="#stack" class="nav-link">Stack</a></li>
         </ul>
 
+        <a href="/cv-alternance" download class="navbar__cv">CV</a>
         <a href="#contact" class="navbar__cta">Me contacter</a>
 
         <button
@@ -110,6 +157,9 @@
             <li><a href="#journey" class="mobile-nav-link">Parcours</a></li>
             <li><a href="#stack" class="mobile-nav-link">Stack</a></li>
             <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+          <li>
+            <a href="/cv-alternance" download class="mobile-nav-link">CV (PDF)</a>
+          </li>
           </ul>
         </div>
       </div>
@@ -154,8 +204,12 @@
                 />
               </svg>
             </a>
-            <a href="#contact" class="btn btn--secondary">
-              Écrire un message
+            <a
+              href="/cv-alternance"
+              download
+              class="btn btn--secondary"
+            >
+              Télécharger le CV
               <svg
                 fill="none"
                 stroke="currentColor"
@@ -166,37 +220,17 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"
                 />
               </svg>
             </a>
+            <a href="#contact" class="btn-ghost">Écrire un message</a>
           </div>
 
-          <!-- Aperçu produit -->
-          <div class="hero-preview">
-            <div class="hero-preview__bar" aria-hidden="true">
-              <span></span><span></span><span></span>
-              <span class="shot__url">brain.mprnl.fr</span>
-            </div>
-            <div class="hero-preview__body">
-              <div class="preview-row">
-                <span class="preview-row__label">Statut</span>
-                <span class="preview-row__value">
-                  En production · <span class="ok">passkey + SSE + OAuth</span>
-                </span>
-              </div>
-              <div class="preview-row">
-                <span class="preview-row__label">Projet actuel</span>
-                <span class="preview-row__value">Backstage — second cerveau IA</span>
-              </div>
-              <div class="preview-row">
-                <span class="preview-row__label">Stack</span>
-                <span class="preview-row__value">
-                  Next.js · React · TypeScript · Node.js
-                </span>
-              </div>
-            </div>
-          </div>
+          <p class="hero__proof">
+            <span class="ok">brain.mprnl.fr</span> en production — utilisé tous
+            les jours
+          </p>
         </div>
 
         <div class="scroll-hint" aria-hidden="true">
@@ -219,7 +253,7 @@
             Du serveur à l'interface, <span class="accent-underline">sans le gap.</span>
           </h2>
 
-          <div class="about" style="margin-top: 3rem">
+          <div class="about">
             <div class="about__text">
               <p>
                 Étudiant en informatique à Sup de Vinci, je construis des
@@ -234,55 +268,81 @@
                 complet — concevoir, coder, tester, corriger, livrer — que je
                 veux poursuivre en entreprise.
               </p>
+            </div>
+
+            <div class="about__pillars">
+              <article class="pillar">
+                <span class="pillar__num">01</span>
+                <div>
+                  <h3 class="pillar__title">Livrer, pas seulement coder</h3>
+                  <p class="pillar__text">
+                    Passage du code au déploiement : variables d'environnement,
+                    migrations, monitoring, rollbacks.
+                  </p>
+                </div>
+              </article>
+              <article class="pillar">
+                <span class="pillar__num">02</span>
+                <div>
+                  <h3 class="pillar__title">Écrire des tests</h3>
+                  <p class="pillar__text">
+                    46 fichiers de tests sur Backstage. Les tests comme
+                    garde-fou, pas comme formalité.
+                  </p>
+                </div>
+              </article>
+              <article class="pillar">
+                <span class="pillar__num">03</span>
+                <div>
+                  <h3 class="pillar__title">Sécuriser par défaut</h3>
+                  <p class="pillar__text">
+                    Passkeys, JWT courts, OAuth — et validation systématique des
+                    entrées.
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ RÉFLEXIONS ═══════════════ -->
+      <section id="focus" class="section">
+        <div class="container">
+          <p class="eyebrow eyebrow--centered">Réflexions</p>
+          <h2 class="section-title section-title--centered">
+            Ce que l'IA sait,<br /><span class="dim">ce qu'elle oublie.</span>
+          </h2>
+
+          <div class="focus">
+            <div class="focus__col">
               <p>
-                Je m'intéresse particulièrement à ce qui se passe entre le
-                modèle et l'utilisateur : <em>ce que l'IA sait, ce qu'elle
-                oublie, et comment on lui fait confiance</em>.
+                Un modèle repart de zéro à chaque conversation. Toute la
+                difficulté n'est pas dans la réponse — elle est dans ce qui
+                survit d'une session à l'autre : ce qu'on garde, ce qu'on
+                résume, ce qu'on a le droit d'oublier.
               </p>
             </div>
-
-            <div class="feature-grid">
-              <article class="feature-card">
-                <span class="feature-card__num">01</span>
-                <h3 class="feature-card__title">Livrer, pas seulement coder</h3>
-                <p class="feature-card__text">
-                  Passage du code au déploiement : variables d'environnement,
-                  migrations, monitoring, rollbacks.
-                </p>
-              </article>
-              <article class="feature-card">
-                <span class="feature-card__num">02</span>
-                <h3 class="feature-card__title">Écrire des tests</h3>
-                <p class="feature-card__text">
-                  46 fichiers de tests sur Backstage. Le tests comme garde-fou,
-                  pas comme formalité.
-                </p>
-              </article>
-              <article class="feature-card">
-                <span class="feature-card__num">03</span>
-                <h3 class="feature-card__title">Sécuriser par défaut</h3>
-                <p class="feature-card__text">
-                  Passkeys, JWT courts, OAuth — et validation systématique des
-                  entrées.
-                </p>
-              </article>
+            <div class="focus__col">
+              <p>
+                La confiance, elle, ne vient pas de la justesse. Elle vient de
+                ce qu'on montre : d'où sort une réponse, depuis quand un
+                souvenir existe, quand il est périmé. C'est exactement le
+                travail sur la mémoire persistante de Backstage.
+              </p>
             </div>
           </div>
 
-          <div class="stats">
-            <div class="stat">
-              <span class="stat__value">32k</span>
-              <span class="stat__label">lignes en production</span>
-            </div>
-            <div class="stat">
-              <span class="stat__value">46</span>
-              <span class="stat__label">fichiers de tests</span>
-            </div>
-            <div class="stat">
-              <span class="stat__value">1</span>
-              <span class="stat__label">produit utilisé tous les jours</span>
-            </div>
-          </div>
+          <p class="focus__bridge">
+            Le week-end, je photographie des concerts. Même obsession : ce que
+            la lumière révèle, ce qu'elle laisse dans l'ombre —
+            <a
+              href="https://photo.mprnl.fr"
+              target="_blank"
+              rel="noopener noreferrer"
+              >photo.mprnl.fr</a
+            >
+          </p>
         </div>
       </section>
 
@@ -297,7 +357,7 @@
             le second tourne sur un modèle local.
           </p>
 
-          <div id="projects" class="projects" style="margin-top: 3.5rem"></div>
+          <div id="projects" class="projects"></div>
         </div>
       </section>
 
@@ -309,7 +369,7 @@
             Comment j'y suis arrivé.
           </h2>
 
-          <div class="timeline" style="margin-top: 3.5rem">
+          <div class="timeline">
             <div id="timeline" class="timeline__list"></div>
           </div>
         </div>
@@ -327,7 +387,7 @@
             de logos.
           </p>
 
-          <div id="stack-grid" class="stack-grid" style="margin-top: 3rem"></div>
+          <div id="stack-grid" class="stack-strip stack-panel"></div>
         </div>
       </section>
 
@@ -343,7 +403,7 @@
             2 semaines en entreprise / 2 semaines en école. Réponse sous 24 h.
           </p>
 
-          <div class="contact-grid" style="margin-top: 3rem">
+          <div class="contact-grid">
             <a href="mailto:contact.mprnl@gmail.com" class="contact-card">
               <div class="contact-card__icon">
                 <svg
@@ -363,6 +423,32 @@
               <div>
                 <div class="contact-card__label">Email</div>
                 <div class="contact-card__value">contact.mprnl@gmail.com</div>
+              </div>
+            </a>
+
+            <a
+              href="/cv-alternance"
+              download
+              class="contact-card"
+            >
+              <div class="contact-card__icon">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"
+                  />
+                </svg>
+              </div>
+              <div>
+                <div class="contact-card__label">CV</div>
+                <div class="contact-card__value">PDF — 1 page</div>
               </div>
             </a>
 
@@ -430,6 +516,32 @@
                 <div class="contact-card__value">photo.mprnl.fr</div>
               </div>
             </a>
+          </div>
+
+          <!-- Action directe : le mail s'ouvre pré-rempli -->
+          <div class="contact-cta">
+            <a
+              href="mailto:contact.mprnl@gmail.com?subject=Alternance%20d%C3%A9veloppeur%20%E2%80%94%20%5BEntreprise%5D&amp;body=Bonjour%20Mattia%2C%0A%0AJe%20vous%20contacte%20au%20sujet%20de%20..."
+              class="btn btn--primary"
+            >
+              Écrire un message
+              <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            </a>
+            <p class="contact-cta__note">
+              Objet et message pré-remplis — réponse sous 24 h.
+            </p>
           </div>
         </div>
       </section>

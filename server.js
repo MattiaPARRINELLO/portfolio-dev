@@ -283,6 +283,21 @@ async function fetchGitHubStats(username) {
     totalLanguages: Object.keys(totals).length,
     estimatedLines: Math.round(estimatedLines),
     languages,
+    /* Les dépôts publics, triés par étoiles — la liste est déjà en
+       mémoire (récupérée pour les langages), donc ce mapping ne coûte
+       aucun appel API supplémentaire. Le front s'en sert pour afficher
+       une preuve vivante : étoiles réelles et dernier push daté. */
+    repos: allRepos
+      .map((repo) => ({
+        name: repo.name,
+        stars: repo.stargazers_count,
+        language: repo.language,
+        pushedAt: repo.pushed_at,
+        description: repo.description,
+        htmlUrl: repo.html_url,
+        fork: repo.fork
+      }))
+      .sort((a, b) => b.stars - a.stars),
     lastUpdate: new Date().toISOString()
   };
 }
@@ -318,6 +333,19 @@ app.get('/api/github-stats/:username?', async (req, res) => {
 // Route principale
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+/* Endpoint CV stable : /cv-alternance sert toujours le fichier
+   cv-alternance.pdf. Pour publier une nouvelle version, il suffit de
+   remplacer CE fichier — l'URL, elle, ne change jamais. */
+app.get('/cv-alternance', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'assets', 'cv', 'cv-alternance.pdf'), {
+    headers: {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition':
+        'attachment; filename="CV-Mattia-Parrinello-alternance.pdf"'
+    }
+  });
 });
 
 // Démarrer le serveur

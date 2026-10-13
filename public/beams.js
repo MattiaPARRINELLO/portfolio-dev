@@ -137,14 +137,22 @@ const BEAM_CONFIG = {
        pourcentage de la course. L'ancre suit la section : si le contenu
        change de hauteur, les poses restent sur les mêmes blocs.
        Les deux bras ne partagent pas les mêmes valeurs, donc jamais le
-       même geste des deux côtés. */
+       même geste des deux côtés.
+
+       Les poses #project-1 / #project-2 éclairent chaque vitrine à son
+       tour : le projecteur chaud porte la première capture, le fill
+       prend le relais sur la seconde. Ça donne un rythme de lumière
+       alterné sur le showroom, au lieu d'un fond fixe. */
     scroll: {
         stiffness: 8.5,
         damping: 4.4,
         keys: [
             { at: '#hero',    key: { x:  0.10, y:  0.05, boost: 1.00, opening: 0.92 }, fill: { x: -0.09, y: -0.04, boost: 1.00, opening: 0.92 } },
             { at: '#about',   key: { x: -0.06, y:  0.10, boost: 0.96, opening: 1.00 }, fill: { x:  0.07, y:  0.08, boost: 1.02, opening: 1.06 } },
+            { at: '#focus',   key: { x:  0.04, y:  0.04, boost: 0.98, opening: 1.02 }, fill: { x: -0.04, y:  0.06, boost: 1.04, opening: 1.00 } },
             { at: '#work',    key: { x:  0.08, y: -0.02, boost: 1.06, opening: 1.12 }, fill: { x: -0.10, y:  0.03, boost: 0.96, opening: 1.02 } },
+            { at: '#project-1', key: { x: 0.14, y: 0.06, boost: 1.18, opening: 1.05 }, fill: { x: -0.12, y: -0.02, boost: 0.92, opening: 0.96 } },
+            { at: '#project-2', key: { x: 0.02, y: 0.12, boost: 0.90, opening: 0.90 }, fill: { x: -0.14, y: 0.08, boost: 1.16, opening: 1.12 } },
             { at: '#journey', key: { x: -0.02, y:  0.18, boost: 1.02, opening: 0.86 }, fill: { x:  0.05, y: -0.16, boost: 1.06, opening: 1.16 } },
             { at: '#stack',   key: { x:  0.12, y: -0.10, boost: 0.94, opening: 1.16 }, fill: { x: -0.06, y: -0.12, boost: 1.00, opening: 0.88 } },
             { at: '#contact', key: { x:  0.02, y:  0.16, boost: 1.10, opening: 1.08 }, fill: { x: -0.02, y: -0.14, boost: 1.14, opening: 1.18 } },
