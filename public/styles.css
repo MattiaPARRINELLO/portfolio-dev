@@ -146,7 +146,9 @@ ul {
 }
 
 .section--tinted {
-  background: var(--surface-1);
+  /* Teinte légèrement translucide : les faisceaux du fond continuent de
+     traverser la section, sans jamais passer devant son contenu. */
+  background: color-mix(in srgb, var(--surface-1) 85%, transparent);
   border-block: 1px solid var(--border-1);
 }
 
@@ -1231,23 +1233,26 @@ ul {
 
 /* ---------- Faisceaux lumineux (WebGL) ---------- */
 
-/* Calque fixe, devant les fonds de section mais derrière le texte
-   (dernier enfant de body, z-index 0). Le mélange "screen" est
-   additif : il ne peut qu'éclairer le fond, jamais l'assombrir.
-   Le texte clair, déjà proche du blanc, garde son contraste. */
+/* Calque fixe DERRIÈRE tout le contenu (z-index négatif) : les
+   faisceaux éclairent le fond de page et les zones vides, mais ne
+   passent plus au-dessus des images, des cartes ni du texte — un
+   élément peint par-dessus le calque, pas l'inverse.
+   Le mélange "screen" est additif : il ne peut qu'éclairer le fond,
+   jamais l'assombrir. */
 .beam-layer {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
   mix-blend-mode: screen;
   -webkit-mix-blend-mode: screen;
 }
 
 /* Repli : sans WebGL ou en cas d'échec d'initialisation, deux halos
-   CSS très diffus. Aucun mouvement, aucun coût GPU. */
+   CSS très diffus. Même règle d'empilement que le canvas : derrière
+   le contenu, devant le fond. */
 .beams-fallback body::before,
 .beams-fallback body::after {
   content: "";
@@ -1255,7 +1260,7 @@ ul {
   top: -12%;
   width: 52vw;
   height: 78vh;
-  z-index: 1;
+  z-index: -1;
   pointer-events: none;
   mix-blend-mode: screen;
   -webkit-mix-blend-mode: screen;
