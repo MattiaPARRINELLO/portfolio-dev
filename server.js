@@ -164,33 +164,97 @@ app.use(
   })
 );
 
-async function readCache() {
+/* Le cache est une map d'entrées par compte, clé en minuscules car GitHub
+   traite les noms de compte sans distinction de casse. Un ancien fichier au
+   format global { timestamp, data } ne correspond à aucun compte : il est
+   ignoré et sera remplacé à la première écriture réussie. */
+function cacheKey(username) {
+  return username.toLowerCase();
+}
+
+function isValidCacheEntry(entry) {
+  return (
+    entry !== null &&
+    typeof entry === 'object' &&
+    typeof entry.timestamp === 'number' &&
+    entry.data !== null &&
+    typeof entry.data === 'object'
+  );
+}
+
+async function readCacheStore() {
   try {
     const content = await fs.readFile(CACHE_FILE, 'utf8');
-    const cached = JSON.parse(content);
-    const age = Date.now() - cached.timestamp;
-    if (age < CACHE_DURATION) {
-      return cached.data;
+    const parsed = JSON.parse(content);
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return {};
     }
-    return null;
+    // Ancien format global : inutilisable pour un compte précis.
+    if (typeof parsed.timestamp === 'number' && isValidCacheEntry(parsed)) {
+      return {};
+    }
+    return parsed;
   } catch (error) {
-    return null;
+    return {};
   }
 }
 
-async function writeCache(data) {
-  try {
-    await fs.mkdir(path.dirname(CACHE_FILE), { recursive: true });
-    const payload = {
-      timestamp: Date.now(),
-      data
-    };
-    await fs.writeFile(CACHE_FILE, JSON.stringify(payload, null, 2), 'utf8');
-    return true;
-  } catch (error) {
-    console.error('Erreur lors de l\'écriture du cache:', error);
-    return false;
+async function readCache(username) {
+  const store = await readCacheStore();
+  const entry = store[cacheKey(username)];
+  if (!isValidCacheEntry(entry)) {
+    return null;
   }
+  if (Date.now() - entry.timestamp >= CACHE_DURATION) {
+    return null;
+  }
+  return entry.data;
+}
+
+/* Verrou en mémoire par clé : deux écritures concurrentes pour le même
+   compte dans ce processus sont sérialisées, ce qui évite de perdre une
+   entrée lors du read-modify-write de la map. */
+const cacheLocks = new Map();
+
+async function withCacheLock(key, task) {
+  const previous = cacheLocks.get(key) || Promise.resolve();
+  const current = previous.then(task, task);
+  const guard = current.catch(() => {});
+  cacheLocks.set(key, guard);
+  try {
+    return await current;
+  } finally {
+    if (cacheLocks.get(key) === guard) {
+      cacheLocks.delete(key);
+    }
+  }
+}
+
+async function writeCache(username, data) {
+  const key = cacheKey(username);
+  return withCacheLock(key, async () => {
+    let tempFile = null;
+    try {
+      await fs.mkdir(path.dirname(CACHE_FILE), { recursive: true });
+      const store = await readCacheStore();
+      store[key] = {
+        timestamp: Date.now(),
+        data
+      };
+      tempFile = `${CACHE_FILE}.${process.pid}.${Date.now()}.${Math.random()
+        .toString(16)
+        .slice(2)}.tmp`;
+      await fs.writeFile(tempFile, JSON.stringify(store, null, 2), 'utf8');
+      await fs.rename(tempFile, CACHE_FILE);
+      return true;
+    } catch (error) {
+      if (tempFile) {
+        await fs.unlink(tempFile).catch(() => {});
+      }
+      console.error('Erreur lors de l\'écriture du cache:', error.message);
+      return false;
+    }
+  });
 }
 
 async function fetchGitHubStats(username) {
@@ -331,14 +395,14 @@ app.get('/api/github-stats/:username?', async (req, res) => {
 
     const forceRefresh = req.query.refresh === 'true';
     if (!forceRefresh) {
-      const cached = await readCache();
+      const cached = await readCache(username);
       if (cached) {
         return res.json(cached);
       }
     }
 
     const stats = await fetchGitHubStats(username);
-    await writeCache(stats);
+    await writeCache(username, stats);
     return res.json(stats);
   } catch (error) {
     console.error('Erreur API GitHub:', error.message);
