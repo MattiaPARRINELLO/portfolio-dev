@@ -180,15 +180,28 @@ app.use(compression());
 const BLOCKED_PATHS = ['.env', '.env.local', '.env.production', 'package.json', 'package-lock.json', 'server.js', '.gitignore', 'README.md'];
 
 app.use((req, res, next) => {
-  const requested = decodeURIComponent(req.path.split('?')[0]);
-  const basename = path.posix.basename(requested);
+  let requested;
+  try {
+    requested = decodeURIComponent(req.path);
+  } catch (error) {
+    // Chemin malformé : réponse tersée, jamais de pile ni de chemin absolu.
+    res.status(400).type('text/plain').send('Bad request');
+    return;
+  }
+
+  /* Normaliser avant de comparer, pour que /./cache/... ou //cache/...
+     retombent sur les préfixes bloqués. */
+  const normalized = path.posix.normalize(
+    '/' + requested.replace(/^\/+/, '')
+  );
+  const basename = path.posix.basename(normalized);
 
   if (
     basename.startsWith('.env') ||
     BLOCKED_PATHS.includes(basename) ||
-    requested.startsWith('/.git') ||
-    requested.startsWith('/cache') ||
-    requested.startsWith('/src')
+    normalized.startsWith('/.git') ||
+    normalized.startsWith('/cache') ||
+    normalized.startsWith('/src')
   ) {
     res.status(404).send('Not found');
     return;
@@ -500,6 +513,19 @@ app.get('/cv-alternance', (req, res) => {
         'attachment; filename="CV-Mattia-Parrinello-alternance.pdf"'
     }
   });
+});
+
+// Middleware d'erreur terminal : log côté serveur, réponse générique.
+// Aucune pile, aucun chemin absolu, aucun détail interne ne sort au client.
+app.use((err, req, res, next) => {
+  console.error('Erreur non gérée:', err && err.message ? err.message : 'inconnue');
+  if (res.headersSent) {
+    return next(err);
+  }
+  if (req.path.startsWith('/api/')) {
+    return res.status(500).json({ error: 'Erreur interne du serveur' });
+  }
+  return res.status(500).type('text/plain').send('Erreur interne du serveur');
 });
 
 // Démarrer le serveur
