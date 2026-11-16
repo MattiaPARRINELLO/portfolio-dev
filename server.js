@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const crypto = require('crypto');
 const compression = require('compression');
 const axios = require('axios');
 const fs = require('fs').promises;
@@ -9,10 +10,60 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || '';
+/* Optionnel : permet à un opérateur de forcer un rafraîchissement via
+   l'en-tête x-refresh-secret. Jamais loggé, jamais renvoyé au client. */
+const REFRESH_SECRET = process.env.REFRESH_SECRET || '';
 const ALLOWED_FORKS = new Set(['photography-portfolio']);
 
 const CACHE_FILE = path.join(__dirname, 'cache', 'github-stats.json');
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24h
+
+/* Bornes sur l'amont GitHub : pagination plafonnée, délai par requête, et
+   délai global sur le fan-out des langues. */
+const MAX_REPO_PAGES = 10;
+const MAX_REPOS = 1000;
+const GITHUB_TIMEOUT_MS = 10 * 1000;
+const LANGUAGE_FANOUT_TIMEOUT_MS = 15 * 1000;
+
+/* Un rafraîchissement privilégié ne peut pas se produire plus d'une fois
+   par intervalle, même avec un secret valide. */
+const MIN_FORCED_REFRESH_INTERVAL_MS = 60 * 1000;
+let lastForcedRefreshAt = 0;
+
+function hasValidRefreshSecret(req) {
+  if (!REFRESH_SECRET) {
+    return false;
+  }
+  const provided = req.get('x-refresh-secret');
+  if (typeof provided !== 'string' || provided.length === 0) {
+    return false;
+  }
+  // Comparaison en temps constant sur des empreintes de taille fixe.
+  const expected = crypto.createHash('sha256').update(REFRESH_SECRET).digest();
+  const actual = crypto.createHash('sha256').update(provided).digest();
+  return crypto.timingSafeEqual(expected, actual);
+}
+
+function claimForcedRefresh() {
+  const now = Date.now();
+  if (now - lastForcedRefreshAt < MIN_FORCED_REFRESH_INTERVAL_MS) {
+    return false;
+  }
+  lastForcedRefreshAt = now;
+  return true;
+}
+
+function withTimeout(promise, ms, fallback) {
+  let timer = null;
+  const deadline = new Promise((resolve) => {
+    timer = setTimeout(() => resolve(fallback), ms);
+  });
+  return Promise.race([promise, deadline]).finally(() => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+  });
+}
 
 /* Un compte GitHub fait 1 à 39 caractères, uniquement alphanumériques et
    tirets, sans tiret en tête ni en fin, ni deux tirets consécutifs. Toute
@@ -269,11 +320,12 @@ async function fetchGitHubStats(username) {
   let page = 1;
   let hasMore = true;
 
-  while (hasMore) {
+  while (hasMore && page <= MAX_REPO_PAGES && allRepos.length < MAX_REPOS) {
     const response = await axios.get(
       `https://api.github.com/users/${encodeURIComponent(username)}/repos`,
       {
         headers,
+        timeout: GITHUB_TIMEOUT_MS,
         params: {
           type: 'public',
           per_page: 100,
@@ -293,9 +345,16 @@ async function fetchGitHubStats(username) {
     }
   }
 
+  if (allRepos.length > MAX_REPOS) {
+    allRepos = allRepos.slice(0, MAX_REPOS);
+  }
+
   const languagePromises = allRepos.map(async (repo) => {
     try {
-      const langResponse = await axios.get(repo.languages_url, { headers });
+      const langResponse = await axios.get(repo.languages_url, {
+        headers,
+        timeout: GITHUB_TIMEOUT_MS
+      });
       return {
         name: repo.name,
         languages: langResponse.data
@@ -308,7 +367,13 @@ async function fetchGitHubStats(username) {
     }
   });
 
-  const reposWithLanguages = await Promise.all(languagePromises);
+  /* Si le fan-out dépasse le délai global, on dégrade proprement : les
+     dépôts restent listés, seuls les langages manquent. */
+  const reposWithLanguages = await withTimeout(
+    Promise.all(languagePromises),
+    LANGUAGE_FANOUT_TIMEOUT_MS,
+    allRepos.map((repo) => ({ name: repo.name, languages: {} }))
+  );
 
   const repoStats = reposWithLanguages.map((repo) => {
     let repoBytes = 0;
@@ -393,8 +458,15 @@ app.get('/api/github-stats/:username?', async (req, res) => {
     }
     const username = rawUsername;
 
-    const forceRefresh = req.query.refresh === 'true';
-    if (!forceRefresh) {
+    /* Le front n'utilise pas ?refresh=true. Un rafraîchissement forcé exige
+       désormais un secret serveur (x-refresh-secret) et reste borné par un
+       intervalle minimal global. Sinon la requête est servie depuis le cache. */
+    const forcedRefresh =
+      req.query.refresh === 'true' &&
+      hasValidRefreshSecret(req) &&
+      claimForcedRefresh();
+
+    if (!forcedRefresh) {
       const cached = await readCache(username);
       if (cached) {
         return res.json(cached);
