@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const crypto = require('crypto');
 const compression = require('compression');
 const axios = require('axios');
 const fs = require('fs').promises;
@@ -9,10 +10,76 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME || '';
+/* Optionnel : permet à un opérateur de forcer un rafraîchissement via
+   l'en-tête x-refresh-secret. Jamais loggé, jamais renvoyé au client. */
+const REFRESH_SECRET = process.env.REFRESH_SECRET || '';
 const ALLOWED_FORKS = new Set(['photography-portfolio']);
 
 const CACHE_FILE = path.join(__dirname, 'cache', 'github-stats.json');
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24h
+
+/* Bornes sur l'amont GitHub : pagination plafonnée, délai par requête, et
+   délai global sur le fan-out des langues. */
+const MAX_REPO_PAGES = 10;
+const MAX_REPOS = 1000;
+const GITHUB_TIMEOUT_MS = 10 * 1000;
+const LANGUAGE_FANOUT_TIMEOUT_MS = 15 * 1000;
+
+/* Un rafraîchissement privilégié ne peut pas se produire plus d'une fois
+   par intervalle, même avec un secret valide. */
+const MIN_FORCED_REFRESH_INTERVAL_MS = 60 * 1000;
+let lastForcedRefreshAt = 0;
+
+function hasValidRefreshSecret(req) {
+  if (!REFRESH_SECRET) {
+    return false;
+  }
+  const provided = req.get('x-refresh-secret');
+  if (typeof provided !== 'string' || provided.length === 0) {
+    return false;
+  }
+  // Comparaison en temps constant sur des empreintes de taille fixe.
+  const expected = crypto.createHash('sha256').update(REFRESH_SECRET).digest();
+  const actual = crypto.createHash('sha256').update(provided).digest();
+  return crypto.timingSafeEqual(expected, actual);
+}
+
+function claimForcedRefresh() {
+  const now = Date.now();
+  if (now - lastForcedRefreshAt < MIN_FORCED_REFRESH_INTERVAL_MS) {
+    return false;
+  }
+  lastForcedRefreshAt = now;
+  return true;
+}
+
+function withTimeout(promise, ms, fallback) {
+  let timer = null;
+  const deadline = new Promise((resolve) => {
+    timer = setTimeout(() => resolve(fallback), ms);
+  });
+  return Promise.race([promise, deadline]).finally(() => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+  });
+}
+
+/* Un compte GitHub fait 1 à 39 caractères, uniquement alphanumériques et
+   tirets, sans tiret en tête ni en fin, ni deux tirets consécutifs. Toute
+   valeur hors de cette grammaire est refusée avant de toucher au cache ou
+   à l'API amont. */
+function isValidGitHubUsername(value) {
+  return (
+    typeof value === 'string' &&
+    value.length >= 1 &&
+    value.length <= 39 &&
+    /^[A-Za-z0-9-]+$/.test(value) &&
+    !value.startsWith('-') &&
+    !value.endsWith('-') &&
+    !value.includes('--')
+  );
+}
 
 // Estimation du nombre de lignes par Ko de code pour chaque langage
 const LINES_PER_KB = {
@@ -113,15 +180,28 @@ app.use(compression());
 const BLOCKED_PATHS = ['.env', '.env.local', '.env.production', 'package.json', 'package-lock.json', 'server.js', '.gitignore', 'README.md'];
 
 app.use((req, res, next) => {
-  const requested = decodeURIComponent(req.path.split('?')[0]);
-  const basename = path.posix.basename(requested);
+  let requested;
+  try {
+    requested = decodeURIComponent(req.path);
+  } catch (error) {
+    // Chemin malformé : réponse tersée, jamais de pile ni de chemin absolu.
+    res.status(400).type('text/plain').send('Bad request');
+    return;
+  }
+
+  /* Normaliser avant de comparer, pour que /./cache/... ou //cache/...
+     retombent sur les préfixes bloqués. */
+  const normalized = path.posix.normalize(
+    '/' + requested.replace(/^\/+/, '')
+  );
+  const basename = path.posix.basename(normalized);
 
   if (
     basename.startsWith('.env') ||
     BLOCKED_PATHS.includes(basename) ||
-    requested.startsWith('/.git') ||
-    requested.startsWith('/cache') ||
-    requested.startsWith('/src')
+    normalized.startsWith('/.git') ||
+    normalized.startsWith('/cache') ||
+    normalized.startsWith('/src')
   ) {
     res.status(404).send('Not found');
     return;
@@ -148,33 +228,97 @@ app.use(
   })
 );
 
-async function readCache() {
+/* Le cache est une map d'entrées par compte, clé en minuscules car GitHub
+   traite les noms de compte sans distinction de casse. Un ancien fichier au
+   format global { timestamp, data } ne correspond à aucun compte : il est
+   ignoré et sera remplacé à la première écriture réussie. */
+function cacheKey(username) {
+  return username.toLowerCase();
+}
+
+function isValidCacheEntry(entry) {
+  return (
+    entry !== null &&
+    typeof entry === 'object' &&
+    typeof entry.timestamp === 'number' &&
+    entry.data !== null &&
+    typeof entry.data === 'object'
+  );
+}
+
+async function readCacheStore() {
   try {
     const content = await fs.readFile(CACHE_FILE, 'utf8');
-    const cached = JSON.parse(content);
-    const age = Date.now() - cached.timestamp;
-    if (age < CACHE_DURATION) {
-      return cached.data;
+    const parsed = JSON.parse(content);
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return {};
     }
-    return null;
+    // Ancien format global : inutilisable pour un compte précis.
+    if (typeof parsed.timestamp === 'number' && isValidCacheEntry(parsed)) {
+      return {};
+    }
+    return parsed;
   } catch (error) {
-    return null;
+    return {};
   }
 }
 
-async function writeCache(data) {
-  try {
-    await fs.mkdir(path.dirname(CACHE_FILE), { recursive: true });
-    const payload = {
-      timestamp: Date.now(),
-      data
-    };
-    await fs.writeFile(CACHE_FILE, JSON.stringify(payload, null, 2), 'utf8');
-    return true;
-  } catch (error) {
-    console.error('Erreur lors de l\'écriture du cache:', error);
-    return false;
+async function readCache(username) {
+  const store = await readCacheStore();
+  const entry = store[cacheKey(username)];
+  if (!isValidCacheEntry(entry)) {
+    return null;
   }
+  if (Date.now() - entry.timestamp >= CACHE_DURATION) {
+    return null;
+  }
+  return entry.data;
+}
+
+/* Verrou en mémoire par clé : deux écritures concurrentes pour le même
+   compte dans ce processus sont sérialisées, ce qui évite de perdre une
+   entrée lors du read-modify-write de la map. */
+const cacheLocks = new Map();
+
+async function withCacheLock(key, task) {
+  const previous = cacheLocks.get(key) || Promise.resolve();
+  const current = previous.then(task, task);
+  const guard = current.catch(() => {});
+  cacheLocks.set(key, guard);
+  try {
+    return await current;
+  } finally {
+    if (cacheLocks.get(key) === guard) {
+      cacheLocks.delete(key);
+    }
+  }
+}
+
+async function writeCache(username, data) {
+  const key = cacheKey(username);
+  return withCacheLock(key, async () => {
+    let tempFile = null;
+    try {
+      await fs.mkdir(path.dirname(CACHE_FILE), { recursive: true });
+      const store = await readCacheStore();
+      store[key] = {
+        timestamp: Date.now(),
+        data
+      };
+      tempFile = `${CACHE_FILE}.${process.pid}.${Date.now()}.${Math.random()
+        .toString(16)
+        .slice(2)}.tmp`;
+      await fs.writeFile(tempFile, JSON.stringify(store, null, 2), 'utf8');
+      await fs.rename(tempFile, CACHE_FILE);
+      return true;
+    } catch (error) {
+      if (tempFile) {
+        await fs.unlink(tempFile).catch(() => {});
+      }
+      console.error('Erreur lors de l\'écriture du cache:', error.message);
+      return false;
+    }
+  });
 }
 
 async function fetchGitHubStats(username) {
@@ -189,11 +333,12 @@ async function fetchGitHubStats(username) {
   let page = 1;
   let hasMore = true;
 
-  while (hasMore) {
+  while (hasMore && page <= MAX_REPO_PAGES && allRepos.length < MAX_REPOS) {
     const response = await axios.get(
-      `https://api.github.com/users/${username}/repos`,
+      `https://api.github.com/users/${encodeURIComponent(username)}/repos`,
       {
         headers,
+        timeout: GITHUB_TIMEOUT_MS,
         params: {
           type: 'public',
           per_page: 100,
@@ -213,9 +358,16 @@ async function fetchGitHubStats(username) {
     }
   }
 
+  if (allRepos.length > MAX_REPOS) {
+    allRepos = allRepos.slice(0, MAX_REPOS);
+  }
+
   const languagePromises = allRepos.map(async (repo) => {
     try {
-      const langResponse = await axios.get(repo.languages_url, { headers });
+      const langResponse = await axios.get(repo.languages_url, {
+        headers,
+        timeout: GITHUB_TIMEOUT_MS
+      });
       return {
         name: repo.name,
         languages: langResponse.data
@@ -228,7 +380,13 @@ async function fetchGitHubStats(username) {
     }
   });
 
-  const reposWithLanguages = await Promise.all(languagePromises);
+  /* Si le fan-out dépasse le délai global, on dégrade proprement : les
+     dépôts restent listés, seuls les langages manquent. */
+  const reposWithLanguages = await withTimeout(
+    Promise.all(languagePromises),
+    LANGUAGE_FANOUT_TIMEOUT_MS,
+    allRepos.map((repo) => ({ name: repo.name, languages: {} }))
+  );
 
   const repoStats = reposWithLanguages.map((repo) => {
     let repoBytes = 0;
@@ -304,23 +462,32 @@ async function fetchGitHubStats(username) {
 
 app.get('/api/github-stats/:username?', async (req, res) => {
   try {
-    const username = req.params.username || GITHUB_USERNAME;
-    if (!username) {
+    const rawUsername =
+      req.params.username === undefined ? GITHUB_USERNAME : req.params.username;
+    if (!isValidGitHubUsername(rawUsername)) {
       return res.status(400).json({
-        error: 'GITHUB_USERNAME manquant'
+        error: 'Nom de compte GitHub invalide'
       });
     }
+    const username = rawUsername;
 
-    const forceRefresh = req.query.refresh === 'true';
-    if (!forceRefresh) {
-      const cached = await readCache();
+    /* Le front n'utilise pas ?refresh=true. Un rafraîchissement forcé exige
+       désormais un secret serveur (x-refresh-secret) et reste borné par un
+       intervalle minimal global. Sinon la requête est servie depuis le cache. */
+    const forcedRefresh =
+      req.query.refresh === 'true' &&
+      hasValidRefreshSecret(req) &&
+      claimForcedRefresh();
+
+    if (!forcedRefresh) {
+      const cached = await readCache(username);
       if (cached) {
         return res.json(cached);
       }
     }
 
     const stats = await fetchGitHubStats(username);
-    await writeCache(stats);
+    await writeCache(username, stats);
     return res.json(stats);
   } catch (error) {
     console.error('Erreur API GitHub:', error.message);
@@ -346,6 +513,19 @@ app.get('/cv-alternance', (req, res) => {
         'attachment; filename="CV-Mattia-Parrinello-alternance.pdf"'
     }
   });
+});
+
+// Middleware d'erreur terminal : log côté serveur, réponse générique.
+// Aucune pile, aucun chemin absolu, aucun détail interne ne sort au client.
+app.use((err, req, res, next) => {
+  console.error('Erreur non gérée:', err && err.message ? err.message : 'inconnue');
+  if (res.headersSent) {
+    return next(err);
+  }
+  if (req.path.startsWith('/api/')) {
+    return res.status(500).json({ error: 'Erreur interne du serveur' });
+  }
+  return res.status(500).type('text/plain').send('Erreur interne du serveur');
 });
 
 // Démarrer le serveur
