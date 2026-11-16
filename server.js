@@ -14,6 +14,22 @@ const ALLOWED_FORKS = new Set(['photography-portfolio']);
 const CACHE_FILE = path.join(__dirname, 'cache', 'github-stats.json');
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24h
 
+/* Un compte GitHub fait 1 à 39 caractères, uniquement alphanumériques et
+   tirets, sans tiret en tête ni en fin, ni deux tirets consécutifs. Toute
+   valeur hors de cette grammaire est refusée avant de toucher au cache ou
+   à l'API amont. */
+function isValidGitHubUsername(value) {
+  return (
+    typeof value === 'string' &&
+    value.length >= 1 &&
+    value.length <= 39 &&
+    /^[A-Za-z0-9-]+$/.test(value) &&
+    !value.startsWith('-') &&
+    !value.endsWith('-') &&
+    !value.includes('--')
+  );
+}
+
 // Estimation du nombre de lignes par Ko de code pour chaque langage
 const LINES_PER_KB = {
   // Markup
@@ -191,7 +207,7 @@ async function fetchGitHubStats(username) {
 
   while (hasMore) {
     const response = await axios.get(
-      `https://api.github.com/users/${username}/repos`,
+      `https://api.github.com/users/${encodeURIComponent(username)}/repos`,
       {
         headers,
         params: {
@@ -304,12 +320,14 @@ async function fetchGitHubStats(username) {
 
 app.get('/api/github-stats/:username?', async (req, res) => {
   try {
-    const username = req.params.username || GITHUB_USERNAME;
-    if (!username) {
+    const rawUsername =
+      req.params.username === undefined ? GITHUB_USERNAME : req.params.username;
+    if (!isValidGitHubUsername(rawUsername)) {
       return res.status(400).json({
-        error: 'GITHUB_USERNAME manquant'
+        error: 'Nom de compte GitHub invalide'
       });
     }
+    const username = rawUsername;
 
     const forceRefresh = req.query.refresh === 'true';
     if (!forceRefresh) {
