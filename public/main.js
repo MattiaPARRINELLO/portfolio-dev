@@ -1,6 +1,6 @@
 /* =========================================================
    Portfolio Mattia Parrinello, interactions
-   Révélations au scroll, dérive des photographies,
+   Entrées des morceaux, dérive de l'affiche,
    et préparation du message de contact.
    ========================================================= */
 
@@ -8,7 +8,7 @@ document.documentElement.classList.add('js');
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-/* ── Révélations : chaque bloc entre une fois, décalé de 70 ms ── */
+/* ── Entrées : chaque bloc du morceau arrive une fois, décalé ── */
 function initReveal() {
   const targets = [...document.querySelectorAll('[data-reveal]')];
   if (!targets.length) return;
@@ -28,7 +28,7 @@ function initReveal() {
 
   groups.forEach((list) => {
     list.forEach((el, index) => {
-      el.style.setProperty('--delay', `${Math.min(index, 6) * 70}ms`);
+      el.style.setProperty('--delay', `${Math.min(index, 6) * 80}ms`);
     });
   });
 
@@ -40,37 +40,23 @@ function initReveal() {
         observer.unobserve(entry.target);
       });
     },
-    { rootMargin: '0px 0px -12% 0px', threshold: 0.12 }
+    { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
   );
 
   targets.forEach((el) => observer.observe(el));
 }
 
-/* ── Dérive : la photo d'ouverture et les tirages bougent au scroll ── */
-function initDrift() {
-  const heroImage = document.querySelector('.hero__media img');
-  const shots = [...document.querySelectorAll('.ph[data-drift]')];
-  if (!heroImage && !shots.length) return;
+/* ── L'affiche respire au scroll ── */
+function initPoster() {
+  const image = document.querySelector('.poster__photo img');
+  if (!image || reduceMotion.matches) return;
 
   let frame = 0;
 
   const update = () => {
     frame = 0;
-    const viewport = window.innerHeight;
-
-    if (heroImage) {
-      const y = Math.min(window.scrollY, viewport);
-      heroImage.style.transform = `translate3d(0, ${y * 0.18}px, 0) scale(1.06)`;
-    }
-
-    shots.forEach((shot) => {
-      const rate = Number(shot.dataset.drift) || 0.1;
-      const rect = shot.getBoundingClientRect();
-      // On ne dérive que près de l'écran : la composition au repos reste stable
-      const raw = rect.top + rect.height / 2 - viewport / 2;
-      const offset = Math.max(-viewport * 0.4, Math.min(viewport * 0.4, raw));
-      shot.style.transform = `translate3d(0, ${(-offset * rate).toFixed(2)}px, 0)`;
-    });
+    const y = Math.min(window.scrollY, window.innerHeight);
+    image.style.translate = `0 ${(y * 0.12).toFixed(1)}px`;
   };
 
   const request = () => {
@@ -78,21 +64,8 @@ function initDrift() {
     frame = window.requestAnimationFrame(update);
   };
 
-  if (reduceMotion.matches) return;
-
   update();
   window.addEventListener('scroll', request, { passive: true });
-  window.addEventListener('resize', request);
-
-  reduceMotion.addEventListener('change', (event) => {
-    if (!event.matches) return;
-    window.removeEventListener('scroll', request);
-    window.removeEventListener('resize', request);
-    if (heroImage) heroImage.style.transform = '';
-    shots.forEach((shot) => {
-      shot.style.transform = '';
-    });
-  });
 }
 
 /* ── Contact : un nom d'entreprise suffit pour préparer le message ── */
@@ -134,7 +107,7 @@ function initContactForm() {
 
 function init() {
   initReveal();
-  initDrift();
+  initPoster();
   initContactForm();
 }
 
