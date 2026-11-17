@@ -32,3 +32,6 @@ cache
 
 # Outils
 .playwright-cli/
+
+# Travail design (captures, direction)
+.taste-skill/
