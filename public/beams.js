@@ -6,7 +6,7 @@
    ========================================================= */
 
 (function () {
-  const canvas = document.querySelector('.hero__beams');
+  const canvas = document.querySelector('.hero__beams, .poster__beams');
   if (!canvas) return;
 
   const ctx = canvas.getContext('2d', { alpha: true });

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Maquette console, Mattia Parrinello</title>
+    <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="/mockups/console.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Aller au contenu</a>
+
+    <header class="hero" id="top">
+      <canvas class="hero__beams" aria-hidden="true"></canvas>
+      <div class="hero__photo" aria-hidden="true">
+        <img src="/assets/photos/hero-concert.webp" alt="" width="1600" height="898" />
+      </div>
+
+      <nav class="bar" aria-label="Navigation principale">
+        <a class="bar__name" href="#top">Mattia Parrinello</a>
+        <ul class="bar__links">
+          <li><a href="#work">Ce qui tourne</a></li>
+          <li><a href="#log">Le journal</a></li>
+          <li><a href="#photos">Photos</a></li>
+        </ul>
+        <a class="bar__action" href="#contact">Alternance 2027</a>
+      </nav>
+
+      <div class="hero__grid">
+        <div class="hero__text">
+          <h1 class="hero__name">Mattia<br />Parrinello</h1>
+          <p class="hero__lead">
+            Je construis des applications web qui tournent en production. Le week-end, je
+            photographie des concerts. Dans les deux cas, je choisis ce qui reste.
+          </p>
+          <p class="status">
+            <span class="status__dot" aria-hidden="true"></span>
+            <a href="https://brain.mprnl.fr" target="_blank" rel="noopener noreferrer"
+              >brain.mprnl.fr</a
+            >
+            <span class="status__sep">/</span> en production
+            <span class="status__sep">/</span> 46 fichiers de tests
+            <span class="status__sep">/</span> 34 routes
+          </p>
+          <p class="hero__actions">
+            <a class="button" href="https://brain.mprnl.fr" target="_blank" rel="noopener noreferrer"
+              >Ouvrir Backstage</a
+            >
+            <a class="link" href="/cv-alternance" download>Le CV, une page</a>
+          </p>
+        </div>
+
+        <div class="screen">
+          <p class="screen__label">
+            backstage <span>/</span> accueil <span>/</span> en production
+          </p>
+          <img
+            class="screen__img"
+            src="/assets/projects/backstage-console.webp"
+            alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
+            width="1400"
+            height="1067"
+          />
+          <pre class="screen__term"><code>$ npm test
+  ok  46 fichiers de tests
+  ok  34 routes
+  ok  build</code></pre>
+        </div>
+      </div>
+
+      <p class="hero__credit">Photo : Mattia Parrinello, concert à Paris, 2026.</p>
+    </header>
+
+    <main id="main">
+      <section class="section" id="work">
+        <div class="wrap section__head">
+          <h2 class="h2">Ce qui tourne</h2>
+          <p class="lede">
+            Deux projets, pas dix maquettes. Le premier me sert tous les jours, le second
+            tourne sur un modèle local.
+          </p>
+        </div>
+
+        <article class="project">
+          <figure class="project__media">
+            <img
+              src="/assets/projects/backstage-today.webp"
+              alt="Vue du jour de Backstage : agenda et mémoire de l'assistant"
+              width="1400"
+              height="1369"
+              loading="lazy"
+            />
+          </figure>
+          <div class="project__body">
+            <p class="project__kicker">En production depuis 2026</p>
+            <h3 class="project__title">Backstage</h3>
+            <p class="project__text">
+              Un second cerveau : chat IA à mémoire persistante, agenda synchronisé,
+              rappels. Passkeys, streaming, déploiement continu. 32 000 lignes de
+              TypeScript, 46 fichiers de tests. Je m'en sers chaque matin, ce qui est le
+              meilleur test.
+            </p>
+            <p class="project__links">
+              <a class="link" href="https://brain.mprnl.fr" target="_blank" rel="noopener noreferrer">Ouvrir l'app</a>
+              <a class="link" href="https://github.com/MattiaPARRINELLO/backstage" target="_blank" rel="noopener noreferrer">Code source</a>
+            </p>
+          </div>
+        </article>
+
+        <article class="project project--flipped">
+          <figure class="project__media">
+            <img
+              src="/assets/projects/gymshark-home.webp"
+              alt="Accueil de Gymshark-Sync, assistant interne sur un modèle local"
+              width="1400"
+              height="757"
+              loading="lazy"
+            />
+          </figure>
+          <div class="project__body">
+            <p class="project__kicker">Projet de groupe, 2026</p>
+            <h3 class="project__title">Gymshark-Sync</h3>
+            <p class="project__text">
+              Un serveur Node.js et Express branché sur Ollama. Neuf workflows métier,
+              réponses en streaming, API documentée avec Swagger. J'ai écrit le serveur :
+              neuf workflows, zéro appel à l'extérieur.
+            </p>
+            <p class="project__links">
+              <a class="link" href="https://github.com/mattia-school/gymshark-sync" target="_blank" rel="noopener noreferrer">Code source</a>
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <section class="section section--field" id="log">
+        <div class="wrap section__head">
+          <h2 class="h2">Le journal</h2>
+          <p class="lede">
+            Mon parcours, lu comme un dépôt. Les branches, ce sont les projets perso et
+            l'école ; le tronc, ce sont les stages.
+          </p>
+        </div>
+
+        <div class="wrap">
+          <pre class="log"><code><span class="log__ref log__ref--main">main</span>    2027  <span class="log__hash">a41f0e2</span>  Alternance, recherche ouverte
+<span class="log__ref log__ref--main">main</span>    2026  <span class="log__hash">8c2b7d1</span>  Portfolio photo, premières accréditations
+<span class="log__ref log__ref--perso">perso</span>   2026  <span class="log__hash">d90e4aa</span>  Backstage, de l'idée à la production
+<span class="log__ref log__ref--ecole">ecole</span>   2026  <span class="log__hash">3f5c118</span>  Gymshark-Sync, assistant sur LLM local
+<span class="log__ref log__ref--main">main</span>    2025  <span class="log__hash">b71a6c9</span>  Sup de Vinci, bachelor informatique
+<span class="log__ref log__ref--main">main</span>    2023  <span class="log__hash">e02d3f5</span>  INOVSHOP Group, stages développeur
+<span class="log__ref log__ref--perso">perso</span>   2020  <span class="log__hash">1ad9c07</span>  Premier programme, premier bot Discord
+<span class="log__ref">HEAD</span>  <span class="log__hash">-------</span>  aujourd'hui</code></pre>
+          <p class="log__note">
+            Le commit que je préfère reste celui qui casse les tests, parce qu'après on
+            sait quoi réparer.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="photos">
+        <div class="wrap section__head">
+          <h2 class="h2">Ce que je vois</h2>
+          <p class="lede">
+            Le week-end, je photographie des concerts à Paris. Même travail qu'au clavier :
+            choisir ce qu'on montre, et ce qu'on laisse dans le noir.
+          </p>
+        </div>
+
+        <div class="strip">
+          <figure class="strip__item">
+            <img src="/assets/photos/concert-1.webp" alt="Deux interprètes suspendus au-dessus de la fosse" width="900" height="1604" loading="lazy" />
+          </figure>
+          <figure class="strip__item strip__item--wide">
+            <img src="/assets/photos/concert-4.webp" alt="Un chanteur en chemise rouge, bras levés" width="900" height="1604" loading="lazy" />
+          </figure>
+          <figure class="strip__item">
+            <img src="/assets/photos/concert-3.webp" alt="Une gerbe d'étincelles au-dessus d'un interprète en blanc" width="900" height="1604" loading="lazy" />
+          </figure>
+          <figure class="strip__item">
+            <img src="/assets/photos/concert-5.webp" alt="Une main tient une pochette de disque" width="900" height="900" loading="lazy" />
+          </figure>
+        </div>
+        <div class="wrap">
+          <p class="strip__credit">
+            Concerts, Paris, 2026.
+            <a class="link" href="https://photo.mprnl.fr" target="_blank" rel="noopener noreferrer">Le portfolio photo</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <div class="wrap contact__grid">
+          <div>
+            <h2 class="h2">La suite</h2>
+            <p class="contact__text">
+              Je cherche une alternance pour septembre 2027 : deux semaines en entreprise,
+              deux semaines à l'école. Le nom de votre boîte suffit pour préparer le mail,
+              je fais le reste.
+            </p>
+            <form class="field" id="contact-form" action="mailto:contact.mprnl@gmail.com" method="post" enctype="text/plain">
+              <label class="sr-only" for="company">Nom de l'entreprise</label>
+              <input id="company" name="company" type="text" placeholder="Nom de l'entreprise" autocomplete="organization" spellcheck="false" />
+              <button type="submit" aria-label="Préparer le message">&#8594;</button>
+            </form>
+            <p class="field__note">Le message s'ouvre pré-rempli. Rien ne part sans vous.</p>
+          </div>
+          <dl class="rows">
+            <div><dt>Email</dt><dd><a href="mailto:contact.mprnl@gmail.com">contact.mprnl@gmail.com</a></dd></div>
+            <div><dt>GitHub</dt><dd><a href="https://github.com/MattiaPARRINELLO" target="_blank" rel="noopener noreferrer">@MattiaPARRINELLO</a></dd></div>
+            <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/mattia-parrinello-015382208/" target="_blank" rel="noopener noreferrer">Mattia Parrinello</a></dd></div>
+            <div><dt>CV</dt><dd><a href="/cv-alternance" download>PDF, une page</a></dd></div>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Mattia Parrinello, développeur full-stack</p>
+      <p>© 2026 · Photographies : Mattia Parrinello</p>
+    </footer>
+
+    <div class="mockbar">
+      <span>Maquette</span>
+      <a href="/mockups/console.html" aria-current="page">A · console</a>
+      <a href="/mockups/setlist.html">B · setlist</a>
+    </div>
+
+    <script src="/beams.js" defer></script>
+    <script src="/mockups/mock.js"></script>
+  </body>
+</html>
