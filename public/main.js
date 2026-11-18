@@ -173,19 +173,40 @@ function initMotion() {
     gsap.set(wrap, { autoAlpha: 1 });
     scene.dataset.face = 'front';
 
-    const foilUpdate = () => {
+    /* Foil diffractif : l'angle effectif de la face visible décide de tout.
+       recto : eff = (ry, rx) ; verso : on mesure par rapport à la normale
+       opposée, donc eff = (ry - 180, -rx). L'énergie ne dépend que des
+       sinus absolus, donc elle reste continue pendant le retournement. */
+    const DEG = Math.PI / 180;
+    const clamp01 = (value) => (value < 0 ? 0 : value > 1 ? 1 : value);
+    const last = { hue: NaN, energy: NaN, shift: NaN, angle: NaN, x: NaN, y: NaN, glint: NaN };
+    const write = (name, value, epsilon, suffix = '') => {
+      const key = name.slice(7);
+      if (Math.abs(value - last[key]) < epsilon) return;
+      last[key] = value;
+      card.style.setProperty(name, value.toFixed(2) + suffix);
+    };
+
+    const foilUpdate = (progress = 0) => {
       const ry = Number(gsap.getProperty(card, 'rotationY')) || 0;
       const rx = Number(gsap.getProperty(card, 'rotationX')) || 0;
-      const radians = ((ry + rx) * Math.PI) / 180;
-      card.style.setProperty('--foil-hue', `${((ry + rx) * 1.6).toFixed(1)}deg`);
-      card.style.setProperty(
-        '--foil-energy',
-        Math.abs(Math.sin(radians)).toFixed(3)
-      );
-      card.style.setProperty(
-        '--foil-shift',
-        Math.min(1, Math.max(0, (ry + 16) / 206)).toFixed(3)
-      );
+      const isBack = progress >= 0.34;
+      const sy = Math.sin(ry * DEG) * (isBack ? -1 : 1);
+      const sx = Math.sin(rx * DEG) * (isBack ? -1 : 1);
+      const spread = Math.abs(Math.sin(ry * DEG));
+      const tilt = Math.abs(Math.sin(rx * DEG));
+
+      // 0 de face, 1 quand la surface est vue de biais
+      const energy = clamp01((2 * spread + 0.9 * tilt - 0.18) / 1.5);
+      const glint = clamp01(1 - Math.abs(energy - 0.52) / 0.3);
+
+      write('--foil-hue', Math.max(-48, Math.min(48, ry * 0.9 + rx * 2.2)), 0.05, 'deg');
+      write('--foil-energy', energy, 0.002);
+      write('--foil-shift', clamp01(0.5 + sy * 0.62 - sx * 0.1), 0.002);
+      write('--foil-angle', -18 + sy * 11 + sx * 7, 0.05, 'deg');
+      write('--foil-x', clamp01(0.5 + sy * 0.5 + sx * 0.08), 0.002);
+      write('--foil-y', clamp01(0.5 + sx * 0.55), 0.002);
+      write('--foil-glint', glint, 0.004);
     };
 
     foilUpdate();
@@ -197,11 +218,14 @@ function initMotion() {
         start: 'top top',
         end: 'bottom bottom',
         scrub: 0.5,
-        onUpdate: (self) => {
-          scene.dataset.face = self.progress < 0.34 ? 'front' : 'back';
-          card.style.setProperty('--sheen', self.progress.toFixed(3));
-          foilUpdate();
-        },
+      },
+      // le scrub avance sans nouvel événement de scroll : c'est la timeline
+      // elle-même qui pilote le foil, sinon les variables figent en cours de route
+      onUpdate() {
+        const progress = this.progress();
+        scene.dataset.face = progress < 0.34 ? 'front' : 'back';
+        card.style.setProperty('--sheen', progress.toFixed(3));
+        foilUpdate(progress);
       },
     });
 
