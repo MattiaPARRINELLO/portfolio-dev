@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Maquette setlist, Mattia Parrinello</title>
+    <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="/mockups/setlist.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Aller au contenu</a>
+
+    <header class="poster" id="top">
+      <canvas class="poster__beams" aria-hidden="true"></canvas>
+      <div class="poster__photo" aria-hidden="true">
+        <img src="/assets/photos/concert-1.webp" alt="" width="900" height="1604" />
+      </div>
+
+      <nav class="bar" aria-label="Navigation principale">
+        <a class="bar__name" href="#top">Mattia Parrinello</a>
+        <p class="bar__meta">Développeur full-stack, Paris</p>
+        <a class="bar__action" href="#rappel">Contact</a>
+      </nav>
+
+      <div class="poster__main">
+        <h1 class="poster__name">Mattia<br />Parrinello</h1>
+        <p class="poster__sub">
+          Développeur full-stack JS/TS. Applications en production, concerts le week-end.
+          Deux scènes, la même lumière.
+        </p>
+      </div>
+
+      <div class="poster__foot">
+        <p class="poster__tag">Setlist 2027 · 6 morceaux · un rappel</p>
+        <ol class="setlist">
+          <li><a href="#ouverture"><span class="setlist__time">21:00</span> Ouverture</a></li>
+          <li><a href="#backstage"><span class="setlist__time">21:04</span> Backstage</a></li>
+          <li><a href="#gymshark"><span class="setlist__time">21:09</span> Gymshark-Sync</a></li>
+          <li><a href="#journal"><span class="setlist__time">21:14</span> Le journal</a></li>
+          <li><a href="#projections"><span class="setlist__time">21:19</span> Projections</a></li>
+          <li><a href="#rappel"><span class="setlist__time">21:24</span> Rappel</a></li>
+        </ol>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="track" id="ouverture">
+        <header class="track__head">
+          <p class="track__time">21:00</p>
+          <h2 class="track__title">Ouverture</h2>
+          <p class="track__note">Balance faite. Ce morceau, je le joue depuis 2026.</p>
+        </header>
+        <div class="track__body">
+          <div class="track__text">
+            <p class="big">
+              Je code des applications web qui tournent en production, et je photographie
+              des concerts le week-end. Dans les deux cas, il s'agit de choisir ce qui
+              reste.
+            </p>
+          </div>
+          <dl class="facts">
+            <div><dt>En scène</dt><dd>backstage.mprnl.fr, tous les jours</dd></div>
+            <div><dt>Formation</dt><dd>Sup de Vinci, bachelor informatique</dd></div>
+            <div><dt>Disponible</dt><dd>Alternance, septembre 2027</dd></div>
+            <div><dt>Rythme</dt><dd>2 semaines entreprise, 2 semaines école</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="track track--split" id="backstage">
+        <header class="track__head">
+          <p class="track__time">21:04</p>
+          <h2 class="track__title">Backstage</h2>
+          <p class="track__note">Le morceau que je joue tous les matins, en production.</p>
+        </header>
+        <div class="track__body">
+          <figure class="shot">
+            <img
+              src="/assets/projects/backstage-console.webp"
+              alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
+              width="1400"
+              height="1067"
+              loading="lazy"
+            />
+          </figure>
+          <div class="track__text">
+            <p>
+              Un second cerveau : chat IA à mémoire persistante, agenda synchronisé,
+              rappels, notifications. Passkeys, streaming, déploiement continu.
+            </p>
+            <p class="small">
+              32 000 lignes de TypeScript. 46 fichiers de tests. 34 routes. Un utilisateur
+              quotidien, moi.
+            </p>
+            <p class="links">
+              <a class="link" href="https://backstage.mprnl.fr" target="_blank" rel="noopener noreferrer">Ouvrir l'app</a>
+              <a class="link" href="https://github.com/MattiaPARRINELLO/backstage" target="_blank" rel="noopener noreferrer">Code source</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="track track--split track--reverse" id="gymshark">
+        <header class="track__head">
+          <p class="track__time">21:09</p>
+          <h2 class="track__title">Gymshark-Sync</h2>
+          <p class="track__note">Projet de groupe. Le batteur, c'était moi.</p>
+        </header>
+        <div class="track__body">
+          <figure class="shot">
+            <img
+              src="/assets/projects/gymshark-workflows.webp"
+              alt="Bibliothèque des neuf workflows de Gymshark-Sync"
+              width="1400"
+              height="757"
+              loading="lazy"
+            />
+          </figure>
+          <div class="track__text">
+            <p>
+              Un serveur Node.js et Express branché sur un modèle local via Ollama. Neuf
+              workflows métier, réponses en streaming, API documentée avec Swagger.
+            </p>
+            <p class="small">
+              Neuf workflows. Zéro appel à l'extérieur. Les données ne sortent pas de la
+              machine.
+            </p>
+            <p class="links">
+              <a class="link" href="https://github.com/mattia-school/gymshark-sync" target="_blank" rel="noopener noreferrer">Code source</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="track" id="journal">
+        <header class="track__head">
+          <p class="track__time">21:14</p>
+          <h2 class="track__title">Le journal</h2>
+          <p class="track__note">Six ans de répétitions, dans l'ordre.</p>
+        </header>
+        <div class="track__body">
+          <ol class="timeline">
+            <li><span>2020</span> Premier programme, premier bot Discord</li>
+            <li><span>2023</span> INOVSHOP Group, stages développeur</li>
+            <li><span>2025</span> Portfolio photo, premières accréditations</li>
+            <li><span>2025</span> Sup de Vinci, bachelor informatique</li>
+            <li><span>2026</span> Backstage, de l'idée à la production</li>
+            <li><span>2026</span> Gymshark-Sync, assistant sur LLM local</li>
+            <li><span>2027</span> Alternance, la prochaine date</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="track track--full" id="projections">
+        <header class="track__head">
+          <p class="track__time">21:19</p>
+          <h2 class="track__title">Projections</h2>
+          <p class="track__note">Le week-end, la lumière change de côté.</p>
+        </header>
+        <div class="projections">
+          <figure><img src="/assets/photos/concert-4.webp" alt="Un chanteur en chemise rouge, bras levés" width="900" height="1604" loading="lazy" /></figure>
+          <figure><img src="/assets/photos/concert-3.webp" alt="Une gerbe d'étincelles au-dessus d'un interprète en blanc" width="900" height="1604" loading="lazy" /></figure>
+          <figure><img src="/assets/photos/concert-2.webp" alt="Deux silhouettes éclairées sur fond noir" width="900" height="1604" loading="lazy" /></figure>
+          <figure><img src="/assets/photos/concert-5.webp" alt="Une main tient une pochette de disque" width="900" height="900" loading="lazy" /></figure>
+        </div>
+        <p class="projections__credit">
+          Concerts, Paris, 2026.
+          <a class="link" href="https://photo.mprnl.fr" target="_blank" rel="noopener noreferrer">Le portfolio photo</a>
+        </p>
+      </section>
+
+      <section class="track track--paper" id="rappel">
+        <header class="track__head">
+          <p class="track__time">21:24</p>
+          <h2 class="track__title">Rappel</h2>
+          <p class="track__note">Je réponds sous 24 h. Bis : le CV tient sur une page.</p>
+        </header>
+        <div class="track__body">
+          <div class="track__text">
+            <p class="big">
+              Une alternance pour septembre 2027, deux semaines en entreprise, deux
+              semaines à l'école. Le nom de votre boîte suffit, je prépare le mail.
+            </p>
+            <form class="field" id="contact-form" action="mailto:contact.mprnl@gmail.com" method="post" enctype="text/plain">
+              <label class="sr-only" for="company">Nom de l'entreprise</label>
+              <input id="company" name="company" type="text" placeholder="Nom de l'entreprise" autocomplete="organization" spellcheck="false" />
+              <button type="submit" aria-label="Préparer le message">&#8594;</button>
+            </form>
+            <p class="field__note">Le message s'ouvre pré-rempli. Rien ne part sans vous.</p>
+          </div>
+          <dl class="rows">
+            <div><dt>Email</dt><dd><a href="mailto:contact.mprnl@gmail.com">contact.mprnl@gmail.com</a></dd></div>
+            <div><dt>GitHub</dt><dd><a href="https://github.com/MattiaPARRINELLO" target="_blank" rel="noopener noreferrer">@MattiaPARRINELLO</a></dd></div>
+            <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/mattia-parrinello-015382208/" target="_blank" rel="noopener noreferrer">Mattia Parrinello</a></dd></div>
+            <div><dt>CV</dt><dd><a href="/cv-alternance" download>PDF, une page</a></dd></div>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Mattia Parrinello, développeur full-stack</p>
+      <p>Photographies : Mattia Parrinello, Paris, 2026.</p>
+    </footer>
+
+    <div class="mockbar">
+      <span>Maquette</span>
+      <a href="/mockups/console.html">A · console</a>
+      <a href="/mockups/setlist.html" aria-current="page">B · setlist</a>
+    </div>
+
+    <script src="/beams.js" defer></script>
+    <script src="/mockups/mock.js"></script>
+  </body>
+</html>

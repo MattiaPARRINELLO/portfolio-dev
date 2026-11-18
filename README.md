@@ -1,6 +1,6 @@
 <div align="center">
   <h1>👨‍💻 Portfolio-Dev</h1>
-  <p><strong>Portfolio développeur avec stats GitHub en temps réel.</strong></p>
+  <p><strong>Portfolio de Mattia Parrinello, développeur full-stack et photographe de concert.</strong></p>
 
 ![Express](https://img.shields.io/badge/Express-4-000000?logo=express)
 ![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-F7DF1E?logo=javascript)
@@ -18,16 +18,21 @@
 ---
 
 ## 🎯 Présentation
-Portfolio personnel de Mattia Parrinello. Design responsive avec micro-interactions, effet tilt 3D, easter eggs (Matrix, Konami code). Affiche les stats GitHub en temps réel et une timeline dexpérience.
+Le portfolio est construit comme une setlist de concert : six morceaux, un rappel. Chaque morceau montre une preuve, une application en production, un parcours lu comme un `git log`, ou une série de photographies de concert. Deux faisceaux de projecteurs balaient l'affiche d'ouverture.
 
 ---
 
 ## ✨ Fonctionnalités
-- ✅ Stats GitHub en temps réel
-- ✅ Micro-interactions et animations
-- ✅ Easter eggs (Matrix, Konami code)
-- ✅ Timeline dexpérience
-- ✅ Design responsive
+- ✅ Affiche plein cadre, nom en pleine largeur
+- ✅ Pass backstage en 3D : épaisseur réelle, foil iridescent AAA, il se retourne au scroll
+- ✅ Lumière de salle en canvas, teintée par morceau (bleu sur Backstage, rouge sur le rappel)
+- ✅ Backstage en scène épinglée : accueil, puis un chat qui s'écrit au scroll (question, réflexion, réponse avec sa source)
+- ✅ Gymshark-Sync dans une fenêtre d'application à onglets (vraies captures)
+- ✅ Terminal de démonstration dans Backstage (`help`, `stats`, `memory`)
+- ✅ Parcours en `git log` avec branches colorées
+- ✅ Photos avec artiste, salle, date et réglages, fiche plein écran au clic
+- ✅ Contact : le nom de l'entreprise prépare le mail pré-rempli
+- ✅ Design responsive et `prefers-reduced-motion` respecté
 
 ---
 
@@ -44,9 +49,10 @@ npm start
 ## 🛠️ Technologies
 | Technologie | Rôle |
 |-------------|------|
-| Express | Serveur |
-| HTML/CSS/JS | Frontend |
-| GitHub API | Stats en temps réel |
+| Express | Serveur et endpoint CV |
+| HTML/CSS/JS | Frontend, sans dépendance |
+| Canvas 2D | Faisceaux de projecteurs |
+| Polices auto-hébergées | Space Grotesk, Inter, JetBrains Mono |
 
 ---
 

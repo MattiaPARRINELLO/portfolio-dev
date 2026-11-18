@@ -5,48 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Portfolio de Mattia Parrinello, développeur full-stack JS/TS. Applications Next.js, React, TypeScript et Node.js : Backstage, un second cerveau IA en production."
+      content="Portfolio de Mattia Parrinello, développeur full-stack JS/TS à Paris. Applications Next.js, React, TypeScript et Node.js en production, et photographie de concert le week-end. Alternance septembre 2027."
     />
     <meta name="darkreader-lock" />
     <meta name="author" content="Mattia Parrinello" />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://dev.mprnl.fr/" />
-    <meta name="theme-color" content="#0a0a0b" />
-    <title>Mattia Parrinello | Développeur Full-Stack JS/TS</title>
+    <meta name="theme-color" content="#070607" />
+    <title>Mattia Parrinello, développeur full-stack JS/TS à Paris</title>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="Mattia Parrinello" />
-    <meta
-      property="og:title"
-      content="Mattia Parrinello | Développeur Full-Stack JS/TS"
-    />
+    <meta property="og:title" content="Mattia Parrinello, développeur full-stack JS/TS à Paris" />
     <meta
       property="og:description"
-      content="Portfolio de Mattia Parrinello, développeur full-stack JS/TS. Applications Next.js, React, TypeScript et Node.js : Backstage, un second cerveau IA en production."
+      content="Applications web en production : Next.js, React, TypeScript, Node.js. Photographie de concert le week-end. Alternance à partir de septembre 2027."
     />
     <meta property="og:url" content="https://dev.mprnl.fr/" />
-    <meta
-      property="og:image"
-      content="https://dev.mprnl.fr/assets/images/og-cover.png"
-    />
+    <meta property="og:image" content="https://dev.mprnl.fr/assets/images/og-cover.png" />
     <meta property="og:image:alt" content="Portfolio de Mattia Parrinello" />
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Mattia Parrinello | Développeur Full-Stack JS/TS"
-    />
+    <meta name="twitter:title" content="Mattia Parrinello, développeur full-stack JS/TS à Paris" />
     <meta
       name="twitter:description"
-      content="Portfolio de Mattia Parrinello, développeur full-stack JS/TS. Applications Next.js, React, TypeScript et Node.js : Backstage, un second cerveau IA en production."
+      content="Applications web en production : Next.js, React, TypeScript, Node.js. Photographie de concert le week-end."
     />
-    <meta
-      name="twitter:image"
-      content="https://dev.mprnl.fr/assets/images/og-cover.png"
-    />
+    <meta name="twitter:image" content="https://dev.mprnl.fr/assets/images/og-cover.png" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -54,7 +42,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <link rel="manifest" href="site.webmanifest" />
 
-    <!-- Polices auto-hébergées : plus de DNS/TLS externe au premier écran -->
+    <!-- Polices auto-hébergées : aucun DNS externe au premier écran -->
     <link rel="stylesheet" href="/assets/fonts/fonts.css" />
     <link
       rel="preload"
@@ -63,13 +51,7 @@
       type="font/woff2"
       crossorigin
     />
-    <link
-      rel="preload"
-      href="/assets/fonts/inter-400-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    <link rel="preload" href="/assets/photos/hero-concert.webp" as="image" />
     <link rel="stylesheet" href="styles.css" />
 
     <script type="application/ld+json">
@@ -79,7 +61,7 @@
         "name": "Mattia Parrinello",
         "jobTitle": "Développeur Full-Stack",
         "url": "https://dev.mprnl.fr/",
-        "description": "Portfolio de Mattia Parrinello, développeur full-stack JS/TS. Applications Next.js, React, TypeScript et Node.js : Backstage, un second cerveau IA en production.",
+        "description": "Portfolio de Mattia Parrinello, développeur full-stack JS/TS à Paris. Applications Next.js, React, TypeScript et Node.js en production.",
         "knowsAbout": ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL", "WebAuthn", "SSE"],
         "sameAs": [
           "https://github.com/MattiaPARRINELLO",
@@ -97,17 +79,17 @@
           {
             "@type": "SoftwareSourceCode",
             "position": 1,
-            "name": "Backstage — second cerveau IA personnel",
+            "name": "Backstage, second cerveau IA personnel",
             "description": "PWA installable : chat IA à mémoire persistante, agenda synchronisé, rappels, notifications push, authentification passkey, streaming SSE. Déployée en production.",
             "programmingLanguage": ["TypeScript", "React", "Next.js", "Node.js"],
             "codeRepository": "https://github.com/MattiaPARRINELLO/backstage",
-            "url": "https://brain.mprnl.fr",
+            "url": "https://backstage.mprnl.fr",
             "author": { "@type": "Person", "name": "Mattia Parrinello" }
           },
           {
             "@type": "SoftwareSourceCode",
             "position": 2,
-            "name": "Gymshark-Sync — assistant interne sur LLM local",
+            "name": "Gymshark-Sync, assistant interne sur LLM local",
             "description": "Serveur Node.js / Express relié à un modèle local via Ollama : neuf workflows métier, streaming SSE, API documentée avec Swagger.",
             "programmingLanguage": ["JavaScript", "Node.js", "Express"],
             "codeRepository": "https://github.com/mattia-school/gymshark-sync",
@@ -119,448 +101,721 @@
   </head>
 
   <body>
-    <a href="#hero" class="sr-only">Aller au contenu</a>
+    <a class="skip-link" href="#main">Aller au contenu</a>
 
-    <!-- ═══════════════ NAVBAR ═══════════════ -->
-    <nav id="navbar" class="navbar" aria-label="Navigation principale">
-      <div class="container navbar__inner">
-        <a href="#hero" class="logo">Mattia<span>.</span></a>
+    <canvas class="room" aria-hidden="true"></canvas>
 
-        <ul class="nav-links">
-          <li><a href="#about" class="nav-link">À propos</a></li>
-          <li><a href="#work" class="nav-link">Projets</a></li>
-          <li><a href="#journey" class="nav-link">Parcours</a></li>
-          <li><a href="#stack" class="nav-link">Stack</a></li>
-        </ul>
-
-        <a href="/cv-alternance" download class="navbar__cv">CV</a>
-        <a href="#contact" class="navbar__cta">Me contacter</a>
-
-        <button
-          id="mobile-menu-btn"
-          class="hamburger"
-          aria-label="Ouvrir le menu"
-          aria-expanded="false"
-          aria-controls="mobile-menu"
-        >
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-        </button>
+    <!-- ═══════════════ AFFICHE ═══════════════ -->
+    <header class="poster" id="top" data-cue="#dfe8ff">
+      <div class="poster__photo" aria-hidden="true">
+        <img src="/assets/photos/concert-1.webp" alt="" width="900" height="1604" fetchpriority="high" />
       </div>
 
-      <div id="mobile-menu" class="mobile-menu">
-        <div class="container">
-          <ul class="mobile-nav-list">
-            <li><a href="#about" class="mobile-nav-link">À propos</a></li>
-            <li><a href="#work" class="mobile-nav-link">Projets</a></li>
-            <li><a href="#journey" class="mobile-nav-link">Parcours</a></li>
-            <li><a href="#stack" class="mobile-nav-link">Stack</a></li>
-            <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
-          <li>
-            <a href="/cv-alternance" download class="mobile-nav-link">CV (PDF)</a>
-          </li>
-          </ul>
-        </div>
+      <nav class="bar" aria-label="Navigation principale">
+        <a class="bar__name" href="#top">Mattia Parrinello</a>
+        <p class="bar__meta">Développeur full-stack, Paris</p>
+        <a class="bar__action" href="#rappel">Contact</a>
+      </nav>
+
+      <div class="poster__main">
+        <h1 class="poster__name">Mattia<br />Parrinello</h1>
+        <p class="poster__sub">
+          Développeur full-stack JS/TS. Applications en production, concerts le week-end.
+          Deux scènes, la même lumière.
+        </p>
+        <p class="poster__actions">
+          <a class="button" href="#backstage">Ouvrir Backstage</a>
+          <a class="link" href="/cv-alternance" download>Le CV, une page</a>
+        </p>
       </div>
-    </nav>
 
-    <main>
-      <!-- ═══════════════ HERO ═══════════════ -->
-      <section id="hero" class="hero">
-        <div class="grid-lines" aria-hidden="true"></div>
-        <div class="hero-glow" aria-hidden="true"></div>
+      <div class="poster__foot">
+        <p class="poster__tag">Setlist 2027 · 6 morceaux · un rappel</p>
+        <ol class="setlist">
+          <li><a href="#ouverture"><span class="setlist__time">21:00</span> Ouverture</a></li>
+          <li><a href="#backstage"><span class="setlist__time">21:04</span> Backstage</a></li>
+          <li><a href="#gymshark"><span class="setlist__time">21:09</span> Gymshark-Sync</a></li>
+          <li><a href="#journal"><span class="setlist__time">21:14</span> Le journal</a></li>
+          <li><a href="#projections"><span class="setlist__time">21:19</span> Projections</a></li>
+          <li><a href="#rappel"><span class="setlist__time">21:24</span> Rappel</a></li>
+        </ol>
+        <p class="poster__credit">
+          Photo d'ouverture : Jok'air, Pagaille Festival, Bordeaux, août 2026.
+        </p>
+      </div>
+    </header>
 
-        <div class="container hero__content">
-          <div class="badge">
-            <span class="badge__dot" aria-hidden="true"></span>
-            Disponible pour une alternance — septembre 2027
+    <main id="main">
+      <!-- ═══════════════ 1. OUVERTURE ═══════════════ -->
+      <section class="track" id="ouverture" data-cue="#f0e6d2" style="--cue: #f0e6d2">
+        <header class="track__head" data-reveal>
+          <p class="track__time">21:00</p>
+          <h2 class="track__title">Ouverture</h2>
+          <p class="track__note">Balance faite. Ce morceau, je le joue depuis 2026.</p>
+        </header>
+        <div class="track__body">
+          <div class="track__text">
+            <p class="big">
+              Je code des applications en production. Le week-end, je photographie des
+              concerts.
+            </p>
+          </div>
+          <dl class="facts" data-reveal>
+            <div><dt>En scène</dt><dd>backstage.mprnl.fr, tous les jours</dd></div>
+            <div><dt>Formation</dt><dd>Sup de Vinci, bachelor informatique</dd></div>
+            <div><dt>Disponible</dt><dd>Alternance, septembre 2027</dd></div>
+            <div><dt>Rythme</dt><dd>2 semaines entreprise, 2 semaines école</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ═══════════════ INTERLUDE : LE PASS ═══════════════ -->
+      <section class="pass-scene" id="pass" data-cue="#dfe8ff" data-step="1" aria-labelledby="pass-title">
+        <div class="pass-photo" aria-hidden="true">
+          <img
+            src="/assets/photos/concert-2.webp"
+            alt=""
+            width="1100"
+            height="1956"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="pass-stage">
+          <div class="pass-copy">
+            <h2 class="pass-title" id="pass-title">Le pass</h2>
+            <div class="pass-steps">
+              <p class="pass-step pass-step--1">
+                Une accréditation, un nom, une date. C'est ce qu'on porte autour du cou
+                quand on travaille dans le noir.
+              </p>
+              <p class="pass-step pass-step--2">
+                Le même pass, de l'autre côté : le projet qu'il y a derrière.
+              </p>
+              <p class="pass-step pass-step--3">
+                Backstage, en production depuis 2026. Quarante-six fichiers de tests, et
+                une mémoire qui survit d'une session à l'autre.
+              </p>
+            </div>
           </div>
 
-          <h1 class="hero__title">
-            Développeur<br />
-            <span class="dim">full-stack</span> JS/TS
-          </h1>
-
-          <p class="hero__subtitle">
-            Je conçois des applications web <strong>qui tournent en production</strong>,
-            du serveur à l'interface.
-          </p>
-
-          <div class="hero__actions">
-            <a href="#work" class="btn btn--primary">
-              Voir mes projets
-              <svg
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
+          <div class="pass-wrap" aria-hidden="true">
+            <div class="pass">
+              <svg class="pass__defs" aria-hidden="true" focusable="false">
+                <defs>
+                  <linearGradient id="pf-base" x1="0" y1="0" x2="0.7" y2="1">
+                    <stop offset="0" stop-color="#f2f4f6" />
+                    <stop offset="0.32" stop-color="#c2c8d0" />
+                    <stop offset="0.6" stop-color="#dfe3e8" />
+                    <stop offset="1" stop-color="#b4bac2" />
+                  </linearGradient>
+                  <linearGradient id="pf-wash" x1="0" y1="0" x2="1" y2="0.55">
+                    <stop offset="0" stop-color="#e0aecd" />
+                    <stop offset="0.18" stop-color="#e3d09a" />
+                    <stop offset="0.36" stop-color="#a3d8c0" />
+                    <stop offset="0.54" stop-color="#a4cbe3" />
+                    <stop offset="0.72" stop-color="#c0b0e8" />
+                    <stop offset="0.88" stop-color="#ddb0b0" />
+                    <stop offset="1" stop-color="#a4cbe3" />
+                  </linearGradient>
+                  <linearGradient id="pf-line-a" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#c2619b" stop-opacity="0" />
+                    <stop offset="0.18" stop-color="#c2619b" stop-opacity="0.9" />
+                    <stop offset="0.42" stop-color="#b8923f" stop-opacity="0.85" />
+                    <stop offset="0.68" stop-color="#3f8fb5" stop-opacity="0.9" />
+                    <stop offset="0.9" stop-color="#7563c9" stop-opacity="0.75" />
+                    <stop offset="1" stop-color="#7563c9" stop-opacity="0" />
+                  </linearGradient>
+                  <linearGradient id="pf-line-b" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#3f8fb5" stop-opacity="0" />
+                    <stop offset="0.2" stop-color="#3f8fb5" stop-opacity="0.85" />
+                    <stop offset="0.44" stop-color="#4a9c7b" stop-opacity="0.9" />
+                    <stop offset="0.7" stop-color="#b8923f" stop-opacity="0.85" />
+                    <stop offset="0.9" stop-color="#c2619b" stop-opacity="0.75" />
+                    <stop offset="1" stop-color="#c2619b" stop-opacity="0" />
+                  </linearGradient>
+                  <linearGradient id="pf-line-c" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#7563c9" stop-opacity="0" />
+                    <stop offset="0.16" stop-color="#7563c9" stop-opacity="0.8" />
+                    <stop offset="0.4" stop-color="#c2619b" stop-opacity="0.85" />
+                    <stop offset="0.64" stop-color="#3f8fb5" stop-opacity="0.9" />
+                    <stop offset="0.86" stop-color="#4a9c7b" stop-opacity="0.75" />
+                    <stop offset="1" stop-color="#4a9c7b" stop-opacity="0" />
+                  </linearGradient>
+                  <linearGradient id="pf-line-d" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#b8923f" stop-opacity="0" />
+                    <stop offset="0.22" stop-color="#b8923f" stop-opacity="0.85" />
+                    <stop offset="0.46" stop-color="#c46e6e" stop-opacity="0.8" />
+                    <stop offset="0.7" stop-color="#7563c9" stop-opacity="0.85" />
+                    <stop offset="0.88" stop-color="#3f8fb5" stop-opacity="0.75" />
+                    <stop offset="1" stop-color="#3f8fb5" stop-opacity="0" />
+                  </linearGradient>
+                  <linearGradient id="pf-steel" x1="0" y1="0" x2="0.15" y2="1">
+                    <stop offset="0" stop-color="#333a41" />
+                    <stop offset="0.28" stop-color="#525b64" />
+                    <stop offset="0.5" stop-color="#262c32" />
+                    <stop offset="0.72" stop-color="#464f57" />
+                    <stop offset="1" stop-color="#1d2227" />
+                  </linearGradient>
+                  <linearGradient id="pf-spec" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#ffffff" stop-opacity="0" />
+                    <stop offset="0.42" stop-color="#ffffff" stop-opacity="0.55" />
+                    <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.8" />
+                    <stop offset="0.58" stop-color="#ffffff" stop-opacity="0.55" />
+                    <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+                  </linearGradient>
+                  <filter id="pf-grain" x="0" y="0" width="100%" height="100%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" stitchTiles="stitch" />
+                    <feColorMatrix type="saturate" values="0" />
+                  </filter>
+                  <filter id="pf-blur" x="-60%" y="-200%" width="220%" height="500%">
+                    <feGaussianBlur stdDeviation="1.8" />
+                  </filter>
+                  <clipPath id="pf-aaa-lit">
+                    <rect x="0" y="0" width="300" height="33" />
+                  </clipPath>
+                </defs>
               </svg>
-            </a>
-            <a
-              href="/cv-alternance"
-              download
-              class="btn btn--secondary"
-            >
-              Télécharger le CV
-              <svg
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"
+              <span class="pass__side pass__side--top" aria-hidden="true"></span>
+              <span class="pass__side pass__side--bottom" aria-hidden="true"></span>
+              <span class="pass__side pass__side--left" aria-hidden="true"></span>
+              <span class="pass__side pass__side--right" aria-hidden="true"></span>
+
+              <div class="pass__face pass__face--front">
+                <span class="pass__clip" aria-hidden="true"></span>
+                <div class="pass__id">
+                  <p class="pass__brand">Backstage</p>
+                  <img
+                    class="pass__photo"
+                    src="/assets/photos/pass-portrait.webp"
+                    alt=""
+                    width="500"
+                    height="500"
+                  />
+                  <p class="pass__name">Mattia<br />Parrinello</p>
+                  <p class="pass__role">Développeur full-stack</p>
+                  <dl class="pass__facts">
+                    <div><dt>Accès</dt><dd>Production</dd></div>
+                    <div><dt>Ville</dt><dd>Paris</dd></div>
+                    <div><dt>Date</dt><dd>Sept. 2027</dd></div>
+                  </dl>
+                <div class="pass__foil" aria-hidden="true">
+                  <svg class="pass__foil-svg" viewBox="0 0 300 64" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <rect width="300" height="64" fill="url(#pf-base)" />
+                    <g class="pf-bands">
+                      <rect class="pf-wash" x="-80" y="-40" width="460" height="144" fill="url(#pf-wash)" />
+                      <g class="pf-lines">
+                        <rect class="pf-h" x="-80" y="2" width="460" height="9" fill="url(#pf-line-a)" />
+                        <rect class="pf-c" x="-80" y="5" width="460" height="3" fill="url(#pf-line-a)" />
+                        <rect class="pf-h" x="-80" y="10" width="460" height="9" fill="url(#pf-line-b)" />
+                        <rect class="pf-c" x="-80" y="13" width="460" height="3" fill="url(#pf-line-b)" />
+                        <rect class="pf-h" x="-80" y="18" width="460" height="9" fill="url(#pf-line-c)" />
+                        <rect class="pf-c" x="-80" y="21" width="460" height="3" fill="url(#pf-line-c)" />
+                        <rect class="pf-h" x="-80" y="26" width="460" height="9" fill="url(#pf-line-d)" />
+                        <rect class="pf-c" x="-80" y="29" width="460" height="3" fill="url(#pf-line-d)" />
+                        <rect class="pf-h" x="-80" y="34" width="460" height="9" fill="url(#pf-line-c)" />
+                        <rect class="pf-c" x="-80" y="37" width="460" height="3" fill="url(#pf-line-c)" />
+                        <rect class="pf-h" x="-80" y="42" width="460" height="9" fill="url(#pf-line-b)" />
+                        <rect class="pf-c" x="-80" y="45" width="460" height="3" fill="url(#pf-line-b)" />
+                        <rect class="pf-h" x="-80" y="50" width="460" height="9" fill="url(#pf-line-a)" />
+                        <rect class="pf-c" x="-80" y="53" width="460" height="3" fill="url(#pf-line-a)" />
+                        <rect class="pf-h" x="-80" y="58" width="460" height="9" fill="url(#pf-line-d)" />
+                        <rect class="pf-c" x="-80" y="61" width="460" height="3" fill="url(#pf-line-d)" />
+                      </g>
+                    </g>
+                    <g class="pf-guilloche">
+                      <path d="M-20 6 C 60 0 130 12 190 6 S 300 0 320 6" />
+                      <path d="M-20 14 C 60 8 130 20 190 14 S 300 8 320 14" />
+                      <path d="M-20 22 C 60 28 130 16 190 22 S 300 28 320 22" />
+                      <path d="M-20 30 C 60 24 130 36 190 30 S 300 24 320 30" />
+                      <path d="M-20 38 C 60 44 130 32 190 38 S 300 44 320 38" />
+                      <path d="M-20 46 C 60 40 130 52 190 46 S 300 40 320 46" />
+                      <path d="M-20 54 C 60 60 130 48 190 54 S 300 60 320 54" />
+                    </g>
+                    <g class="pf-micro">
+                      <text x="150" y="9" textLength="292" lengthAdjust="spacingAndGlyphs">BACKSTAGE · MPRNL · 2027 · BACKSTAGE · MPRNL</text>
+                      <text x="150" y="59" textLength="292" lengthAdjust="spacingAndGlyphs">TOUR 2027 · ACCÈS PRODUCTION · MPRNL · BACKSTAGE</text>
+                    </g>
+                    <g class="pf-glint">
+                      <circle cx="281" cy="11" r="7.4" />
+                      <path d="M281 5.4l1.8 4 4.4.5-3.3 2.9.9 4.3-3.8-2.2-3.8 2.2.9-4.3-3.3-2.9 4.4-.5z" />
+                    </g>
+                    <rect width="300" height="64" filter="url(#pf-grain)" opacity="0.12" />
+                    <g class="pf-spec">
+                      <ellipse cx="150" cy="32" rx="150" ry="3.4" fill="url(#pf-spec)" filter="url(#pf-blur)" />
+                    </g>
+                    <g class="pf-aaa">
+                      <text class="pf-aaa__engrave" x="150" y="44" dx="-0.8" dy="-0.9">AAA</text>
+                      <text class="pf-aaa__edge" x="150" y="44" dx="0.9" dy="0.9">AAA</text>
+                      <text class="pf-aaa__fill" x="150" y="44">AAA</text>
+                      <text class="pf-aaa__lit" x="150" y="44" clip-path="url(#pf-aaa-lit)">AAA</text>
+                    </g>
+                  </svg>
+                </div>
+                  <div class="pass__foot">
+                                  <svg class="pass__barcode" viewBox="0 0 96 28" preserveAspectRatio="none" aria-hidden="true">
+                    <rect x="0" width="2" height="28" />
+                    <rect x="4" width="1" height="28" />
+                    <rect x="7" width="3" height="28" />
+                    <rect x="12" width="1" height="28" />
+                    <rect x="15" width="2" height="28" />
+                    <rect x="19" width="4" height="28" />
+                    <rect x="25" width="1" height="28" />
+                    <rect x="28" width="2" height="28" />
+                    <rect x="32" width="1" height="28" />
+                    <rect x="35" width="3" height="28" />
+                    <rect x="40" width="1" height="28" />
+                    <rect x="43" width="2" height="28" />
+                    <rect x="47" width="1" height="28" />
+                    <rect x="50" width="3" height="28" />
+                    <rect x="55" width="2" height="28" />
+                    <rect x="59" width="1" height="28" />
+                    <rect x="62" width="4" height="28" />
+                    <rect x="68" width="1" height="28" />
+                    <rect x="71" width="2" height="28" />
+                    <rect x="75" width="1" height="28" />
+                    <rect x="78" width="3" height="28" />
+                    <rect x="83" width="1" height="28" />
+                    <rect x="86" width="2" height="28" />
+                    <rect x="90" width="1" height="28" />
+                    <rect x="93" width="3" height="28" />
+                  </svg>
+    
+                    <span class="pass__serial">mprnl.fr · 2027</span>
+                  </div>
+                  <p class="pass__url">backstage.mprnl.fr</p>
+                </div>
+                <span class="pass__sheen" aria-hidden="true"></span>
+              </div>
+
+              <div class="pass__face pass__face--back">
+                <span class="pass__clip" aria-hidden="true"></span>
+                <div class="pass__id">
+                  <p class="pass__brand">Tour 2027</p>
+                  <p class="pass__back-title">Le second<br />cerveau</p>
+                  <p class="pass__back-sub">
+                    Une application en production depuis 2026. Je m'en sers chaque matin.
+                  </p>
+                  <dl class="pass__facts">
+                    <div><dt>Tests</dt><dd>46 fichiers</dd></div>
+                    <div><dt>Routes</dt><dd>34</dd></div>
+                    <div><dt>Mémoire</dt><dd>persistante</dd></div>
+                  </dl>
+                <div class="pass__foil" aria-hidden="true">
+                  <svg class="pass__foil-svg" viewBox="0 0 300 64" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                    <rect width="300" height="64" fill="url(#pf-base)" />
+                    <g class="pf-bands">
+                      <rect class="pf-wash" x="-80" y="-40" width="460" height="144" fill="url(#pf-wash)" />
+                      <g class="pf-lines">
+                        <rect class="pf-h" x="-80" y="2" width="460" height="9" fill="url(#pf-line-a)" />
+                        <rect class="pf-c" x="-80" y="5" width="460" height="3" fill="url(#pf-line-a)" />
+                        <rect class="pf-h" x="-80" y="10" width="460" height="9" fill="url(#pf-line-b)" />
+                        <rect class="pf-c" x="-80" y="13" width="460" height="3" fill="url(#pf-line-b)" />
+                        <rect class="pf-h" x="-80" y="18" width="460" height="9" fill="url(#pf-line-c)" />
+                        <rect class="pf-c" x="-80" y="21" width="460" height="3" fill="url(#pf-line-c)" />
+                        <rect class="pf-h" x="-80" y="26" width="460" height="9" fill="url(#pf-line-d)" />
+                        <rect class="pf-c" x="-80" y="29" width="460" height="3" fill="url(#pf-line-d)" />
+                        <rect class="pf-h" x="-80" y="34" width="460" height="9" fill="url(#pf-line-c)" />
+                        <rect class="pf-c" x="-80" y="37" width="460" height="3" fill="url(#pf-line-c)" />
+                        <rect class="pf-h" x="-80" y="42" width="460" height="9" fill="url(#pf-line-b)" />
+                        <rect class="pf-c" x="-80" y="45" width="460" height="3" fill="url(#pf-line-b)" />
+                        <rect class="pf-h" x="-80" y="50" width="460" height="9" fill="url(#pf-line-a)" />
+                        <rect class="pf-c" x="-80" y="53" width="460" height="3" fill="url(#pf-line-a)" />
+                        <rect class="pf-h" x="-80" y="58" width="460" height="9" fill="url(#pf-line-d)" />
+                        <rect class="pf-c" x="-80" y="61" width="460" height="3" fill="url(#pf-line-d)" />
+                      </g>
+                    </g>
+                    <g class="pf-guilloche">
+                      <path d="M-20 6 C 60 0 130 12 190 6 S 300 0 320 6" />
+                      <path d="M-20 14 C 60 8 130 20 190 14 S 300 8 320 14" />
+                      <path d="M-20 22 C 60 28 130 16 190 22 S 300 28 320 22" />
+                      <path d="M-20 30 C 60 24 130 36 190 30 S 300 24 320 30" />
+                      <path d="M-20 38 C 60 44 130 32 190 38 S 300 44 320 38" />
+                      <path d="M-20 46 C 60 40 130 52 190 46 S 300 40 320 46" />
+                      <path d="M-20 54 C 60 60 130 48 190 54 S 300 60 320 54" />
+                    </g>
+                    <g class="pf-micro">
+                      <text x="150" y="9" textLength="292" lengthAdjust="spacingAndGlyphs">BACKSTAGE · MPRNL · 2027 · BACKSTAGE · MPRNL</text>
+                      <text x="150" y="59" textLength="292" lengthAdjust="spacingAndGlyphs">TOUR 2027 · ACCÈS PRODUCTION · MPRNL · BACKSTAGE</text>
+                    </g>
+                    <g class="pf-glint">
+                      <circle cx="281" cy="11" r="7.4" />
+                      <path d="M281 5.4l1.8 4 4.4.5-3.3 2.9.9 4.3-3.8-2.2-3.8 2.2.9-4.3-3.3-2.9 4.4-.5z" />
+                    </g>
+                    <rect width="300" height="64" filter="url(#pf-grain)" opacity="0.12" />
+                    <g class="pf-spec">
+                      <ellipse cx="150" cy="32" rx="150" ry="3.4" fill="url(#pf-spec)" filter="url(#pf-blur)" />
+                    </g>
+                    <g class="pf-aaa">
+                      <text class="pf-aaa__engrave" x="150" y="44" dx="-0.8" dy="-0.9">AAA</text>
+                      <text class="pf-aaa__edge" x="150" y="44" dx="0.9" dy="0.9">AAA</text>
+                      <text class="pf-aaa__fill" x="150" y="44">AAA</text>
+                      <text class="pf-aaa__lit" x="150" y="44" clip-path="url(#pf-aaa-lit)">AAA</text>
+                    </g>
+                  </svg>
+                </div>
+                  <div class="pass__foot">
+                                  <svg class="pass__barcode" viewBox="0 0 96 28" preserveAspectRatio="none" aria-hidden="true">
+                    <rect x="0" width="2" height="28" />
+                    <rect x="4" width="1" height="28" />
+                    <rect x="7" width="3" height="28" />
+                    <rect x="12" width="1" height="28" />
+                    <rect x="15" width="2" height="28" />
+                    <rect x="19" width="4" height="28" />
+                    <rect x="25" width="1" height="28" />
+                    <rect x="28" width="2" height="28" />
+                    <rect x="32" width="1" height="28" />
+                    <rect x="35" width="3" height="28" />
+                    <rect x="40" width="1" height="28" />
+                    <rect x="43" width="2" height="28" />
+                    <rect x="47" width="1" height="28" />
+                    <rect x="50" width="3" height="28" />
+                    <rect x="55" width="2" height="28" />
+                    <rect x="59" width="1" height="28" />
+                    <rect x="62" width="4" height="28" />
+                    <rect x="68" width="1" height="28" />
+                    <rect x="71" width="2" height="28" />
+                    <rect x="75" width="1" height="28" />
+                    <rect x="78" width="3" height="28" />
+                    <rect x="83" width="1" height="28" />
+                    <rect x="86" width="2" height="28" />
+                    <rect x="90" width="1" height="28" />
+                    <rect x="93" width="3" height="28" />
+                  </svg>
+    
+                    <span class="pass__serial">mprnl.fr · 2027</span>
+                  </div>
+                  <p class="pass__url">backstage.mprnl.fr</p>
+                </div>
+                <span class="pass__sheen" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ 2. BACKSTAGE ═══════════════ -->
+      <section class="track track--split" id="backstage" data-cue="#9fd0ff" style="--cue: #9fd0ff">
+        <header class="track__head" data-reveal>
+          <p class="track__time">21:04</p>
+          <h2 class="track__title">Backstage</h2>
+          <p class="track__note">Le morceau que je joue tous les matins, en production.</p>
+        </header>
+        <div class="story" data-story>
+          <div class="story__stage">
+            <div class="story__copy">
+              <div class="story__steps">
+                <p class="story__step" data-step="1">
+                  <span>Le matin</span>
+                  Un second cerveau : le chat, l'agenda, les rappels. Un seul écran, et
+                  rien d'autre à ouvrir.
+                </p>
+                <p class="story__step" data-step="2">
+                  <span>La question</span>
+                  Je demande en langage normal. Pas de formulaire, pas de menu, pas de
+                  dossier à retrouver.
+                </p>
+                <p class="story__step" data-step="3">
+                  <span>La réponse</span>
+                  Il interroge l'agenda, vérifie la salle, puis retrouve le souvenir et sa
+                  source. C'est ça, la mémoire.
+                </p>
+              </div>
+              <p class="story__links">
+                <a class="link" href="https://backstage.mprnl.fr" target="_blank" rel="noopener noreferrer">Ouvrir l'app</a>
+                <a class="link" href="https://github.com/MattiaPARRINELLO/backstage" target="_blank" rel="noopener noreferrer">Code source</a>
+              </p>
+            </div>
+
+            <div class="story__app">
+              <div class="app app--story" data-ui>
+                <div class="app__bar">
+                  <div class="app__tabs" aria-hidden="true">
+                    <span class="app__tab is-on" data-tab="0">Accueil</span>
+                    <span class="app__tab" data-tab="1">Chat</span>
+                  </div>
+                  <p class="app__url"><span class="app__dot" aria-hidden="true"></span>backstage.mprnl.fr</p>
+                </div>
+                <div class="app__panels app__panels--story">
+                  <div class="app__panel" data-panel="0">
+                    <img
+                      src="/assets/projects/backstage-console.webp"
+                      alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
+                      width="1400"
+                      height="1067"
+                    />
+                  </div>
+                  <div class="app__panel app__panel--chat" data-panel="1">
+                    <div class="chat">
+                      <div class="chat__thread">
+                        <div class="chat__msg chat__msg--user">
+                          <p data-user-text>Qu'est-ce que j'ai à 13h30 aujourd'hui ?</p>
+                        </div>
+
+                        <div class="chat__reason" data-reason>
+                          <p class="chat__label">Réflexion</p>
+                          <p class="chat__reason-line">Je regarde l'agenda du jour, autour de 13h30.</p>
+                          <p class="chat__reason-line">Un événement. Je vérifie la salle et l'heure avant de répondre.</p>
+                        </div>
+
+                        <div class="chat__tool" data-tool>
+                          <p class="chat__tool-name">agenda.lookup</p>
+                          <p class="chat__tool-args">{ "date": "jeudi 1 octobre", "heure": "13:30" }</p>
+                          <p class="chat__tool-result"><span class="chat__ok">ok</span> 1 événement · E25 Personal Branding</p>
+                        </div>
+
+                        <div class="chat__msg chat__msg--ai" data-ai>
+                          <p data-ai-text>E25 Personal Branding, salle 05. Tu m'avais demandé de te prévenir 30 minutes avant.</p>
+                          <p class="chat__source" data-source>Souvenir du 3 octobre · agenda synchronisé</p>
+                        </div>
+                      </div>
+                      <div class="chat__input">
+                        <span>Demander à Backstage…</span>
+                        <span class="chat__caret" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app__status">
+                  <span>en production</span>
+                  <span>32 000 lignes</span>
+                  <span>46 tests</span>
+                  <span>34 routes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ 3. GYMSHARK-SYNC ═══════════════ -->
+      <section class="track track--split track--reverse" id="gymshark" data-cue="#b7e3a1" style="--cue: #b7e3a1">
+        <header class="track__head" data-reveal>
+          <p class="track__time">21:09</p>
+          <h2 class="track__title">Gymshark-Sync</h2>
+          <p class="track__note">Projet de groupe. Le batteur, c'était moi.</p>
+        </header>
+        <div class="track__body">
+          <div class="app" data-app data-ui data-ratio="wide" data-reveal>
+            <div class="app__bar">
+              <div class="app__tabs" role="tablist" aria-label="Vues de Gymshark-Sync">
+                <button class="app__tab is-on" id="gs-tab-1" role="tab" aria-selected="true" aria-controls="gs-panel-1" tabindex="0">Bibliothèque</button>
+                <button class="app__tab" id="gs-tab-2" role="tab" aria-selected="false" aria-controls="gs-panel-2" tabindex="-1">Assistant</button>
+              </div>
+              <p class="app__url"><span class="app__dot app__dot--local" aria-hidden="true"></span>gymshark-sync · local</p>
+            </div>
+            <div class="app__panels">
+              <div class="app__panel" id="gs-panel-1" role="tabpanel" aria-labelledby="gs-tab-1">
+                <img
+                  src="/assets/projects/gymshark-workflows.webp"
+                  alt="Bibliothèque des neuf workflows de l'assistant Gymshark-Sync"
+                  width="1400"
+                  height="757"
                 />
-              </svg>
-            </a>
-            <a href="#contact" class="btn-ghost">Écrire un message</a>
-          </div>
-
-          <p class="hero__proof">
-            <span class="ok">brain.mprnl.fr</span> en production — utilisé tous
-            les jours
-          </p>
-        </div>
-
-        <div class="scroll-hint" aria-hidden="true">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            />
-          </svg>
-        </div>
-      </section>
-
-      <!-- ═══════════════ À PROPOS ═══════════════ -->
-      <section id="about" class="section section--tinted">
-        <div class="container">
-          <p class="eyebrow">À propos</p>
-          <h2 class="section-title">
-            Du serveur à l'interface, <span class="accent-underline">sans le gap.</span>
-          </h2>
-
-          <div class="about">
-            <div class="about__text">
-              <p>
-                Étudiant en informatique à Sup de Vinci, je construis des
-                applications web full-stack. Côté serveur : API Node.js,
-                Next.js, authentification, persistance. Côté client : interfaces
-                React et TypeScript.
-              </p>
-              <p>
-                Ma méthode : <strong>un projet réel plutôt que dix exercices.</strong>
-                Backstage est une application que j'utilise tous les jours,
-                déployée en production, avec une suite de tests. C'est ce cycle
-                complet — concevoir, coder, tester, corriger, livrer — que je
-                veux poursuivre en entreprise.
-              </p>
-            </div>
-
-            <div class="about__pillars">
-              <article class="pillar">
-                <span class="pillar__num">01</span>
-                <div>
-                  <h3 class="pillar__title">Livrer, pas seulement coder</h3>
-                  <p class="pillar__text">
-                    Passage du code au déploiement : variables d'environnement,
-                    migrations, monitoring, rollbacks.
-                  </p>
-                </div>
-              </article>
-              <article class="pillar">
-                <span class="pillar__num">02</span>
-                <div>
-                  <h3 class="pillar__title">Écrire des tests</h3>
-                  <p class="pillar__text">
-                    46 fichiers de tests sur Backstage. Les tests comme
-                    garde-fou, pas comme formalité.
-                  </p>
-                </div>
-              </article>
-              <article class="pillar">
-                <span class="pillar__num">03</span>
-                <div>
-                  <h3 class="pillar__title">Sécuriser par défaut</h3>
-                  <p class="pillar__text">
-                    Passkeys, JWT courts, OAuth — et validation systématique des
-                    entrées.
-                  </p>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════ RÉFLEXIONS ═══════════════ -->
-      <section id="focus" class="section">
-        <div class="container">
-          <p class="eyebrow eyebrow--centered">Réflexions</p>
-          <h2 class="section-title section-title--centered">
-            Ce que l'IA sait,<br /><span class="dim">ce qu'elle oublie.</span>
-          </h2>
-
-          <div class="focus">
-            <div class="focus__col">
-              <p>
-                Un modèle repart de zéro à chaque conversation. Toute la
-                difficulté n'est pas dans la réponse — elle est dans ce qui
-                survit d'une session à l'autre : ce qu'on garde, ce qu'on
-                résume, ce qu'on a le droit d'oublier.
-              </p>
-            </div>
-            <div class="focus__col">
-              <p>
-                La confiance, elle, ne vient pas de la justesse. Elle vient de
-                ce qu'on montre : d'où sort une réponse, depuis quand un
-                souvenir existe, quand il est périmé. C'est exactement le
-                travail sur la mémoire persistante de Backstage.
-              </p>
-            </div>
-          </div>
-
-          <p class="focus__bridge">
-            Le week-end, je photographie des concerts. Même obsession : ce que
-            la lumière révèle, ce qu'elle laisse dans l'ombre —
-            <a
-              href="https://photo.mprnl.fr"
-              target="_blank"
-              rel="noopener noreferrer"
-              >photo.mprnl.fr</a
-            >
-          </p>
-        </div>
-      </section>
-
-      <!-- ═══════════════ PROJETS ═══════════════ -->
-      <section id="work" class="section">
-        <div class="grid-lines" aria-hidden="true"></div>
-        <div class="container">
-          <p class="eyebrow">Projets</p>
-          <h2 class="section-title">Ce que j'ai construit.</h2>
-          <p class="section-lede">
-            Deux projets qui tournent réellement. Le premier est en production,
-            le second tourne sur un modèle local.
-          </p>
-
-          <div id="projects" class="projects"></div>
-        </div>
-      </section>
-
-      <!-- ═══════════════ PARCOURS ═══════════════ -->
-      <section id="journey" class="section section--tinted">
-        <div class="container">
-          <p class="eyebrow eyebrow--centered">Parcours</p>
-          <h2 class="section-title section-title--centered">
-            Comment j'y suis arrivé.
-          </h2>
-
-          <div class="timeline">
-            <div id="timeline" class="timeline__list"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════ STACK ═══════════════ -->
-      <section id="stack" class="section">
-        <div class="container">
-          <p class="eyebrow eyebrow--centered">Stack</p>
-          <h2 class="section-title section-title--centered">
-            Les outils du quotidien.
-          </h2>
-          <p class="section-lede section-lede--centered">
-            Les technologies que j'utilise réellement en production, pas une liste
-            de logos.
-          </p>
-
-          <div id="stack-grid" class="stack-strip stack-panel"></div>
-        </div>
-      </section>
-
-      <!-- ═══════════════ CONTACT ═══════════════ -->
-      <section id="contact" class="section section--tinted">
-        <div class="container">
-          <p class="eyebrow eyebrow--centered">Contact</p>
-          <h2 class="section-title section-title--centered">
-            Parlons de votre projet.
-          </h2>
-          <p class="section-lede section-lede--centered">
-            Disponible pour une alternance à partir de septembre 2027, rythme
-            2 semaines en entreprise / 2 semaines en école. Réponse sous 24 h.
-          </p>
-
-          <div class="contact-grid">
-            <a href="mailto:contact.mprnl@gmail.com" class="contact-card">
-              <div class="contact-card__icon">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
               </div>
-              <div>
-                <div class="contact-card__label">Email</div>
-                <div class="contact-card__value">contact.mprnl@gmail.com</div>
-              </div>
-            </a>
-
-            <a
-              href="/cv-alternance"
-              download
-              class="contact-card"
-            >
-              <div class="contact-card__icon">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"
-                  />
-                </svg>
-              </div>
-              <div>
-                <div class="contact-card__label">CV</div>
-                <div class="contact-card__value">PDF — 1 page</div>
-              </div>
-            </a>
-
-            <a
-              href="https://github.com/MattiaPARRINELLO"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="contact-card"
-            >
-              <div class="contact-card__icon">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path
-                    d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57C20.565 21.795 24 17.31 24 12c0-6.63-5.37-12-12-12z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <div class="contact-card__label">GitHub</div>
-                <div class="contact-card__value">@MattiaPARRINELLO</div>
-              </div>
-            </a>
-
-            <a
-              href="https://www.linkedin.com/in/mattia-parrinello-015382208/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="contact-card"
-            >
-              <div class="contact-card__icon">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path
-                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.065 2.063-2.065 1.14 0 2.064.927 2.064 2.065 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <div class="contact-card__label">LinkedIn</div>
-                <div class="contact-card__value">Mattia Parrinello</div>
-              </div>
-            </a>
-
-            <a
-              href="https://photo.mprnl.fr"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="contact-card"
-            >
-              <div class="contact-card__icon">
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <div class="contact-card__label">Photographie</div>
-                <div class="contact-card__value">photo.mprnl.fr</div>
-              </div>
-            </a>
-          </div>
-
-          <!-- Action directe : le mail s'ouvre pré-rempli -->
-          <div class="contact-cta">
-            <a
-              href="mailto:contact.mprnl@gmail.com?subject=Alternance%20d%C3%A9veloppeur%20%E2%80%94%20%5BEntreprise%5D&amp;body=Bonjour%20Mattia%2C%0A%0AJe%20vous%20contacte%20au%20sujet%20de%20..."
-              class="btn btn--primary"
-            >
-              Écrire un message
-              <svg
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              <div class="app__panel" id="gs-panel-2" role="tabpanel" aria-labelledby="gs-tab-2" hidden>
+                <img
+                  src="/assets/projects/gymshark-home.webp"
+                  alt="Accueil de Gymshark-Sync : l'assistant et sa barre de conversation"
+                  width="1400"
+                  height="757"
+                  loading="lazy"
                 />
-              </svg>
-            </a>
-            <p class="contact-cta__note">
-              Objet et message pré-remplis — réponse sous 24 h.
+              </div>
+            </div>
+            <div class="app__status">
+              <span>9 workflows</span>
+              <span>100 % local</span>
+              <span>API Swagger</span>
+            </div>
+          </div>
+          <div class="track__text" data-reveal>
+            <p>
+              Un serveur Node.js et Express branché sur un modèle local via Ollama. Neuf
+              workflows métier, réponses en streaming, API documentée avec Swagger.
+            </p>
+            <p class="small">
+              J'ai écrit le serveur. Neuf workflows, zéro appel à l'extérieur : les données
+              ne sortent pas de la machine.
+            </p>
+            <p class="links">
+              <a class="link" href="https://github.com/mattia-school/gymshark-sync" target="_blank" rel="noopener noreferrer">Code source</a>
             </p>
           </div>
         </div>
       </section>
+
+      <!-- ═══════════════ 4. LE JOURNAL ═══════════════ -->
+      <section class="track" id="journal" data-cue="#ffb38a" style="--cue: #ffb38a">
+        <header class="track__head" data-reveal>
+          <p class="track__time">21:14</p>
+          <h2 class="track__title">Le journal</h2>
+          <p class="track__note">Six ans de répétitions, dans l'ordre.</p>
+        </header>
+        <div class="track__body">
+          <pre class="log"><code><span class="log__ref log__ref--main">main</span>    2027  <span class="log__hash">a41f0e2</span>  Alternance, recherche ouverte
+<span class="log__ref log__ref--main">main</span>    2026  <span class="log__hash">8c2b7d1</span>  Portfolio photo, premières accréditations
+<span class="log__ref log__ref--perso">perso</span>   2026  <span class="log__hash">d90e4aa</span>  Backstage, de l'idée à la production
+<span class="log__ref log__ref--ecole">ecole</span>   2026  <span class="log__hash">3f5c118</span>  Gymshark-Sync, assistant sur LLM local
+<span class="log__ref log__ref--main">main</span>    2025  <span class="log__hash">b71a6c9</span>  Sup de Vinci, bachelor informatique
+<span class="log__ref log__ref--main">main</span>    2023  <span class="log__hash">e02d3f5</span>  INOVSHOP Group, stages développeur
+<span class="log__ref log__ref--perso">perso</span>   2020  <span class="log__hash">1ad9c07</span>  Premier programme, premier bot Discord
+<span class="log__ref">HEAD</span>  <span class="log__hash">-------</span>  aujourd'hui</code></pre>
+          <p class="log__note" data-reveal>
+            Le commit que je préfère reste celui qui casse les tests, parce qu'après on sait
+            quoi réparer.
+          </p>
+        </div>
+      </section>
+
+      <!-- ═══════════════ 5. PROJECTIONS ═══════════════ -->
+      <section class="track track--full" id="projections" data-cue="#ff6a5a" style="--cue: #ff6a5a">
+        <header class="track__head" data-reveal>
+          <p class="track__time">21:19</p>
+          <h2 class="track__title">Projections</h2>
+          <p class="track__note">Le week-end, la lumière change de côté.</p>
+        </header>
+        <div class="projections">
+          <figure class="shot" data-photo
+            data-title="Jok'air"
+            data-place="Pagaille Festival, Bordeaux"
+            data-meta="29 août 2026 · 70 mm · f/2.8 · 1/1600 s · 500 ISO"
+            data-alt="Un chanteur en chemise rouge, bras levés, dans la lumière d'un projecteur">
+            <button class="shot__open" type="button" aria-label="Voir en grand : Jok'air, Pagaille Festival">
+              <img src="/assets/photos/concert-4.webp" alt="Un chanteur en chemise rouge, bras levés, dans la lumière d'un projecteur" width="1100" height="1956" loading="lazy" />
+            </button>
+            <figcaption class="shot__caption" data-reveal>
+              <span class="shot__who">Jok'air</span>
+              <span class="shot__where">Pagaille Festival, Bordeaux</span>
+            </figcaption>
+          </figure>
+
+          <figure class="shot" data-photo
+            data-title="Damso"
+            data-place="Paris La Défense Arena"
+            data-meta="30 mai 2026 · 200 mm · f/4 · 1/250 s · 1250 ISO"
+            data-alt="Une gerbe d'étincelles s'élève au-dessus d'un interprète en blanc">
+            <button class="shot__open" type="button" aria-label="Voir en grand : Damso, Paris La Défense Arena">
+              <img src="/assets/photos/concert-3.webp" alt="Une gerbe d'étincelles s'élève au-dessus d'un interprète en blanc" width="1100" height="1956" loading="lazy" />
+            </button>
+            <figcaption class="shot__caption" data-reveal>
+              <span class="shot__who">Damso</span>
+              <span class="shot__where">Paris La Défense Arena</span>
+            </figcaption>
+          </figure>
+
+          <figure class="shot" data-photo
+            data-title="Damso"
+            data-place="Paris La Défense Arena"
+            data-meta="30 mai 2026 · 192 mm · f/4 · 1/250 s · 320 ISO"
+            data-alt="Deux silhouettes éclairées sur fond noir, l'une en noir, l'autre en blanc">
+            <button class="shot__open" type="button" aria-label="Voir en grand : Damso, Paris La Défense Arena">
+              <img src="/assets/photos/concert-2.webp" alt="Deux silhouettes éclairées sur fond noir, l'une en noir, l'autre en blanc" width="1100" height="1956" loading="lazy" />
+            </button>
+            <figcaption class="shot__caption" data-reveal>
+              <span class="shot__who">Damso</span>
+              <span class="shot__where">Paris La Défense Arena</span>
+            </figcaption>
+          </figure>
+
+          <figure class="shot" data-photo
+            data-title="Jok'air"
+            data-place="Pagaille Festival, Bordeaux"
+            data-meta="29 août 2026 · 70 mm · f/2.8 · 1/2000 s · 400 ISO"
+            data-alt="Une main tient la pochette d'un disque devant une grille métallique">
+            <button class="shot__open" type="button" aria-label="Voir en grand : Jok'air, Pagaille Festival">
+              <img src="/assets/photos/concert-5.webp" alt="Une main tient la pochette d'un disque devant une grille métallique" width="1100" height="1100" loading="lazy" />
+            </button>
+            <figcaption class="shot__caption" data-reveal>
+              <span class="shot__who">Jok'air</span>
+              <span class="shot__where">Pagaille Festival, Bordeaux</span>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="projections__credit" data-reveal>
+          <span>Chaque photo ouvre sa fiche : salle, date, réglages. Photographies : Mattia Parrinello, 2026.</span>
+          <a class="link" href="https://photo.mprnl.fr" target="_blank" rel="noopener noreferrer">Le portfolio photo</a>
+        </p>
+      </section>
+
+      <!-- ═══════════════ 6. RAPPEL ═══════════════ -->
+      <section class="track track--paper" id="rappel" data-cue="#b8271e" data-light="0" style="--cue: #b8271e">
+        <header class="track__head" data-reveal>
+          <p class="track__time">21:24</p>
+          <h2 class="track__title">Rappel</h2>
+          <p class="track__note">Je réponds sous 24 h. Bis : le CV tient sur une page.</p>
+        </header>
+        <div class="track__body">
+          <div class="track__text">
+            <p class="big">
+              Une alternance pour septembre 2027, deux semaines ici, deux semaines à
+              l'école.
+            </p>
+            <form
+              class="field"
+              id="contact-form"
+              action="mailto:contact.mprnl@gmail.com"
+              method="post"
+              enctype="text/plain"
+            >
+              <label class="sr-only" for="company">Nom de l'entreprise</label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                placeholder="Nom de l'entreprise"
+                autocomplete="organization"
+                spellcheck="false"
+              />
+              <button type="submit" aria-label="Préparer le message">&#8594;</button>
+            </form>
+            <p class="field__note">Le message s'ouvre pré-rempli. Rien ne part sans vous.</p>
+          </div>
+          <dl class="rows" data-reveal>
+            <div><dt>Email</dt><dd><a href="mailto:contact.mprnl@gmail.com">contact.mprnl@gmail.com</a></dd></div>
+            <div><dt>GitHub</dt><dd><a href="https://github.com/MattiaPARRINELLO" target="_blank" rel="noopener noreferrer">@MattiaPARRINELLO</a></dd></div>
+            <div><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/mattia-parrinello-015382208/" target="_blank" rel="noopener noreferrer">Mattia Parrinello</a></dd></div>
+            <div><dt>CV</dt><dd><a href="/cv-alternance" download>PDF, une page</a></dd></div>
+          </dl>
+        </div>
+      </section>
     </main>
 
-    <!-- ═══════════════ FOOTER ═══════════════ -->
     <footer class="footer">
-      <div class="container footer__inner">
-        <p>© 2026 Mattia Parrinello</p>
-        <p>
-          Conçu et développé avec
-          <a href="https://github.com/MattiaPARRINELLO/backstage" target="_blank" rel="noopener noreferrer"
-            >Backstage</a
-          >
-        </p>
+      <div class="footer__id">
+        <p>Mattia Parrinello, développeur full-stack</p>
+        <p>Photographies : Mattia Parrinello, 2026.</p>
       </div>
+      <ul class="footer__links">
+        <li><a href="#backstage">Backstage</a></li>
+        <li><a href="#journal">Le journal</a></li>
+        <li><a href="#projections">Photos</a></li>
+        <li><a href="#rappel">Contact</a></li>
+      </ul>
     </footer>
 
-    <script src="beams.js"></script>
+    <dialog class="sheet" id="photo-sheet" aria-label="Photo en grand">
+      <div class="sheet__bar">
+        <p class="sheet__count" data-count></p>
+        <button class="sheet__close" type="button" data-close aria-label="Fermer la photo">Fermer</button>
+      </div>
+      <figure class="sheet__figure">
+        <img class="sheet__img" alt="" width="1100" height="1956" />
+        <figcaption class="sheet__caption">
+          <p class="sheet__who" data-title></p>
+          <p class="sheet__where" data-place></p>
+          <p class="sheet__meta" data-meta></p>
+        </figcaption>
+      </figure>
+      <div class="sheet__nav">
+        <button type="button" data-prev aria-label="Photo précédente">Précédente</button>
+        <button type="button" data-next aria-label="Photo suivante">Suivante</button>
+      </div>
+    </dialog>
+
+    <script src="/vendor/gsap.min.js"></script>
+    <script src="/vendor/ScrollTrigger.min.js"></script>
+    <script src="beams.js" defer></script>
     <script src="main.js"></script>
   </body>
 </html>
