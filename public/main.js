@@ -173,6 +173,23 @@ function initMotion() {
     gsap.set(wrap, { autoAlpha: 1 });
     scene.dataset.face = 'front';
 
+    const foilUpdate = () => {
+      const ry = Number(gsap.getProperty(card, 'rotationY')) || 0;
+      const rx = Number(gsap.getProperty(card, 'rotationX')) || 0;
+      const radians = ((ry + rx) * Math.PI) / 180;
+      card.style.setProperty('--foil-hue', `${((ry + rx) * 1.6).toFixed(1)}deg`);
+      card.style.setProperty(
+        '--foil-energy',
+        Math.abs(Math.sin(radians)).toFixed(3)
+      );
+      card.style.setProperty(
+        '--foil-shift',
+        Math.min(1, Math.max(0, (ry + 16) / 206)).toFixed(3)
+      );
+    };
+
+    foilUpdate();
+
     const pass = gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: {
@@ -183,6 +200,7 @@ function initMotion() {
         onUpdate: (self) => {
           scene.dataset.face = self.progress < 0.34 ? 'front' : 'back';
           card.style.setProperty('--sheen', self.progress.toFixed(3));
+          foilUpdate();
         },
       },
     });

@@ -1046,6 +1046,22 @@ a:hover {
   width: 140%;
   height: 100%;
   transform: translateX(calc(var(--sheen, 0) * -16%));
+  /* la teinte et la saturation suivent l'angle de la carte */
+  filter: hue-rotate(var(--foil-hue, 0deg))
+    saturate(calc(0.35 + var(--foil-energy, 0) * 1.35));
+}
+
+.pass__foil::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 34%;
+  background: #fff;
+  opacity: 0.16;
+  transform: translateX(calc(-140% + var(--foil-shift, 0) * 420%)) skewX(-18deg);
+  pointer-events: none;
 }
 
 .pass__aaa {
