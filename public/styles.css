@@ -461,35 +461,90 @@ a:hover {
   visibility: visible;
 }
 
-.app__panel--term {
+.app__panel--chat {
+  padding: clamp(0.9rem, 1.8vw, 1.5rem);
+  background: #171a1e;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat__thread {
+  flex: 1;
   display: grid;
-  align-content: start;
-  padding: clamp(1rem, 2vw, 1.6rem);
+  gap: 0.75rem;
+  align-content: end;
+  overflow: hidden;
+}
+
+.chat__msg {
+  max-width: 80%;
+  padding: 0.75rem 0.95rem;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.chat__msg--user {
+  justify-self: end;
+  background: #2a3038;
+  color: #e6edf3;
+}
+
+.chat__msg--ai {
+  justify-self: start;
+  background: #101317;
+  color: #dfe6ec;
+}
+
+.chat__source {
+  margin-top: 0.55rem;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: #8a949d;
+}
+
+.chat__typing {
+  justify-self: start;
+  display: none;
+  gap: 0.3rem;
+  padding: 0.75rem 0.95rem;
+  background: #101317;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.chat__typing span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #7d8993;
+}
+
+.chat__input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.9rem;
+  padding: 0.8rem 1rem;
   background: #0b0d0f;
+  color: #7d8993;
+  font-size: 14px;
 }
 
-.app__caret {
-  display: inline-block;
-  width: 0.55em;
-  height: 1.05em;
-  vertical-align: -0.15em;
-  background: #c7d0d8;
-  animation: blink 1.1s steps(2, start) infinite;
+.chat__caret {
+  width: 0.5em;
+  height: 1em;
+  background: #7d8993;
 }
 
-@keyframes blink {
-  to {
-    visibility: hidden;
+@media (prefers-reduced-motion: reduce) {
+  .chat__caret {
+    display: none;
   }
-}
-
-.app__term {
-  margin: 0;
-  font-family: "JetBrains Mono", ui-monospace, monospace; /* taste-skill-ignore: sortie de terminal littérale */
-  font-size: clamp(0.75rem, 0.65rem + 0.3vw, 0.9rem);
-  line-height: 2;
-  color: #c7d0d8;
-  white-space: pre-wrap;
 }
 
 /* ── Fenêtre d'application ── */
@@ -1257,10 +1312,6 @@ html.gsap .pass-step {
     height: auto;
   }
 
-  .app__caret {
-    animation: none;
-  }
-
   .story__stage {
     position: static;
     height: auto;
@@ -1376,6 +1427,10 @@ html.gsap .pass-step {
 
   .story__steps {
     min-height: 7.5rem;
+  }
+
+  .app__panels--story {
+    aspect-ratio: 4 / 5;
   }
 
   .app__url {

@@ -77,11 +77,27 @@ function initMotion() {
     const steps = [...story.querySelectorAll('[data-step]')];
     const panels = [...story.querySelectorAll('[data-panel]')];
     const tabs = [...story.querySelectorAll('[data-tab]')];
+    const userText = story.querySelector('[data-user-text]');
+    const aiText = story.querySelector('[data-ai-text]');
+    const typing = story.querySelector('[data-typing]');
+    const aiBubble = story.querySelector('[data-ai]');
+    const source = story.querySelector('[data-source]');
 
+    const fullUser = userText.textContent.trim();
+    const fullAi = aiText.textContent.trim();
+    userText.textContent = '';
+    aiText.textContent = '';
+
+    gsap.set(typing, { autoAlpha: 0, display: 'none' });
+    gsap.set(aiBubble, { autoAlpha: 0, y: 10, display: 'none' });
+    gsap.set(source, { autoAlpha: 0 });
     gsap.set(steps.slice(1), { autoAlpha: 0, y: 16 });
     gsap.set(steps[0], { autoAlpha: 1, y: 0 });
-    gsap.set(panels.slice(1), { autoAlpha: 0 });
     gsap.set(panels[0], { autoAlpha: 1 });
+    gsap.set(panels[1], { autoAlpha: 0 });
+
+    const user = { n: 0 };
+    const ai = { n: 0 };
 
     const storyTl = gsap.timeline({
       defaults: { ease: 'none' },
@@ -91,8 +107,7 @@ function initMotion() {
         end: 'bottom bottom',
         scrub: 0.4,
         onUpdate: (self) => {
-          const p = self.progress;
-          const index = p < 0.3 ? 0 : p < 0.62 ? 1 : 2;
+          const index = self.progress < 0.29 ? 0 : 1;
           tabs.forEach((tab, i) => tab.classList.toggle('is-on', i === index));
         },
       },
@@ -103,12 +118,43 @@ function initMotion() {
       .to(panels[0], { autoAlpha: 0, duration: 0.05 }, 0.28)
       .to(panels[1], { autoAlpha: 1, duration: 0.05 }, 0.28)
       .to(steps[1], { autoAlpha: 1, y: 0, duration: 0.05 }, 0.3)
-      .to(steps[1], { autoAlpha: 0, duration: 0.04 }, 0.59)
-      .to(panels[1], { autoAlpha: 0, duration: 0.05 }, 0.6)
-      .to(panels[2], { autoAlpha: 1, duration: 0.05 }, 0.6)
-      .to(steps[2], { autoAlpha: 1, y: 0, duration: 0.05 }, 0.62)
-      // garde une durée totale de 1 pour que le scrub suive exactement le scroll
-      .to({}, { duration: 0.38 }, 0.62);
+      // la question s'écrit
+      .to(
+        user,
+        {
+          n: fullUser.length,
+          duration: 0.15,
+          snap: { n: 1 },
+          onUpdate: () => {
+            userText.textContent = fullUser.slice(0, user.n);
+          },
+        },
+        0.33
+      )
+      // il réfléchit
+      .set(typing, { display: 'flex' }, 0.505)
+      .to(typing, { autoAlpha: 1, duration: 0.02 }, 0.51)
+      .to(typing, { autoAlpha: 0, duration: 0.02 }, 0.57)
+      .set(typing, { display: 'none' }, 0.59)
+      .to(steps[1], { autoAlpha: 0, duration: 0.04 }, 0.58)
+      .set(aiBubble, { display: 'block' }, 0.585)
+      .to(aiBubble, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.59)
+      .to(steps[2], { autoAlpha: 1, y: 0, duration: 0.05 }, 0.6)
+      // la réponse s'écrit
+      .to(
+        ai,
+        {
+          n: fullAi.length,
+          duration: 0.18,
+          snap: { n: 1 },
+          onUpdate: () => {
+            aiText.textContent = fullAi.slice(0, ai.n);
+          },
+        },
+        0.62
+      )
+      .to(source, { autoAlpha: 1, duration: 0.03 }, 0.82)
+      .to({}, { duration: 0.15 }, 0.85);
   });
 
   /* Le pass : il apparaît, se retourne une fois, puis s'efface */

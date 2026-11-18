@@ -261,14 +261,14 @@
                   rien d'autre à ouvrir.
                 </p>
                 <p class="story__step" data-step="2">
-                  <span>La mémoire</span>
-                  Il garde ce qui survit d'une session à l'autre : un souvenir, sa date, sa
-                  source.
+                  <span>La question</span>
+                  Je demande en langage normal. Pas de formulaire, pas de menu, pas de
+                  dossier à retrouver.
                 </p>
                 <p class="story__step" data-step="3">
-                  <span>La production</span>
-                  Le même cycle à chaque commit : 46 fichiers de tests, un build, un
-                  déploiement.
+                  <span>La réponse</span>
+                  Il retrouve le souvenir, sa date et sa source. C'est ça, la mémoire :
+                  ce qui survit d'une session à l'autre.
                 </p>
               </div>
               <p class="story__links">
@@ -282,8 +282,7 @@
                 <div class="app__bar">
                   <div class="app__tabs" aria-hidden="true">
                     <span class="app__tab is-on" data-tab="0">Accueil</span>
-                    <span class="app__tab" data-tab="1">Aujourd'hui</span>
-                    <span class="app__tab" data-tab="2">Tests</span>
+                    <span class="app__tab" data-tab="1">Chat</span>
                   </div>
                   <p class="app__url"><span class="app__dot" aria-hidden="true"></span>brain.mprnl.fr</p>
                 </div>
@@ -296,24 +295,25 @@
                       height="1067"
                     />
                   </div>
-                  <div class="app__panel" data-panel="1">
-                    <img
-                      src="/assets/projects/backstage-today.webp"
-                      alt="Vue du jour de Backstage : agenda et mémoire de l'assistant"
-                      width="1400"
-                      height="1369"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div class="app__panel app__panel--term" data-panel="2">
-                    <pre class="app__term"><code>$ npm test
-  ok  46 fichiers de tests
-  ok  34 routes
-$ npm run build
-  ok  build
-$ deploy
-  brain.mprnl.fr  live
-$ <span class="app__caret" aria-hidden="true"></span></code></pre>
+                  <div class="app__panel app__panel--chat" data-panel="1">
+                    <div class="chat">
+                      <div class="chat__thread">
+                        <div class="chat__msg chat__msg--user">
+                          <p data-user-text>Qu'est-ce que j'ai à 13h30 aujourd'hui ?</p>
+                        </div>
+                        <div class="chat__typing" data-typing aria-hidden="true">
+                          <span></span><span></span><span></span>
+                        </div>
+                        <div class="chat__msg chat__msg--ai" data-ai>
+                          <p data-ai-text>E25 Personal Branding, salle 05. Tu m'avais demandé de te prévenir 30 minutes avant.</p>
+                          <p class="chat__source" data-source>Souvenir du 3 octobre · agenda synchronisé</p>
+                        </div>
+                      </div>
+                      <div class="chat__input">
+                        <span>Demander à Backstage…</span>
+                        <span class="chat__caret" aria-hidden="true"></span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="app__status">
