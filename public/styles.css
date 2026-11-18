@@ -463,7 +463,7 @@ a:hover {
 
 .app__panel--chat {
   padding: clamp(0.9rem, 1.8vw, 1.5rem);
-  background: #171a1e;
+  background: #0a0b0d;
 }
 
 .chat {
@@ -475,52 +475,81 @@ a:hover {
 .chat__thread {
   flex: 1;
   display: grid;
-  gap: 0.75rem;
+  gap: 0.65rem;
   align-content: end;
   overflow: hidden;
 }
 
 .chat__msg {
-  max-width: 80%;
-  padding: 0.75rem 0.95rem;
+  max-width: 84%;
+  padding: 0.7rem 0.9rem;
   font-size: 15px;
-  line-height: 1.45;
+  line-height: 1.42;
 }
 
 .chat__msg--user {
   justify-self: end;
-  background: #2a3038;
-  color: #e6edf3;
+  background: #2547ff24;
+  color: #eef1ff;
 }
 
 .chat__msg--ai {
   justify-self: start;
-  background: #101317;
-  color: #dfe6ec;
+  background: #14161a;
+  color: #eef1f6;
+}
+
+.chat__label {
+  font-size: 13px;
+  color: #7f8694;
+}
+
+.chat__reason {
+  justify-self: start;
+  max-width: 92%;
+  padding: 0.65rem 0.85rem;
+  background: #101215;
+  color: #a7adba;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.chat__reason-line {
+  margin-top: 0.2rem;
+}
+
+.chat__tool {
+  justify-self: start;
+  max-width: 92%;
+  padding: 0.65rem 0.85rem;
+  background: #101215;
+  font-family: "JetBrains Mono", ui-monospace, monospace; /* taste-skill-ignore: appel d'outil littéral */
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.chat__tool-name {
+  color: #b9c6ff;
+}
+
+.chat__tool-args {
+  color: #8d94a3;
+}
+
+.chat__tool-result {
+  margin-top: 0.15rem;
+  color: #c7cbd4;
+}
+
+.chat__ok {
+  color: #9bbf8a;
 }
 
 .chat__source {
   margin-top: 0.55rem;
-  font-size: 12px;
-  letter-spacing: 0.01em;
-  color: #8a949d;
-}
-
-.chat__typing {
-  justify-self: start;
-  display: none;
-  gap: 0.3rem;
-  padding: 0.75rem 0.95rem;
-  background: #101317;
-  opacity: 0;
-  visibility: hidden;
-}
-
-.chat__typing span {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #7d8993;
+  font-family: "JetBrains Mono", ui-monospace, monospace; /* taste-skill-ignore: source de la mémoire */
+  font-size: 13px;
+  color: #8d94a3;
 }
 
 .chat__input {
@@ -529,22 +558,23 @@ a:hover {
   justify-content: space-between;
   gap: 1rem;
   margin-top: 0.9rem;
-  padding: 0.8rem 1rem;
-  background: #0b0d0f;
-  color: #7d8993;
+  padding: 0.75rem 0.95rem;
+  background: #101215;
+  color: #8d94a3;
   font-size: 14px;
 }
 
 .chat__caret {
   width: 0.5em;
   height: 1em;
-  background: #7d8993;
+  background: #8d94a3;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .chat__caret {
     display: none;
   }
+}
 }
 
 /* ── Fenêtre d'application ── */

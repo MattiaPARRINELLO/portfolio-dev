@@ -58,8 +58,6 @@
     let radius = 0;
 
     for (const heading of headings) {
-      const block = heading.getBoundingClientRect();
-      if (block.bottom < -600 || block.top > height + 600) continue;
       // le texte réel, pas la largeur de la colonne
       range.selectNodeContents(heading);
       const box = range.getBoundingClientRect();

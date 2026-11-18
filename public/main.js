@@ -79,7 +79,8 @@ function initMotion() {
     const tabs = [...story.querySelectorAll('[data-tab]')];
     const userText = story.querySelector('[data-user-text]');
     const aiText = story.querySelector('[data-ai-text]');
-    const typing = story.querySelector('[data-typing]');
+    const reason = story.querySelector('[data-reason]');
+    const tool = story.querySelector('[data-tool]');
     const aiBubble = story.querySelector('[data-ai]');
     const source = story.querySelector('[data-source]');
 
@@ -88,7 +89,8 @@ function initMotion() {
     userText.textContent = '';
     aiText.textContent = '';
 
-    gsap.set(typing, { autoAlpha: 0, display: 'none' });
+    gsap.set(reason, { autoAlpha: 0, display: 'none' });
+    gsap.set(tool, { autoAlpha: 0, display: 'none' });
     gsap.set(aiBubble, { autoAlpha: 0, y: 10, display: 'none' });
     gsap.set(source, { autoAlpha: 0 });
     gsap.set(steps.slice(1), { autoAlpha: 0, y: 16 });
@@ -131,30 +133,31 @@ function initMotion() {
         },
         0.33
       )
-      // il réfléchit
-      .set(typing, { display: 'flex' }, 0.505)
-      .to(typing, { autoAlpha: 1, duration: 0.02 }, 0.51)
-      .to(typing, { autoAlpha: 0, duration: 0.02 }, 0.57)
-      .set(typing, { display: 'none' }, 0.59)
+      // il réfléchit, puis appelle un outil
+      .set(reason, { display: 'block' }, 0.5)
+      .to(reason, { autoAlpha: 1, duration: 0.05 }, 0.5)
       .to(steps[1], { autoAlpha: 0, duration: 0.04 }, 0.58)
-      .set(aiBubble, { display: 'block' }, 0.585)
-      .to(aiBubble, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.59)
+      .set(tool, { display: 'block' }, 0.59)
+      .to(tool, { autoAlpha: 1, duration: 0.04 }, 0.59)
       .to(steps[2], { autoAlpha: 1, y: 0, duration: 0.05 }, 0.6)
+      .set(aiBubble, { display: 'block' }, 0.64)
+      .to(aiBubble, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.64)
+      .to(reason, { opacity: 0.55, duration: 0.04 }, 0.64)
       // la réponse s'écrit
       .to(
         ai,
         {
           n: fullAi.length,
-          duration: 0.18,
+          duration: 0.16,
           snap: { n: 1 },
           onUpdate: () => {
             aiText.textContent = fullAi.slice(0, ai.n);
           },
         },
-        0.62
+        0.66
       )
-      .to(source, { autoAlpha: 1, duration: 0.03 }, 0.82)
-      .to({}, { duration: 0.15 }, 0.85);
+      .to(source, { autoAlpha: 1, duration: 0.03 }, 0.84)
+      .to({}, { duration: 0.16 }, 0.84);
   });
 
   /* Le pass : il apparaît, se retourne une fois, puis s'efface */

@@ -83,7 +83,7 @@
             "description": "PWA installable : chat IA à mémoire persistante, agenda synchronisé, rappels, notifications push, authentification passkey, streaming SSE. Déployée en production.",
             "programmingLanguage": ["TypeScript", "React", "Next.js", "Node.js"],
             "codeRepository": "https://github.com/MattiaPARRINELLO/backstage",
-            "url": "https://brain.mprnl.fr",
+            "url": "https://backstage.mprnl.fr",
             "author": { "@type": "Person", "name": "Mattia Parrinello" }
           },
           {
@@ -161,7 +161,7 @@
             </p>
           </div>
           <dl class="facts" data-reveal>
-            <div><dt>En scène</dt><dd>brain.mprnl.fr, tous les jours</dd></div>
+            <div><dt>En scène</dt><dd>backstage.mprnl.fr, tous les jours</dd></div>
             <div><dt>Formation</dt><dd>Sup de Vinci, bachelor informatique</dd></div>
             <div><dt>Disponible</dt><dd>Alternance, septembre 2027</dd></div>
             <div><dt>Rythme</dt><dd>2 semaines entreprise, 2 semaines école</dd></div>
@@ -260,7 +260,7 @@
     
                     <span class="pass__serial">mprnl.fr · 2027</span>
                   </div>
-                  <p class="pass__url">brain.mprnl.fr</p>
+                  <p class="pass__url">backstage.mprnl.fr</p>
                 </div>
                 <span class="pass__sheen" aria-hidden="true"></span>
               </div>
@@ -309,7 +309,7 @@
     
                     <span class="pass__serial">mprnl.fr · 2027</span>
                   </div>
-                  <p class="pass__url">brain.mprnl.fr</p>
+                  <p class="pass__url">backstage.mprnl.fr</p>
                 </div>
                 <span class="pass__sheen" aria-hidden="true"></span>
               </div>
@@ -341,12 +341,12 @@
                 </p>
                 <p class="story__step" data-step="3">
                   <span>La réponse</span>
-                  Il retrouve le souvenir, sa date et sa source. C'est ça, la mémoire :
-                  ce qui survit d'une session à l'autre.
+                  Il interroge l'agenda, vérifie la salle, puis retrouve le souvenir et sa
+                  source. C'est ça, la mémoire.
                 </p>
               </div>
               <p class="story__links">
-                <a class="link" href="https://brain.mprnl.fr" target="_blank" rel="noopener noreferrer">Ouvrir l'app</a>
+                <a class="link" href="https://backstage.mprnl.fr" target="_blank" rel="noopener noreferrer">Ouvrir l'app</a>
                 <a class="link" href="https://github.com/MattiaPARRINELLO/backstage" target="_blank" rel="noopener noreferrer">Code source</a>
               </p>
             </div>
@@ -358,7 +358,7 @@
                     <span class="app__tab is-on" data-tab="0">Accueil</span>
                     <span class="app__tab" data-tab="1">Chat</span>
                   </div>
-                  <p class="app__url"><span class="app__dot" aria-hidden="true"></span>brain.mprnl.fr</p>
+                  <p class="app__url"><span class="app__dot" aria-hidden="true"></span>backstage.mprnl.fr</p>
                 </div>
                 <div class="app__panels app__panels--story">
                   <div class="app__panel" data-panel="0">
@@ -375,9 +375,19 @@
                         <div class="chat__msg chat__msg--user">
                           <p data-user-text>Qu'est-ce que j'ai à 13h30 aujourd'hui ?</p>
                         </div>
-                        <div class="chat__typing" data-typing aria-hidden="true">
-                          <span></span><span></span><span></span>
+
+                        <div class="chat__reason" data-reason>
+                          <p class="chat__label">Réflexion</p>
+                          <p class="chat__reason-line">Je regarde l'agenda du jour, autour de 13h30.</p>
+                          <p class="chat__reason-line">Un événement. Je vérifie la salle et l'heure avant de répondre.</p>
                         </div>
+
+                        <div class="chat__tool" data-tool>
+                          <p class="chat__tool-name">agenda.lookup</p>
+                          <p class="chat__tool-args">{ "date": "jeudi 1 octobre", "heure": "13:30" }</p>
+                          <p class="chat__tool-result"><span class="chat__ok">ok</span> 1 événement · E25 Personal Branding</p>
+                        </div>
+
                         <div class="chat__msg chat__msg--ai" data-ai>
                           <p data-ai-text>E25 Personal Branding, salle 05. Tu m'avais demandé de te prévenir 30 minutes avant.</p>
                           <p class="chat__source" data-source>Souvenir du 3 octobre · agenda synchronisé</p>
