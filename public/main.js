@@ -193,7 +193,8 @@ function initMotion() {
       .to('.pass-step--2', { autoAlpha: 0, duration: 0.04 }, 0.5)
       .fromTo('.pass-step--3', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.51)
       .to('.pass-step--3', { autoAlpha: 0, duration: 0.05 }, 0.88)
-      .to(wrap, { autoAlpha: 0, duration: 0.08 }, 0.9);
+      // la carte reste en place : la scène s'arrête sans la faire disparaître
+      .to({}, { duration: 0.07 }, 0.93);
   });
 }
 
