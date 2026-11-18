@@ -383,6 +383,115 @@ a:hover {
   filter: brightness(0.96);
 }
 
+/* ── Scène : la fenêtre raconte le projet ── */
+
+.story {
+  position: relative;
+  height: 240svh;
+}
+
+.story__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.35fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-inline: var(--pad);
+}
+
+.story__copy {
+  max-width: 34ch;
+}
+
+.story__steps {
+  position: relative;
+  min-height: 9rem;
+}
+
+.story__step {
+  position: absolute;
+  inset: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--t-3);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.story__step span {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.story__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.story__app {
+  width: 100%;
+  max-width: 46rem;
+  justify-self: end;
+}
+
+.app__panels--story {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.app__panels--story .app__panel {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.app__panels--story .app__panel[data-panel="0"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.app__panel--term {
+  display: grid;
+  align-content: start;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  background: #0b0d0f;
+}
+
+.app__caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  vertical-align: -0.15em;
+  background: #c7d0d8;
+  animation: blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.app__term {
+  margin: 0;
+  font-family: "JetBrains Mono", ui-monospace, monospace; /* taste-skill-ignore: sortie de terminal littérale */
+  font-size: clamp(0.75rem, 0.65rem + 0.3vw, 0.9rem);
+  line-height: 2;
+  color: #c7d0d8;
+  white-space: pre-wrap;
+}
+
 /* ── Fenêtre d'application ── */
 
 .stack-media {
@@ -1144,6 +1253,48 @@ html.gsap .pass-step {
     transition: none !important;
   }
 
+  .story {
+    height: auto;
+  }
+
+  .app__caret {
+    animation: none;
+  }
+
+  .story__stage {
+    position: static;
+    height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: clamp(3rem, 6vw, 5rem);
+  }
+
+  .story__steps {
+    min-height: 0;
+  }
+
+  .story__step {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    margin-bottom: 1.1rem;
+  }
+
+  .story__app {
+    justify-self: start;
+  }
+
+  .app__panels--story {
+    aspect-ratio: auto;
+  }
+
+  .app__panels--story .app__panel {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    aspect-ratio: 4 / 3;
+    margin-top: 0.5rem;
+  }
+
   .pass-scene {
     height: auto;
   }
@@ -1206,6 +1357,29 @@ html.gsap .pass-step {
 
   .sheet__img {
     max-height: 60svh;
+  }
+
+  .story {
+    height: 220svh;
+  }
+
+  .story__stage {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    gap: clamp(1.5rem, 4vh, 2.5rem);
+  }
+
+  .story__app {
+    max-width: 100%;
+    justify-self: stretch;
+  }
+
+  .story__steps {
+    min-height: 7.5rem;
+  }
+
+  .app__url {
+    display: none;
   }
 
   .pass-stage {

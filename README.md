@@ -26,7 +26,8 @@ Le portfolio est construit comme une setlist de concert : six morceaux, un rappe
 - ✅ Affiche plein cadre, nom en pleine largeur
 - ✅ Pass backstage en 3D : il apparaît, se retourne une fois au scroll, puis s'efface
 - ✅ Lumière de salle en canvas, teintée par morceau (bleu sur Backstage, rouge sur le rappel)
-- ✅ Projets présentés dans une fenêtre d'application à onglets (vraies captures), chiffres et liens
+- ✅ Backstage en scène épinglée : la fenêtre change de vue au scroll (accueil, mémoire, tests)
+- ✅ Gymshark-Sync dans une fenêtre d'application à onglets (vraies captures)
 - ✅ Terminal de démonstration dans Backstage (`help`, `stats`, `memory`)
 - ✅ Parcours en `git log` avec branches colorées
 - ✅ Photos avec artiste, salle, date et réglages, fiche plein écran au clic

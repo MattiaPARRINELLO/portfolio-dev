@@ -251,77 +251,79 @@
           <h2 class="track__title">Backstage</h2>
           <p class="track__note">Le morceau que je joue tous les matins, en production.</p>
         </header>
-        <div class="track__body">
-          <div class="stack-media" data-reveal>
-            <div class="app" data-app data-ui>
-              <div class="app__bar">
-                <div class="app__tabs" role="tablist" aria-label="Vues de Backstage">
-                  <button class="app__tab is-on" id="bs-tab-1" role="tab" aria-selected="true" aria-controls="bs-panel-1" tabindex="0">Accueil</button>
-                  <button class="app__tab" id="bs-tab-2" role="tab" aria-selected="false" aria-controls="bs-panel-2" tabindex="-1">Aujourd'hui</button>
-                </div>
-                <p class="app__url"><span class="app__dot" aria-hidden="true"></span>brain.mprnl.fr</p>
+        <div class="story" data-story>
+          <div class="story__stage">
+            <div class="story__copy">
+              <div class="story__steps">
+                <p class="story__step" data-step="1">
+                  <span>Le matin</span>
+                  Un second cerveau : le chat, l'agenda, les rappels. Un seul écran, et
+                  rien d'autre à ouvrir.
+                </p>
+                <p class="story__step" data-step="2">
+                  <span>La mémoire</span>
+                  Il garde ce qui survit d'une session à l'autre : un souvenir, sa date, sa
+                  source.
+                </p>
+                <p class="story__step" data-step="3">
+                  <span>La production</span>
+                  Le même cycle à chaque commit : 46 fichiers de tests, un build, un
+                  déploiement.
+                </p>
               </div>
-              <div class="app__panels">
-                <div class="app__panel" id="bs-panel-1" role="tabpanel" aria-labelledby="bs-tab-1">
-                  <img
-                    src="/assets/projects/backstage-console.webp"
-                    alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
-                    width="1400"
-                    height="1067"
-                  />
-                </div>
-                <div class="app__panel" id="bs-panel-2" role="tabpanel" aria-labelledby="bs-tab-2" hidden>
-                  <img
-                    src="/assets/projects/backstage-today.webp"
-                    alt="Vue du jour de Backstage : agenda et mémoire de l'assistant"
-                    width="1400"
-                    height="1369"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-              <div class="app__status">
-                <span>en production</span>
-                <span>46 fichiers de tests</span>
-                <span>34 routes</span>
-              </div>
+              <p class="story__links">
+                <a class="link" href="https://brain.mprnl.fr" target="_blank" rel="noopener noreferrer">Ouvrir l'app</a>
+                <a class="link" href="https://github.com/MattiaPARRINELLO/backstage" target="_blank" rel="noopener noreferrer">Code source</a>
+              </p>
             </div>
 
-            <div class="term" data-term>
-              <pre class="term__out" aria-live="polite"><code>$ npm test
+            <div class="story__app">
+              <div class="app app--story" data-ui>
+                <div class="app__bar">
+                  <div class="app__tabs" aria-hidden="true">
+                    <span class="app__tab is-on" data-tab="0">Accueil</span>
+                    <span class="app__tab" data-tab="1">Aujourd'hui</span>
+                    <span class="app__tab" data-tab="2">Tests</span>
+                  </div>
+                  <p class="app__url"><span class="app__dot" aria-hidden="true"></span>brain.mprnl.fr</p>
+                </div>
+                <div class="app__panels app__panels--story">
+                  <div class="app__panel" data-panel="0">
+                    <img
+                      src="/assets/projects/backstage-console.webp"
+                      alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
+                      width="1400"
+                      height="1067"
+                    />
+                  </div>
+                  <div class="app__panel" data-panel="1">
+                    <img
+                      src="/assets/projects/backstage-today.webp"
+                      alt="Vue du jour de Backstage : agenda et mémoire de l'assistant"
+                      width="1400"
+                      height="1369"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div class="app__panel app__panel--term" data-panel="2">
+                    <pre class="app__term"><code>$ npm test
   ok  46 fichiers de tests
   ok  34 routes
-  ok  build</code></pre>
-              <form class="term__form" autocomplete="off">
-                <label class="sr-only" for="term-input">Commande du terminal</label>
-                <span class="term__prompt" aria-hidden="true">$</span>
-                <input
-                  id="term-input"
-                  name="cmd"
-                  type="text"
-                  placeholder="tapez help"
-                  spellcheck="false"
-                  autocapitalize="off"
-                />
-              </form>
+$ npm run build
+  ok  build
+$ deploy
+  brain.mprnl.fr  live
+$ <span class="app__caret" aria-hidden="true"></span></code></pre>
+                  </div>
+                </div>
+                <div class="app__status">
+                  <span>en production</span>
+                  <span>32 000 lignes</span>
+                  <span>46 tests</span>
+                  <span>34 routes</span>
+                </div>
+              </div>
             </div>
-            <p class="term__note">
-              Démo locale : les chiffres sont ceux du projet, pas un vrai shell.
-            </p>
-          </div>
-          <div class="track__text" data-reveal>
-            <p>
-              Un second cerveau : chat IA à mémoire persistante, agenda synchronisé,
-              rappels, notifications. Passkeys, streaming, déploiement continu.
-            </p>
-            <p class="small">
-              32 000 lignes de TypeScript. 46 fichiers de tests. 34 routes. Un utilisateur
-              quotidien : moi.
-            </p>
-            <p class="links">
-              <a class="link" href="https://brain.mprnl.fr" target="_blank" rel="noopener noreferrer">Ouvrir l'app</a>
-              <a class="link" href="https://github.com/MattiaPARRINELLO/backstage" target="_blank" rel="noopener noreferrer">Code source</a>
-            </p>
           </div>
         </div>
       </section>

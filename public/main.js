@@ -69,6 +69,48 @@ function initMotion() {
     };
   });
 
+  /* La scène Backstage : la fenêtre raconte trois temps */
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const story = document.querySelector('[data-story]');
+    if (!story) return;
+
+    const steps = [...story.querySelectorAll('[data-step]')];
+    const panels = [...story.querySelectorAll('[data-panel]')];
+    const tabs = [...story.querySelectorAll('[data-tab]')];
+
+    gsap.set(steps.slice(1), { autoAlpha: 0, y: 16 });
+    gsap.set(steps[0], { autoAlpha: 1, y: 0 });
+    gsap.set(panels.slice(1), { autoAlpha: 0 });
+    gsap.set(panels[0], { autoAlpha: 1 });
+
+    const storyTl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: story,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.4,
+        onUpdate: (self) => {
+          const p = self.progress;
+          const index = p < 0.3 ? 0 : p < 0.62 ? 1 : 2;
+          tabs.forEach((tab, i) => tab.classList.toggle('is-on', i === index));
+        },
+      },
+    });
+
+    storyTl
+      .to(steps[0], { autoAlpha: 0, duration: 0.04 }, 0.27)
+      .to(panels[0], { autoAlpha: 0, duration: 0.05 }, 0.28)
+      .to(panels[1], { autoAlpha: 1, duration: 0.05 }, 0.28)
+      .to(steps[1], { autoAlpha: 1, y: 0, duration: 0.05 }, 0.3)
+      .to(steps[1], { autoAlpha: 0, duration: 0.04 }, 0.59)
+      .to(panels[1], { autoAlpha: 0, duration: 0.05 }, 0.6)
+      .to(panels[2], { autoAlpha: 1, duration: 0.05 }, 0.6)
+      .to(steps[2], { autoAlpha: 1, y: 0, duration: 0.05 }, 0.62)
+      // garde une durée totale de 1 pour que le scrub suive exactement le scroll
+      .to({}, { duration: 0.38 }, 0.62);
+  });
+
   /* Le pass : il apparaît, se retourne une fois, puis s'efface */
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     const scene = document.getElementById('pass');
