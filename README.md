@@ -23,9 +23,12 @@ Le portfolio est construit comme une setlist de concert : six morceaux, un rappe
 ---
 
 ## ✨ Fonctionnalités
-- ✅ Affiche plein cadre, nom en pleine largeur, faisceaux animés en canvas
+- ✅ Affiche plein cadre, nom en pleine largeur
+- ✅ Lumière de salle en canvas, teintée par morceau (bleu sur Backstage, rouge sur le rappel)
 - ✅ Projets illustrés par de vraies captures, avec chiffres et liens
+- ✅ Terminal de démonstration dans Backstage (`help`, `stats`, `memory`)
 - ✅ Parcours en `git log` avec branches colorées
+- ✅ Photos avec artiste, salle, date et réglages, fiche plein écran au clic
 - ✅ Contact : le nom de l'entreprise prépare le mail pré-rempli
 - ✅ Design responsive et `prefers-reduced-motion` respecté
 

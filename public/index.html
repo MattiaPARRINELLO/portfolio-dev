@@ -103,9 +103,10 @@
   <body>
     <a class="skip-link" href="#main">Aller au contenu</a>
 
+    <canvas class="room" aria-hidden="true"></canvas>
+
     <!-- ═══════════════ AFFICHE ═══════════════ -->
-    <header class="poster" id="top">
-      <canvas class="poster__beams" aria-hidden="true"></canvas>
+    <header class="poster" id="top" data-cue="#dfe8ff">
       <div class="poster__photo" aria-hidden="true">
         <img src="/assets/photos/concert-1.webp" alt="" width="900" height="1604" fetchpriority="high" />
       </div>
@@ -138,12 +139,15 @@
           <li><a href="#projections"><span class="setlist__time">21:19</span> Projections</a></li>
           <li><a href="#rappel"><span class="setlist__time">21:24</span> Rappel</a></li>
         </ol>
+        <p class="poster__credit">
+          Photo d'ouverture : Jok'air, Pagaille Festival, Bordeaux, août 2026.
+        </p>
       </div>
     </header>
 
     <main id="main">
       <!-- ═══════════════ 1. OUVERTURE ═══════════════ -->
-      <section class="track" id="ouverture">
+      <section class="track" id="ouverture" data-cue="#f0e6d2" style="--cue: #f0e6d2">
         <header class="track__head" data-reveal>
           <p class="track__time">21:00</p>
           <h2 class="track__title">Ouverture</h2>
@@ -166,7 +170,7 @@
       </section>
 
       <!-- ═══════════════ 2. BACKSTAGE ═══════════════ -->
-      <section class="track track--split" id="backstage">
+      <section class="track track--split" id="backstage" data-cue="#9fd0ff" style="--cue: #9fd0ff">
         <header class="track__head" data-reveal>
           <p class="track__time">21:04</p>
           <h2 class="track__title">Backstage</h2>
@@ -180,10 +184,27 @@
               width="1400"
               height="1067"
             />
-            <pre class="term"><code>$ npm test
+            <div class="term" data-term>
+              <pre class="term__out" aria-live="polite"><code>$ npm test
   ok  46 fichiers de tests
   ok  34 routes
   ok  build</code></pre>
+              <form class="term__form" autocomplete="off">
+                <label class="sr-only" for="term-input">Commande du terminal</label>
+                <span class="term__prompt" aria-hidden="true">$</span>
+                <input
+                  id="term-input"
+                  name="cmd"
+                  type="text"
+                  placeholder="tapez help"
+                  spellcheck="false"
+                  autocapitalize="off"
+                />
+              </form>
+            </div>
+            <p class="term__note" data-reveal>
+              Démo locale : les chiffres sont ceux du projet, pas un vrai shell.
+            </p>
           </figure>
           <div class="track__text" data-reveal>
             <p>
@@ -203,7 +224,7 @@
       </section>
 
       <!-- ═══════════════ 3. GYMSHARK-SYNC ═══════════════ -->
-      <section class="track track--split track--reverse" id="gymshark">
+      <section class="track track--split track--reverse" id="gymshark" data-cue="#b7e3a1" style="--cue: #b7e3a1">
         <header class="track__head" data-reveal>
           <p class="track__time">21:09</p>
           <h2 class="track__title">Gymshark-Sync</h2>
@@ -236,7 +257,7 @@
       </section>
 
       <!-- ═══════════════ 4. LE JOURNAL ═══════════════ -->
-      <section class="track" id="journal">
+      <section class="track" id="journal" data-cue="#ffb38a" style="--cue: #ffb38a">
         <header class="track__head" data-reveal>
           <p class="track__time">21:14</p>
           <h2 class="track__title">Le journal</h2>
@@ -259,34 +280,77 @@
       </section>
 
       <!-- ═══════════════ 5. PROJECTIONS ═══════════════ -->
-      <section class="track track--full" id="projections">
+      <section class="track track--full" id="projections" data-cue="#ff6a5a" style="--cue: #ff6a5a">
         <header class="track__head" data-reveal>
           <p class="track__time">21:19</p>
           <h2 class="track__title">Projections</h2>
           <p class="track__note">Le week-end, la lumière change de côté.</p>
         </header>
         <div class="projections">
-          <figure data-reveal>
-            <img src="/assets/photos/concert-4.webp" alt="Un chanteur en chemise rouge, bras levés, dans la lumière d'un projecteur" width="900" height="1604" loading="lazy" />
+          <figure class="shot" data-photo
+            data-title="Jok'air"
+            data-place="Pagaille Festival, Bordeaux"
+            data-meta="29 août 2026 · 70 mm · f/2.8 · 1/1600 s · 500 ISO"
+            data-alt="Un chanteur en chemise rouge, bras levés, dans la lumière d'un projecteur">
+            <button class="shot__open" type="button" aria-label="Voir en grand : Jok'air, Pagaille Festival">
+              <img src="/assets/photos/concert-4.webp" alt="Un chanteur en chemise rouge, bras levés, dans la lumière d'un projecteur" width="1100" height="1956" loading="lazy" />
+            </button>
+            <figcaption class="shot__caption" data-reveal>
+              <span class="shot__who">Jok'air</span>
+              <span class="shot__where">Pagaille Festival, Bordeaux</span>
+            </figcaption>
           </figure>
-          <figure data-reveal>
-            <img src="/assets/photos/concert-3.webp" alt="Une gerbe d'étincelles s'élève au-dessus d'un interprète en blanc" width="900" height="1604" loading="lazy" />
+
+          <figure class="shot" data-photo
+            data-title="Damso"
+            data-place="Paris La Défense Arena"
+            data-meta="30 mai 2026 · 200 mm · f/4 · 1/250 s · 1250 ISO"
+            data-alt="Une gerbe d'étincelles s'élève au-dessus d'un interprète en blanc">
+            <button class="shot__open" type="button" aria-label="Voir en grand : Damso, Paris La Défense Arena">
+              <img src="/assets/photos/concert-3.webp" alt="Une gerbe d'étincelles s'élève au-dessus d'un interprète en blanc" width="1100" height="1956" loading="lazy" />
+            </button>
+            <figcaption class="shot__caption" data-reveal>
+              <span class="shot__who">Damso</span>
+              <span class="shot__where">Paris La Défense Arena</span>
+            </figcaption>
           </figure>
-          <figure data-reveal>
-            <img src="/assets/photos/concert-2.webp" alt="Deux silhouettes éclairées sur fond noir, l'une en noir, l'autre en blanc" width="900" height="1604" loading="lazy" />
+
+          <figure class="shot" data-photo
+            data-title="Damso"
+            data-place="Paris La Défense Arena"
+            data-meta="30 mai 2026 · 192 mm · f/4 · 1/250 s · 320 ISO"
+            data-alt="Deux silhouettes éclairées sur fond noir, l'une en noir, l'autre en blanc">
+            <button class="shot__open" type="button" aria-label="Voir en grand : Damso, Paris La Défense Arena">
+              <img src="/assets/photos/concert-2.webp" alt="Deux silhouettes éclairées sur fond noir, l'une en noir, l'autre en blanc" width="1100" height="1956" loading="lazy" />
+            </button>
+            <figcaption class="shot__caption" data-reveal>
+              <span class="shot__who">Damso</span>
+              <span class="shot__where">Paris La Défense Arena</span>
+            </figcaption>
           </figure>
-          <figure data-reveal>
-            <img src="/assets/photos/concert-5.webp" alt="Une main tient la pochette d'un disque devant une grille métallique" width="900" height="900" loading="lazy" />
+
+          <figure class="shot" data-photo
+            data-title="Jok'air"
+            data-place="Pagaille Festival, Bordeaux"
+            data-meta="29 août 2026 · 70 mm · f/2.8 · 1/2000 s · 400 ISO"
+            data-alt="Une main tient la pochette d'un disque devant une grille métallique">
+            <button class="shot__open" type="button" aria-label="Voir en grand : Jok'air, Pagaille Festival">
+              <img src="/assets/photos/concert-5.webp" alt="Une main tient la pochette d'un disque devant une grille métallique" width="1100" height="1100" loading="lazy" />
+            </button>
+            <figcaption class="shot__caption" data-reveal>
+              <span class="shot__who">Jok'air</span>
+              <span class="shot__where">Pagaille Festival, Bordeaux</span>
+            </figcaption>
           </figure>
         </div>
         <p class="projections__credit" data-reveal>
-          Concerts, Paris, 2026.
+          <span>Chaque photo ouvre sa fiche : salle, date, réglages. Photographies : Mattia Parrinello, 2026.</span>
           <a class="link" href="https://photo.mprnl.fr" target="_blank" rel="noopener noreferrer">Le portfolio photo</a>
         </p>
       </section>
 
       <!-- ═══════════════ 6. RAPPEL ═══════════════ -->
-      <section class="track track--paper" id="rappel">
+      <section class="track track--paper" id="rappel" data-cue="#b8271e" data-light="0" style="--cue: #b8271e">
         <header class="track__head" data-reveal>
           <p class="track__time">21:24</p>
           <h2 class="track__title">Rappel</h2>
@@ -336,8 +400,27 @@
         <li><a href="#projections">Photos</a></li>
         <li><a href="#rappel">Contact</a></li>
       </ul>
-      <p>Photographies : Mattia Parrinello, Paris, 2026.</p>
+      <p>Photographies : Mattia Parrinello, 2026.</p>
     </footer>
+
+    <dialog class="sheet" id="photo-sheet" aria-label="Photo en grand">
+      <div class="sheet__bar">
+        <p class="sheet__count" data-count></p>
+        <button class="sheet__close" type="button" data-close aria-label="Fermer la photo">Fermer</button>
+      </div>
+      <figure class="sheet__figure">
+        <img class="sheet__img" alt="" width="1100" height="1956" />
+        <figcaption class="sheet__caption">
+          <p class="sheet__who" data-title></p>
+          <p class="sheet__where" data-place></p>
+          <p class="sheet__meta" data-meta></p>
+        </figcaption>
+      </figure>
+      <div class="sheet__nav">
+        <button type="button" data-prev aria-label="Photo précédente">Précédente</button>
+        <button type="button" data-next aria-label="Photo suivante">Suivante</button>
+      </div>
+    </dialog>
 
     <script src="beams.js" defer></script>
     <script src="main.js"></script>

@@ -68,6 +68,113 @@ function initPoster() {
   window.addEventListener('scroll', request, { passive: true });
 }
 
+/* ── Photos : la fiche de chaque image dans une feuille ── */
+function initPhotos() {
+  const dialog = document.getElementById('photo-sheet');
+  const figures = [...document.querySelectorAll('[data-photo]')];
+  if (!dialog || !figures.length || typeof dialog.showModal !== 'function') return;
+
+  const image = dialog.querySelector('.sheet__img');
+  const title = dialog.querySelector('[data-title]');
+  const place = dialog.querySelector('[data-place]');
+  const meta = dialog.querySelector('[data-meta]');
+  const count = dialog.querySelector('[data-count]');
+  let index = 0;
+
+  const show = (next) => {
+    index = (next + figures.length) % figures.length;
+    const figure = figures[index];
+    image.src = figure.querySelector('img').currentSrc || figure.querySelector('img').src;
+    image.alt = figure.dataset.alt || '';
+    title.textContent = figure.dataset.title || '';
+    place.textContent = figure.dataset.place || '';
+    meta.textContent = figure.dataset.meta || '';
+    count.textContent = `${index + 1} / ${figures.length}`;
+  };
+
+  figures.forEach((figure, i) => {
+    figure.querySelector('.shot__open').addEventListener('click', () => {
+      show(i);
+      dialog.showModal();
+    });
+  });
+
+  dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
+  dialog.querySelector('[data-prev]').addEventListener('click', () => show(index - 1));
+  dialog.querySelector('[data-next]').addEventListener('click', () => show(index + 1));
+
+  dialog.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      show(index - 1);
+    }
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      show(index + 1);
+    }
+  });
+
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+}
+
+/* ── Terminal de démonstration, dans Backstage ── */
+function initTerminal() {
+  const root = document.querySelector('[data-term]');
+  if (!root) return;
+
+  const output = root.querySelector('.term__out code');
+  const form = root.querySelector('form');
+  const input = root.querySelector('input');
+  if (!output || !form || !input) return;
+
+  const intro = output.textContent;
+  const commands = {
+    help: [
+      'help    cette liste',
+      'stats   les chiffres de Backstage',
+      'memory  la mémoire persistante',
+      'clear   effacer',
+    ].join('\n'),
+    stats: [
+      '46 fichiers de tests',
+      '34 routes serveur',
+      '32 000 lignes de TypeScript',
+    ].join('\n'),
+    memory: [
+      "Backstage garde ce qui survit d'une session à l'autre :",
+      'un souvenir, sa date, sa source.',
+      'Ce terminal, lui, ne retient rien.',
+    ].join('\n'),
+  };
+
+  let transcript = intro;
+
+  const print = (text) => {
+    transcript = `${transcript}\n${text}`.split('\n').slice(-26).join('\n');
+    output.textContent = transcript;
+    root.scrollTop = root.scrollHeight;
+  };
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const command = input.value.trim();
+    input.value = '';
+    if (!command) return;
+
+    if (command === 'clear') {
+      transcript = intro;
+      output.textContent = intro;
+      return;
+    }
+
+    const key = command.toLowerCase();
+    const answer = commands[key] || `commande inconnue : ${key}. tapez help.`;
+    print(`$ ${command}\n${answer}`);
+  });
+}
+
 /* ── Contact : un nom d'entreprise suffit pour préparer le message ── */
 function initContactForm() {
   const form = document.getElementById('contact-form');
@@ -108,6 +215,8 @@ function initContactForm() {
 function init() {
   initReveal();
   initPoster();
+  initPhotos();
+  initTerminal();
   initContactForm();
 }
 
