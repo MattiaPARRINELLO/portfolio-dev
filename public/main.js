@@ -179,6 +179,7 @@ function initMotion() {
         scrub: 0.5,
         onUpdate: (self) => {
           scene.dataset.face = self.progress < 0.34 ? 'front' : 'back';
+          card.style.setProperty('--sheen', self.progress.toFixed(3));
         },
       },
     });
