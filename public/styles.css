@@ -525,22 +525,8 @@ a:hover {
   place-items: center;
 }
 
-/* Le pass quitte la scène et suit la visite */
-@media (min-width: 1001px) {
-  html.gsap .pass-wrap {
-    position: fixed;
-    top: 50%;
-    right: var(--pad);
-    z-index: 6;
-    pointer-events: none;
-  }
 
-  /* La carte reste cliquable pour la mise en page, sans capter les clics */
-  html.gsap .pass__face {
-    pointer-events: auto;
-  }
 
-}
 
 .pass {
   position: relative;
@@ -583,69 +569,6 @@ a:hover {
 }
 
 /* Le panneau de contexte : ce que joue le morceau en cours */
-.pass__ctx {
-  display: none;
-  flex-direction: column;
-  height: 100%;
-}
-
-.pass-wrap[data-mode="context"] .pass__face {
-  background: #dcd6ca;
-}
-
-.pass-wrap[data-mode="context"] .pass__id {
-  display: none;
-}
-
-.pass-wrap[data-mode="context"] .pass__ctx {
-  display: flex;
-}
-
-.ctx__time {
-  font-size: 26px;
-  color: var(--paper-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.ctx__title {
-  margin-top: 0.2rem;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
-  font-size: clamp(2.2rem, 4vw, 3.4rem);
-  line-height: 0.92;
-  letter-spacing: -0.045em;
-}
-
-.ctx__rows {
-  display: grid;
-  gap: 0.15rem;
-  margin: 1.2rem 0 0;
-}
-
-.ctx__rows div {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 26px;
-  line-height: 1.25;
-}
-
-.ctx__rows dt {
-  color: var(--paper-muted);
-}
-
-.ctx__rows dd {
-  margin: 0;
-  font-weight: 500;
-  text-align: right;
-}
-
-.ctx__foot {
-  margin-top: auto;
-  font-size: 24px;
-  color: var(--paper-muted);
-}
-
 .pass__clip {
   position: absolute;
   top: -11px;

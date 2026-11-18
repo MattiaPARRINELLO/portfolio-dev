@@ -69,208 +69,44 @@ function initMotion() {
     };
   });
 
-  /* Le pass : retournement au scroll, puis panneau du morceau en cours */
-  mm.add(
-    {
-      motion: '(prefers-reduced-motion: no-preference)',
-      wide: '(min-width: 1001px)',
-    },
-    (context) => {
-      const { motion, wide } = context.conditions;
-      if (!motion) return;
+  /* Le pass : il apparaît, se retourne une fois, puis s'efface */
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const scene = document.getElementById('pass');
+    const card = document.querySelector('.pass');
+    const wrap = document.querySelector('.pass-wrap');
+    const steps = document.querySelectorAll('.pass-step');
+    if (!scene || !card || !wrap) return;
 
-      const scene = document.getElementById('pass');
-      const card = document.querySelector('.pass');
-      const wrap = document.querySelector('.pass-wrap');
-      if (!scene || !card || !wrap) return;
+    gsap.set(card, { rotationY: -16, rotationX: 9 });
+    gsap.set(steps, { autoAlpha: 0, y: 16 });
+    gsap.set(wrap, { autoAlpha: 1 });
+    scene.dataset.face = 'front';
 
-      const faces = [
-        document.querySelector('.pass__face--front'),
-        document.querySelector('.pass__face--back'),
-      ];
-
-      const morceaux = [
-        {
-          id: 'backstage',
-          time: '21:04',
-          title: 'Backstage',
-          rows: [['Tests', '46 fichiers'], ['Routes', '34'], ['TypeScript', '32 000 lignes']],
-          foot: 'brain.mprnl.fr',
+    const pass = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: scene,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+        onUpdate: (self) => {
+          scene.dataset.face = self.progress < 0.34 ? 'front' : 'back';
         },
-        {
-          id: 'gymshark',
-          time: '21:09',
-          title: 'Gymshark-Sync',
-          rows: [['Workflows', '9'], ['Modèle', 'local'], ['API', 'Swagger']],
-          foot: 'github.com/mattia-school',
-        },
-        {
-          id: 'journal',
-          time: '21:14',
-          title: 'Le journal',
-          rows: [['Depuis', '2020'], ['Branches', 'main, perso, école'], ['Prochaine', '2027']],
-          foot: 'git log',
-        },
-        {
-          id: 'projections',
-          time: '21:19',
-          title: 'Projections',
-          rows: [['Artistes', "Damso, Jok'air"], ['Salles', '2'], ['Photos', '4']],
-          foot: 'photo.mprnl.fr',
-        },
-        {
-          id: 'rappel',
-          time: '21:24',
-          title: 'Rappel',
-          rows: [['Alternance', 'sept. 2027'], ['Rythme', '2 / 2'], ['Réponse', 'sous 24 h']],
-          foot: 'contact.mprnl@gmail.com',
-        },
-      ];
+      },
+    });
 
-      const render = (face, data) => {
-        if (!face || !data) return;
-        face.querySelector('[data-ctx-time]').textContent = data.time;
-        face.querySelector('[data-ctx-title]').textContent = data.title;
-        face.querySelector('[data-ctx-rows]').innerHTML = data.rows
-          .map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`)
-          .join('');
-        face.querySelector('[data-ctx-foot]').textContent = data.foot;
-      };
-
-      let turn = 360;
-      let current = 0;
-      let mode = 'identity';
-      let ready = false;
-
-      gsap.set(card, { rotationY: -16, rotationX: 9 });
-      gsap.set('.pass-step', { autoAlpha: 0, y: 16 });
-      scene.dataset.face = 'front';
-      wrap.dataset.mode = 'identity';
-
-      let pad = 64;
-      const inset = 8;
-      const centered = () => -wrap.offsetHeight / 2;
-      const dockedY = () => window.innerHeight / 2 - inset - wrap.offsetHeight;
-      const dockedX = () => pad - inset;
-
-      if (wide) {
-        pad = parseFloat(getComputedStyle(wrap).right) || 64;
-        gsap.set(wrap, {
-          scale: 0.5,
-          x: dockedX,
-          y: dockedY,
-          transformOrigin: 'bottom right',
-        });
-      }
-
-      const goTo = (index) => {
-        if (mode === 'identity') {
-          // Premier morceau : la carte passe de l'identité au projet, en fondu
-          mode = 'context';
-          wrap.dataset.mode = 'context';
-          turn = 360;
-          current = index;
-          render(faces[0], morceaux[index]);
-          scene.dataset.face = 'front';
-          gsap.fromTo(
-            faces[0],
-            { opacity: 0.25 },
-            { opacity: 1, duration: 0.4, ease: 'power2.out' }
-          );
-          return;
-        }
-        if (index === current) return;
-        const direction = index > current ? 1 : -1;
-        turn += direction * 180;
-        const parity = ((turn / 180) % 2 + 2) % 2;
-        const face = faces[parity];
-        render(face, morceaux[index]);
-        scene.dataset.face = parity ? 'back' : 'front';
-        gsap.to(card, {
-          rotationY: turn,
-          duration: 0.7,
-          ease: 'power2.inOut',
-          overwrite: 'auto',
-        });
-        current = index;
-      };
-
-      // Le morceau courant : celui qui traverse le milieu de l'écran
-      const sections = morceaux.map((morceau) => document.getElementById(morceau.id));
-      let syncFrame = 0;
-
-      const sync = () => {
-        syncFrame = 0;
-        if (!ready) return;
-        const mid = window.innerHeight * 0.5;
-        let index = 0;
-        sections.forEach((el, i) => {
-          if (el && el.getBoundingClientRect().top <= mid) index = i;
-        });
-        goTo(index);
-      };
-
-      const requestSync = () => {
-        if (syncFrame) return;
-        syncFrame = window.requestAnimationFrame(sync);
-      };
-
-      window.addEventListener('scroll', requestSync, { passive: true });
-
-      const pass = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: scene,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 0.5,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const p = self.progress;
-            const front = wide ? p < 0.34 || p > 0.86 : p < 0.34;
-            scene.dataset.face = front ? 'front' : 'back';
-
-            if (wide) {
-              ready = p >= 0.9;
-              if (!ready && mode === 'context') {
-                mode = 'identity';
-                wrap.dataset.mode = 'identity';
-              }
-            }
-          },
-        },
-      });
-
-      if (wide) {
-        pass.to(wrap, { scale: 1, x: 0, y: centered, duration: 0.12 }, 0);
-      }
-
-      pass
-        .to(card, { rotationY: 0, rotationX: 5, duration: 0.12 }, 0.12)
-        .to(card, { rotationY: 180, rotationX: -4, duration: 0.2 }, 0.24)
-        .to(card, { rotationY: 190, rotationX: -7, duration: 0.1 }, 0.44)
-        .fromTo('.pass-step--1', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0)
-        .to('.pass-step--1', { autoAlpha: 0, duration: 0.04 }, 0.2)
-        .fromTo('.pass-step--2', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.21)
-        .to('.pass-step--2', { autoAlpha: 0, duration: 0.04 }, 0.5)
-        .fromTo('.pass-step--3', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.51)
-        .to('.pass-step--3', { autoAlpha: 0, duration: 0.05 }, 0.9);
-
-      if (wide) {
-        pass
-          .to(card, { rotationY: 360, duration: 0.28 }, 0.72)
-          .to(wrap, { scale: 0.5, x: dockedX, y: dockedY, duration: 0.28 }, 0.72);
-      }
-
-      return () => {
-        window.removeEventListener('scroll', requestSync);
-        if (syncFrame) window.cancelAnimationFrame(syncFrame);
-        if (!wide) return;
-        gsap.set(wrap, { clearProps: 'transform' });
-        delete wrap.dataset.mode;
-      };
-    }
-  );
+    pass
+      .to(card, { rotationY: 0, rotationX: 5, duration: 0.12 }, 0.12)
+      .to(card, { rotationY: 180, rotationX: -4, duration: 0.2 }, 0.24)
+      .to(card, { rotationY: 190, rotationX: -7, duration: 0.1 }, 0.44)
+      .fromTo('.pass-step--1', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0)
+      .to('.pass-step--1', { autoAlpha: 0, duration: 0.04 }, 0.2)
+      .fromTo('.pass-step--2', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.21)
+      .to('.pass-step--2', { autoAlpha: 0, duration: 0.04 }, 0.5)
+      .fromTo('.pass-step--3', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.51)
+      .to('.pass-step--3', { autoAlpha: 0, duration: 0.05 }, 0.88)
+      .to(wrap, { autoAlpha: 0, duration: 0.08 }, 0.9);
+  });
 }
 
 /* ── Photos : la fiche de chaque image dans une feuille ── */

@@ -24,7 +24,7 @@ Le portfolio est construit comme une setlist de concert : six morceaux, un rappe
 
 ## ✨ Fonctionnalités
 - ✅ Affiche plein cadre, nom en pleine largeur
-- ✅ Pass backstage en 3D : il se retourne au scroll, suit la visite et affiche les données du morceau en cours
+- ✅ Pass backstage en 3D : il apparaît, se retourne une fois au scroll, puis s'efface
 - ✅ Lumière de salle en canvas, teintée par morceau (bleu sur Backstage, rouge sur le rappel)
 - ✅ Projets illustrés par de vraies captures, avec chiffres et liens
 - ✅ Terminal de démonstration dans Backstage (`help`, `stats`, `memory`)
