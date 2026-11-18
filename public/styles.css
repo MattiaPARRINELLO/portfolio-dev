@@ -159,16 +159,6 @@ a:hover {
   object-fit: cover;
   object-position: 50% 28%;
   filter: brightness(0.42) saturate(0.85);
-  animation: breathe 26s var(--ease) infinite alternate;
-}
-
-@keyframes breathe {
-  from {
-    transform: scale(1.02);
-  }
-  to {
-    transform: scale(1.09);
-  }
 }
 
 .bar {
@@ -994,21 +984,13 @@ a:hover {
 
 /* ── Entrées ── */
 
-[data-reveal] {
+html.gsap [data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
-  transition-delay: var(--delay, 0ms);
+  transform: translateY(24px);
 }
 
-[data-reveal].is-in {
-  opacity: 1;
-  transform: none;
-}
-
-html:not(.js) [data-reveal] {
-  opacity: 1;
-  transform: none;
+html.gsap .pass-step {
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,114 +1,106 @@
 /* =========================================================
    Portfolio Mattia Parrinello, interactions
-   Entrées des morceaux, dérive de l'affiche,
-   et préparation du message de contact.
+   GSAP + ScrollTrigger pour les entrées et le pass 3D,
+   puis les modules sans animation (photos, terminal, contact).
    ========================================================= */
 
 document.documentElement.classList.add('js');
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const hasGsap = !!window.gsap;
 
-/* ── Entrées : chaque bloc du morceau arrive une fois, décalé ── */
-function initReveal() {
-  const targets = [...document.querySelectorAll('[data-reveal]')];
-  if (!targets.length) return;
+/* ── Mouvement : GSAP si disponible, rien sinon ── */
+function initMotion() {
+  if (!hasGsap || reduceMotion.matches) return;
 
-  if (reduceMotion.matches || !('IntersectionObserver' in window)) {
-    targets.forEach((el) => el.classList.add('is-in'));
-    return;
-  }
+  const { gsap } = window;
+  const { ScrollTrigger } = window;
+  if (!ScrollTrigger) return;
 
-  const groups = new Map();
-  targets.forEach((el) => {
-    const section = el.closest('section, header') || document.body;
-    const list = groups.get(section) || [];
-    list.push(el);
-    groups.set(section, list);
-  });
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
 
-  groups.forEach((list) => {
-    list.forEach((el, index) => {
-      el.style.setProperty('--delay', `${Math.min(index, 6) * 80}ms`);
+  const mm = gsap.matchMedia();
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    // La règle CSS qui masque les blocs ne s'active que si GSAP est là
+    document.documentElement.classList.add('gsap');
+
+    /* Entrées : chaque bloc du morceau arrive une fois, décalé de 80 ms */
+    gsap.set('[data-reveal]', { autoAlpha: 0, y: 24 });
+    ScrollTrigger.batch('[data-reveal]', {
+      start: 'top 88%',
+      once: true,
+      onEnter: (batch) =>
+        gsap.to(batch, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          stagger: 0.08,
+          overwrite: true,
+        }),
     });
-  });
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
-        observer.unobserve(entry.target);
+    /* L'affiche : la photo respire et dérive au scroll */
+    const posterPhoto = document.querySelector('.poster__photo img');
+    if (posterPhoto) {
+      gsap.to(posterPhoto, {
+        yPercent: 9,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.poster',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
       });
-    },
-    { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
-  );
+      gsap.to(posterPhoto, {
+        scale: 1.08,
+        duration: 26,
+        yoyo: true,
+        repeat: -1,
+        ease: 'sine.inOut',
+      });
+    }
 
-  targets.forEach((el) => observer.observe(el));
-}
+    /* Le pass : un seul retournement, piloté au scroll */
+    const scene = document.getElementById('pass');
+    const card = document.querySelector('.pass');
+    if (scene && card) {
+      gsap.set(card, { rotationY: -16, rotationX: 9, y: 28 });
+      gsap.set('.pass-step', { autoAlpha: 0, y: 16 });
+      scene.dataset.face = 'front';
 
-/* ── L'affiche respire au scroll ── */
-function initPoster() {
-  const image = document.querySelector('.poster__photo img');
-  if (!image || reduceMotion.matches) return;
+      const pass = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: scene,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.5,
+          onUpdate: (self) => {
+            // Une seule face existe à la fois
+            scene.dataset.face = self.progress < 0.48 ? 'front' : 'back';
+          },
+        },
+      });
 
-  let frame = 0;
+      pass
+        .to(card, { rotationY: 0, rotationX: 5, y: 6, duration: 0.35 })
+        .to(card, { rotationY: 180, rotationX: -4, y: -28, duration: 0.2 })
+        .to(card, { rotationY: 190, rotationX: -7, y: -56, duration: 0.45 })
+        .to('.pass-step--1', { autoAlpha: 1, y: 0, duration: 0.06 }, 0)
+        .to('.pass-step--1', { autoAlpha: 0, duration: 0.05 }, 0.34)
+        .to('.pass-step--2', { autoAlpha: 1, y: 0, duration: 0.06 }, 0.35)
+        .to('.pass-step--2', { autoAlpha: 0, duration: 0.05 }, 0.58)
+        .to('.pass-step--3', { autoAlpha: 1, y: 0, duration: 0.06 }, 0.6);
+    }
 
-  const update = () => {
-    frame = 0;
-    const y = Math.min(window.scrollY, window.innerHeight);
-    image.style.translate = `0 ${(y * 0.12).toFixed(1)}px`;
-  };
-
-  const request = () => {
-    if (frame) return;
-    frame = window.requestAnimationFrame(update);
-  };
-
-  update();
-  window.addEventListener('scroll', request, { passive: true });
-}
-
-/* ── Le pass : la carte tourne au rythme du scroll ── */
-function initPass() {
-  const scene = document.getElementById('pass');
-  if (!scene) return;
-  if (reduceMotion.matches) {
-    scene.style.setProperty('--p', '0.08');
-    scene.style.setProperty('--turn', '-16deg');
-    scene.dataset.step = '1';
-    scene.dataset.face = 'front';
-    return;
-  }
-
-  let frame = 0;
-
-  const update = () => {
-    frame = 0;
-    const rect = scene.getBoundingClientRect();
-    const run = scene.offsetHeight - window.innerHeight;
-    const progress = run > 0 ? Math.min(1, Math.max(0, -rect.top / run)) : 0;
-    // Le retournement tient en 20 % du scroll : le reste est une lecture nette
-    const turn =
-      progress < 0.35
-        ? -16 + (progress / 0.35) * 16
-        : progress < 0.55
-          ? ((progress - 0.35) / 0.2) * 180
-          : 180 + ((progress - 0.55) / 0.45) * 10;
-    scene.style.setProperty('--p', progress.toFixed(4));
-    scene.style.setProperty('--turn', `${turn.toFixed(1)}deg`);
-    scene.dataset.step = progress < 0.35 ? '1' : progress < 0.6 ? '2' : '3';
-    // Une seule face à la fois : l'autre n'existe pas pour le lecteur ni pour la mise en page
-    scene.dataset.face = turn < 90 ? 'front' : 'back';
-  };
-
-  const request = () => {
-    if (frame) return;
-    frame = window.requestAnimationFrame(update);
-  };
-
-  update();
-  window.addEventListener('scroll', request, { passive: true });
-  window.addEventListener('resize', request);
+    return () => {
+      document.documentElement.classList.remove('gsap');
+    };
+  });
 }
 
 /* ── Photos : la fiche de chaque image dans une feuille ── */
@@ -256,9 +248,7 @@ function initContactForm() {
 }
 
 function init() {
-  initReveal();
-  initPoster();
-  initPass();
+  initMotion();
   initPhotos();
   initTerminal();
   initContactForm();
