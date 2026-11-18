@@ -24,7 +24,7 @@ Le portfolio est construit comme une setlist de concert : six morceaux, un rappe
 
 ## ✨ Fonctionnalités
 - ✅ Affiche plein cadre, nom en pleine largeur
-- ✅ Pass backstage en 3D : il apparaît, se retourne une fois au scroll, puis s'efface
+- ✅ Pass backstage en 3D : épaisseur réelle, foil iridescent AAA, il se retourne au scroll
 - ✅ Lumière de salle en canvas, teintée par morceau (bleu sur Backstage, rouge sur le rappel)
 - ✅ Backstage en scène épinglée : accueil, puis un chat qui s'écrit au scroll (question, réflexion, réponse avec sa source)
 - ✅ Gymshark-Sync dans une fenêtre d'application à onglets (vraies captures)

@@ -201,15 +201,10 @@
 
           <div class="pass-wrap" aria-hidden="true">
             <div class="pass">
-              <span class="pass__slice" style="transform: translateZ(-9px)" aria-hidden="true"></span>
-              <span class="pass__slice" style="transform: translateZ(-6.75px)" aria-hidden="true"></span>
-              <span class="pass__slice" style="transform: translateZ(-4.5px)" aria-hidden="true"></span>
-              <span class="pass__slice" style="transform: translateZ(-2.25px)" aria-hidden="true"></span>
-              <span class="pass__slice" style="transform: translateZ(0px)" aria-hidden="true"></span>
-              <span class="pass__slice" style="transform: translateZ(2.25px)" aria-hidden="true"></span>
-              <span class="pass__slice" style="transform: translateZ(4.5px)" aria-hidden="true"></span>
-              <span class="pass__slice" style="transform: translateZ(6.75px)" aria-hidden="true"></span>
-              <span class="pass__slice" style="transform: translateZ(9px)" aria-hidden="true"></span>
+              <span class="pass__side pass__side--top" aria-hidden="true"></span>
+              <span class="pass__side pass__side--bottom" aria-hidden="true"></span>
+              <span class="pass__side pass__side--left" aria-hidden="true"></span>
+              <span class="pass__side pass__side--right" aria-hidden="true"></span>
 
               <div class="pass__face pass__face--front">
                 <span class="pass__clip" aria-hidden="true"></span>
@@ -229,6 +224,32 @@
                     <div><dt>Ville</dt><dd>Paris</dd></div>
                     <div><dt>Date</dt><dd>Sept. 2027</dd></div>
                   </dl>
+                <div class="pass__foil" aria-hidden="true">
+                  <svg class="pass__foil-svg" viewBox="0 0 300 64" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="irid-front" x1="0" y1="0" x2="1" y2="0.8">
+                        <stop offset="0" stop-color="#f2a6d8" />
+                        <stop offset="0.16" stop-color="#f2d79a" />
+                        <stop offset="0.34" stop-color="#a8e8c0" />
+                        <stop offset="0.52" stop-color="#9adcf2" />
+                        <stop offset="0.7" stop-color="#b8aaf2" />
+                        <stop offset="0.86" stop-color="#f2a6d8" />
+                        <stop offset="1" stop-color="#f2d79a" />
+                      </linearGradient>
+                      <filter id="wave-front" x="-25%" y="-25%" width="150%" height="150%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.035" numOctaves="2" seed="7" result="w" />
+                        <feDisplacementMap in="SourceGraphic" in2="w" scale="26" xChannelSelector="R" yChannelSelector="G" />
+                      </filter>
+                      <filter id="grain-front">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" />
+                        <feColorMatrix type="saturate" values="0" />
+                      </filter>
+                    </defs>
+                    <rect x="-24" y="-12" width="348" height="88" fill="url(#irid-front)" filter="url(#wave-front)" />
+                    <rect width="300" height="64" filter="url(#grain-front)" opacity="0.14" />
+                  </svg>
+                  <span class="pass__aaa">AAA</span>
+                </div>
                   <div class="pass__foot">
                                   <svg class="pass__barcode" viewBox="0 0 96 28" preserveAspectRatio="none" aria-hidden="true">
                     <rect x="0" width="2" height="28" />
@@ -278,6 +299,32 @@
                     <div><dt>Routes</dt><dd>34</dd></div>
                     <div><dt>Mémoire</dt><dd>persistante</dd></div>
                   </dl>
+                <div class="pass__foil" aria-hidden="true">
+                  <svg class="pass__foil-svg" viewBox="0 0 300 64" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="irid-back" x1="0" y1="0" x2="1" y2="0.8">
+                        <stop offset="0" stop-color="#f2a6d8" />
+                        <stop offset="0.16" stop-color="#f2d79a" />
+                        <stop offset="0.34" stop-color="#a8e8c0" />
+                        <stop offset="0.52" stop-color="#9adcf2" />
+                        <stop offset="0.7" stop-color="#b8aaf2" />
+                        <stop offset="0.86" stop-color="#f2a6d8" />
+                        <stop offset="1" stop-color="#f2d79a" />
+                      </linearGradient>
+                      <filter id="wave-back" x="-25%" y="-25%" width="150%" height="150%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.035" numOctaves="2" seed="11" result="w" />
+                        <feDisplacementMap in="SourceGraphic" in2="w" scale="26" xChannelSelector="R" yChannelSelector="G" />
+                      </filter>
+                      <filter id="grain-back">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" />
+                        <feColorMatrix type="saturate" values="0" />
+                      </filter>
+                    </defs>
+                    <rect x="-24" y="-12" width="348" height="88" fill="url(#irid-back)" filter="url(#wave-back)" />
+                    <rect width="300" height="64" filter="url(#grain-back)" opacity="0.14" />
+                  </svg>
+                  <span class="pass__aaa">AAA</span>
+                </div>
                   <div class="pass__foot">
                                   <svg class="pass__barcode" viewBox="0 0 96 28" preserveAspectRatio="none" aria-hidden="true">
                     <rect x="0" width="2" height="28" />
