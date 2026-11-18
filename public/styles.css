@@ -447,6 +447,190 @@ a:hover {
   color: var(--muted);
 }
 
+/* ── Le pass ── */
+
+.pass-scene {
+  position: relative;
+  height: 220svh;
+}
+
+.pass-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  padding-inline: var(--pad);
+}
+
+.pass-copy {
+  max-width: 34ch;
+}
+
+.pass-title {
+  font-size: var(--t-2);
+}
+
+.pass-steps {
+  position: relative;
+  min-height: 8.5rem;
+  margin-top: 1.5rem;
+}
+
+.pass-step {
+  position: absolute;
+  inset: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--t-3);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease),
+    visibility 0s linear 0.5s;
+}
+
+.pass-scene[data-step="1"] .pass-step--1,
+.pass-scene[data-step="2"] .pass-step--2,
+.pass-scene[data-step="3"] .pass-step--3 {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.pass-scene[data-face="front"] .pass__face--back,
+.pass-scene[data-face="back"] .pass__face--front {
+  visibility: hidden;
+}
+
+.pass-wrap {
+  perspective: 1600px;
+  display: grid;
+  place-items: center;
+}
+
+.pass {
+  position: relative;
+  width: clamp(15rem, 24vw, 21rem);
+  aspect-ratio: 0.66;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--turn, -16deg))
+    rotateX(calc(9deg - var(--p, 0) * 16deg))
+    translateY(calc(28px - var(--p, 0) * 56px));
+}
+
+.pass__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(0.9rem, 1.6vw, 1.3rem);
+  background: var(--paper);
+  color: var(--paper-ink);
+  backface-visibility: hidden;
+}
+
+.pass__face--back {
+  transform: rotateY(180deg) translateZ(1px);
+  background: #1b1715;
+  color: var(--ink);
+}
+
+.pass__face--back .pass__role,
+.pass__face--back .pass__back-sub,
+.pass__face--back .pass__facts dt,
+.pass__face--back .pass__url {
+  color: #b8b0a4;
+}
+
+.pass__clip {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 34px;
+  height: 13px;
+  background: #2b2724;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.pass__brand {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.pass__photo {
+  width: 52%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  margin-top: 0.7rem;
+  filter: brightness(0.96) contrast(1.02);
+}
+
+.pass__name {
+  margin-top: 0.7rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.3rem, 1rem + 1vw, 1.75rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.pass__role {
+  font-size: 13px;
+  color: var(--paper-muted);
+}
+
+.pass__facts {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.8rem 0 0;
+}
+
+.pass__facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 13px;
+}
+
+.pass__facts dt {
+  color: var(--paper-muted);
+}
+
+.pass__facts dd {
+  margin: 0;
+  font-weight: 500;
+}
+
+.pass__url {
+  margin-top: auto;
+  padding-top: 0.7rem;
+  font-size: 13px;
+  color: var(--paper-muted);
+}
+
+.pass__back-title {
+  margin-top: 0.4rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 1.15rem + 0.9vw, 1.75rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.pass__back-sub {
+  margin-top: 0.6rem;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
 /* Journal */
 
 .log {
@@ -454,7 +638,7 @@ a:hover {
   padding: 1.5rem;
   background: var(--bg-soft);
   font-family: "JetBrains Mono", ui-monospace, monospace; /* taste-skill-ignore: git log littéral */
-  font-size: clamp(0.75rem, 0.6rem + 0.55vw, 0.95rem);
+  font-size: clamp(0.75rem, 0.65rem + 0.35vw, 0.875rem);
   line-height: 2;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -842,6 +1026,31 @@ html:not(.js) [data-reveal] {
     transform: none !important;
     transition: none !important;
   }
+
+  .pass-scene {
+    height: auto;
+  }
+
+  .pass-stage {
+    position: static;
+    height: auto;
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+
+  .pass {
+    transform: none;
+  }
+
+  .pass-steps {
+    min-height: 0;
+  }
+
+  .pass-step {
+    position: static;
+    opacity: 1;
+    transform: none;
+    margin-top: 1rem;
+  }
 }
 
 /* ── Adaptations ── */
@@ -882,6 +1091,32 @@ html:not(.js) [data-reveal] {
     max-height: 60svh;
   }
 
+  .pass-stage {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    gap: clamp(2rem, 5vh, 3rem);
+  }
+
+  .pass-scene {
+    height: 190svh;
+  }
+
+  .pass-wrap {
+    order: 2;
+  }
+
+  .pass {
+    width: clamp(12.5rem, 56vw, 15rem);
+  }
+
+  .pass__photo {
+    width: 46%;
+  }
+
+  .pass__name {
+    font-size: 1.25rem;
+  }
+
   .footer {
     grid-template-columns: 1fr;
   }
@@ -915,6 +1150,10 @@ html:not(.js) [data-reveal] {
   .track__note {
     grid-column: 1 / -1;
     margin-top: 0.75rem;
+  }
+
+  .big {
+    font-size: 1.25rem;
   }
 
   .projections {

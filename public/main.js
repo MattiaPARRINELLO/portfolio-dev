@@ -68,6 +68,49 @@ function initPoster() {
   window.addEventListener('scroll', request, { passive: true });
 }
 
+/* ── Le pass : la carte tourne au rythme du scroll ── */
+function initPass() {
+  const scene = document.getElementById('pass');
+  if (!scene) return;
+  if (reduceMotion.matches) {
+    scene.style.setProperty('--p', '0.08');
+    scene.style.setProperty('--turn', '-16deg');
+    scene.dataset.step = '1';
+    scene.dataset.face = 'front';
+    return;
+  }
+
+  let frame = 0;
+
+  const update = () => {
+    frame = 0;
+    const rect = scene.getBoundingClientRect();
+    const run = scene.offsetHeight - window.innerHeight;
+    const progress = run > 0 ? Math.min(1, Math.max(0, -rect.top / run)) : 0;
+    // Le retournement tient en 20 % du scroll : le reste est une lecture nette
+    const turn =
+      progress < 0.35
+        ? -16 + (progress / 0.35) * 16
+        : progress < 0.55
+          ? ((progress - 0.35) / 0.2) * 180
+          : 180 + ((progress - 0.55) / 0.45) * 10;
+    scene.style.setProperty('--p', progress.toFixed(4));
+    scene.style.setProperty('--turn', `${turn.toFixed(1)}deg`);
+    scene.dataset.step = progress < 0.35 ? '1' : progress < 0.6 ? '2' : '3';
+    // Une seule face à la fois : l'autre n'existe pas pour le lecteur ni pour la mise en page
+    scene.dataset.face = turn < 90 ? 'front' : 'back';
+  };
+
+  const request = () => {
+    if (frame) return;
+    frame = window.requestAnimationFrame(update);
+  };
+
+  update();
+  window.addEventListener('scroll', request, { passive: true });
+  window.addEventListener('resize', request);
+}
+
 /* ── Photos : la fiche de chaque image dans une feuille ── */
 function initPhotos() {
   const dialog = document.getElementById('photo-sheet');
@@ -215,6 +258,7 @@ function initContactForm() {
 function init() {
   initReveal();
   initPoster();
+  initPass();
   initPhotos();
   initTerminal();
   initContactForm();
