@@ -203,37 +203,53 @@
             <div class="pass">
               <div class="pass__face pass__face--front">
                 <span class="pass__clip"></span>
-                <p class="pass__brand">Backstage</p>
-                <img
-                  class="pass__photo"
-                  src="/assets/photos/pass-portrait.webp"
-                  alt=""
-                  width="500"
-                  height="500"
-                />
-                <p class="pass__name">Mattia<br />Parrinello</p>
-                <p class="pass__role">Développeur full-stack</p>
-                <dl class="pass__facts">
-                  <div><dt>Accès</dt><dd>Production</dd></div>
-                  <div><dt>Ville</dt><dd>Paris</dd></div>
-                  <div><dt>Date</dt><dd>Sept. 2027</dd></div>
-                </dl>
-                <p class="pass__url">brain.mprnl.fr</p>
+                <div class="pass__id">
+                  <p class="pass__brand">Backstage</p>
+                  <img
+                    class="pass__photo"
+                    src="/assets/photos/pass-portrait.webp"
+                    alt=""
+                    width="500"
+                    height="500"
+                  />
+                  <p class="pass__name">Mattia<br />Parrinello</p>
+                  <p class="pass__role">Développeur full-stack</p>
+                  <dl class="pass__facts">
+                    <div><dt>Accès</dt><dd>Production</dd></div>
+                    <div><dt>Ville</dt><dd>Paris</dd></div>
+                    <div><dt>Date</dt><dd>Sept. 2027</dd></div>
+                  </dl>
+                  <p class="pass__url">brain.mprnl.fr</p>
+                </div>
+                <div class="pass__ctx">
+                  <p class="ctx__time" data-ctx-time></p>
+                  <p class="ctx__title" data-ctx-title></p>
+                  <dl class="ctx__rows" data-ctx-rows></dl>
+                  <p class="ctx__foot" data-ctx-foot></p>
+                </div>
               </div>
 
               <div class="pass__face pass__face--back">
                 <span class="pass__clip"></span>
-                <p class="pass__brand">Tour 2027</p>
-                <p class="pass__back-title">Le second<br />cerveau</p>
-                <p class="pass__back-sub">
-                  Une application en production depuis 2026. Je m'en sers chaque matin.
-                </p>
-                <dl class="pass__facts">
-                  <div><dt>Tests</dt><dd>46 fichiers</dd></div>
-                  <div><dt>Routes</dt><dd>34</dd></div>
-                  <div><dt>Mémoire</dt><dd>persistante</dd></div>
-                </dl>
-                <p class="pass__url">brain.mprnl.fr</p>
+                <div class="pass__id">
+                  <p class="pass__brand">Tour 2027</p>
+                  <p class="pass__back-title">Le second<br />cerveau</p>
+                  <p class="pass__back-sub">
+                    Une application en production depuis 2026. Je m'en sers chaque matin.
+                  </p>
+                  <dl class="pass__facts">
+                    <div><dt>Tests</dt><dd>46 fichiers</dd></div>
+                    <div><dt>Routes</dt><dd>34</dd></div>
+                    <div><dt>Mémoire</dt><dd>persistante</dd></div>
+                  </dl>
+                  <p class="pass__url">brain.mprnl.fr</p>
+                </div>
+                <div class="pass__ctx">
+                  <p class="ctx__time" data-ctx-time></p>
+                  <p class="ctx__title" data-ctx-title></p>
+                  <dl class="ctx__rows" data-ctx-rows></dl>
+                  <p class="ctx__foot" data-ctx-foot></p>
+                </div>
               </div>
             </div>
           </div>
@@ -464,14 +480,16 @@
     </main>
 
     <footer class="footer">
-      <p>Mattia Parrinello, développeur full-stack</p>
+      <div class="footer__id">
+        <p>Mattia Parrinello, développeur full-stack</p>
+        <p>Photographies : Mattia Parrinello, 2026.</p>
+      </div>
       <ul class="footer__links">
         <li><a href="#backstage">Backstage</a></li>
         <li><a href="#journal">Le journal</a></li>
         <li><a href="#projections">Photos</a></li>
         <li><a href="#rappel">Contact</a></li>
       </ul>
-      <p>Photographies : Mattia Parrinello, 2026.</p>
     </footer>
 
     <dialog class="sheet" id="photo-sheet" aria-label="Photo en grand">

@@ -29,7 +29,7 @@ function initMotion() {
     /* Entrées : chaque bloc du morceau arrive une fois, décalé de 80 ms */
     gsap.set('[data-reveal]', { autoAlpha: 0, y: 24 });
     ScrollTrigger.batch('[data-reveal]', {
-      start: 'top 88%',
+      start: 'top 60%',
       once: true,
       onEnter: (batch) =>
         gsap.to(batch, {
@@ -69,7 +69,7 @@ function initMotion() {
     };
   });
 
-  /* Le pass : retournement au scroll, et sur grand écran il se range dans le coin */
+  /* Le pass : retournement au scroll, puis panneau du morceau en cours */
   mm.add(
     {
       motion: '(prefers-reduced-motion: no-preference)',
@@ -84,13 +84,71 @@ function initMotion() {
       const wrap = document.querySelector('.pass-wrap');
       if (!scene || !card || !wrap) return;
 
-      const steps = document.querySelectorAll('.pass-step');
-      gsap.set(card, { rotationY: -16, rotationX: 9 });
-      gsap.set(steps, { autoAlpha: 0, y: 16 });
-      scene.dataset.face = 'front';
+      const faces = [
+        document.querySelector('.pass__face--front'),
+        document.querySelector('.pass__face--back'),
+      ];
 
-      let inset = 8;
+      const morceaux = [
+        {
+          id: 'backstage',
+          time: '21:04',
+          title: 'Backstage',
+          rows: [['Tests', '46 fichiers'], ['Routes', '34'], ['TypeScript', '32 000 lignes']],
+          foot: 'brain.mprnl.fr',
+        },
+        {
+          id: 'gymshark',
+          time: '21:09',
+          title: 'Gymshark-Sync',
+          rows: [['Workflows', '9'], ['Modèle', 'local'], ['API', 'Swagger']],
+          foot: 'github.com/mattia-school',
+        },
+        {
+          id: 'journal',
+          time: '21:14',
+          title: 'Le journal',
+          rows: [['Depuis', '2020'], ['Branches', 'main, perso, école'], ['Prochaine', '2027']],
+          foot: 'git log',
+        },
+        {
+          id: 'projections',
+          time: '21:19',
+          title: 'Projections',
+          rows: [['Artistes', "Damso, Jok'air"], ['Salles', '2'], ['Photos', '4']],
+          foot: 'photo.mprnl.fr',
+        },
+        {
+          id: 'rappel',
+          time: '21:24',
+          title: 'Rappel',
+          rows: [['Alternance', 'sept. 2027'], ['Rythme', '2 / 2'], ['Réponse', 'sous 24 h']],
+          foot: 'contact.mprnl@gmail.com',
+        },
+      ];
+
+      const render = (face, data) => {
+        if (!face || !data) return;
+        face.querySelector('[data-ctx-time]').textContent = data.time;
+        face.querySelector('[data-ctx-title]').textContent = data.title;
+        face.querySelector('[data-ctx-rows]').innerHTML = data.rows
+          .map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`)
+          .join('');
+        face.querySelector('[data-ctx-foot]').textContent = data.foot;
+      };
+
+      let turn = 360;
+      let current = 0;
+      let mode = 'identity';
+      let ready = false;
+
+      gsap.set(card, { rotationY: -16, rotationX: 9 });
+      gsap.set('.pass-step', { autoAlpha: 0, y: 16 });
+      scene.dataset.face = 'front';
+      wrap.dataset.mode = 'identity';
+
       let pad = 64;
+      const inset = 8;
       const centered = () => -wrap.offsetHeight / 2;
       const dockedY = () => window.innerHeight / 2 - inset - wrap.offsetHeight;
       const dockedX = () => pad - inset;
@@ -98,13 +156,66 @@ function initMotion() {
       if (wide) {
         pad = parseFloat(getComputedStyle(wrap).right) || 64;
         gsap.set(wrap, {
-          scale: 0.155,
+          scale: 0.5,
           x: dockedX,
           y: dockedY,
           transformOrigin: 'bottom right',
         });
-        wrap.dataset.docked = 'true';
       }
+
+      const goTo = (index) => {
+        if (mode === 'identity') {
+          // Premier morceau : la carte passe de l'identité au projet, en fondu
+          mode = 'context';
+          wrap.dataset.mode = 'context';
+          turn = 360;
+          current = index;
+          render(faces[0], morceaux[index]);
+          scene.dataset.face = 'front';
+          gsap.fromTo(
+            faces[0],
+            { opacity: 0.25 },
+            { opacity: 1, duration: 0.4, ease: 'power2.out' }
+          );
+          return;
+        }
+        if (index === current) return;
+        const direction = index > current ? 1 : -1;
+        turn += direction * 180;
+        const parity = ((turn / 180) % 2 + 2) % 2;
+        const face = faces[parity];
+        render(face, morceaux[index]);
+        scene.dataset.face = parity ? 'back' : 'front';
+        gsap.to(card, {
+          rotationY: turn,
+          duration: 0.7,
+          ease: 'power2.inOut',
+          overwrite: 'auto',
+        });
+        current = index;
+      };
+
+      // Le morceau courant : celui qui traverse le milieu de l'écran
+      const sections = morceaux.map((morceau) => document.getElementById(morceau.id));
+      let syncFrame = 0;
+
+      const sync = () => {
+        syncFrame = 0;
+        if (!ready) return;
+        const mid = window.innerHeight * 0.5;
+        let index = 0;
+        sections.forEach((el, i) => {
+          if (el && el.getBoundingClientRect().top <= mid) index = i;
+        });
+        goTo(index);
+      };
+
+      const requestSync = () => {
+        if (syncFrame) return;
+        syncFrame = window.requestAnimationFrame(sync);
+      };
+
+      window.addEventListener('scroll', requestSync, { passive: true });
 
       const pass = gsap.timeline({
         defaults: { ease: 'none' },
@@ -118,8 +229,13 @@ function initMotion() {
             const p = self.progress;
             const front = wide ? p < 0.34 || p > 0.86 : p < 0.34;
             scene.dataset.face = front ? 'front' : 'back';
+
             if (wide) {
-              wrap.dataset.docked = p < 0.05 || p > 0.86 ? 'true' : 'false';
+              ready = p >= 0.9;
+              if (!ready && mode === 'context') {
+                mode = 'identity';
+                wrap.dataset.mode = 'identity';
+              }
             }
           },
         },
@@ -143,19 +259,19 @@ function initMotion() {
       if (wide) {
         pass
           .to(card, { rotationY: 360, duration: 0.28 }, 0.72)
-          .to(wrap, { scale: 0.155, x: dockedX, y: dockedY, duration: 0.28 }, 0.72);
+          .to(wrap, { scale: 0.5, x: dockedX, y: dockedY, duration: 0.28 }, 0.72);
       }
 
       return () => {
+        window.removeEventListener('scroll', requestSync);
+        if (syncFrame) window.cancelAnimationFrame(syncFrame);
         if (!wide) return;
         gsap.set(wrap, { clearProps: 'transform' });
-        delete wrap.dataset.docked;
+        delete wrap.dataset.mode;
       };
     }
   );
-
 }
-
 
 /* ── Photos : la fiche de chaque image dans une feuille ── */
 function initPhotos() {
