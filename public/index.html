@@ -252,13 +252,41 @@
           <p class="track__note">Le morceau que je joue tous les matins, en production.</p>
         </header>
         <div class="track__body">
-          <figure class="shot" data-reveal>
-            <img
-              src="/assets/projects/backstage-console.webp"
-              alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
-              width="1400"
-              height="1067"
-            />
+          <div class="stack-media" data-reveal>
+            <div class="app" data-app data-ui>
+              <div class="app__bar">
+                <div class="app__tabs" role="tablist" aria-label="Vues de Backstage">
+                  <button class="app__tab is-on" id="bs-tab-1" role="tab" aria-selected="true" aria-controls="bs-panel-1" tabindex="0">Accueil</button>
+                  <button class="app__tab" id="bs-tab-2" role="tab" aria-selected="false" aria-controls="bs-panel-2" tabindex="-1">Aujourd'hui</button>
+                </div>
+                <p class="app__url"><span class="app__dot" aria-hidden="true"></span>brain.mprnl.fr</p>
+              </div>
+              <div class="app__panels">
+                <div class="app__panel" id="bs-panel-1" role="tabpanel" aria-labelledby="bs-tab-1">
+                  <img
+                    src="/assets/projects/backstage-console.webp"
+                    alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
+                    width="1400"
+                    height="1067"
+                  />
+                </div>
+                <div class="app__panel" id="bs-panel-2" role="tabpanel" aria-labelledby="bs-tab-2" hidden>
+                  <img
+                    src="/assets/projects/backstage-today.webp"
+                    alt="Vue du jour de Backstage : agenda et mémoire de l'assistant"
+                    width="1400"
+                    height="1369"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div class="app__status">
+                <span>en production</span>
+                <span>46 fichiers de tests</span>
+                <span>34 routes</span>
+              </div>
+            </div>
+
             <div class="term" data-term>
               <pre class="term__out" aria-live="polite"><code>$ npm test
   ok  46 fichiers de tests
@@ -277,10 +305,10 @@
                 />
               </form>
             </div>
-            <p class="term__note" data-reveal>
+            <p class="term__note">
               Démo locale : les chiffres sont ceux du projet, pas un vrai shell.
             </p>
-          </figure>
+          </div>
           <div class="track__text" data-reveal>
             <p>
               Un second cerveau : chat IA à mémoire persistante, agenda synchronisé,
@@ -306,15 +334,39 @@
           <p class="track__note">Projet de groupe. Le batteur, c'était moi.</p>
         </header>
         <div class="track__body">
-          <figure class="shot" data-reveal>
-            <img
-              src="/assets/projects/gymshark-workflows.webp"
-              alt="Bibliothèque des neuf workflows de l'assistant Gymshark-Sync"
-              width="1400"
-              height="757"
-              loading="lazy"
-            />
-          </figure>
+          <div class="app" data-app data-ui data-ratio="wide" data-reveal>
+            <div class="app__bar">
+              <div class="app__tabs" role="tablist" aria-label="Vues de Gymshark-Sync">
+                <button class="app__tab is-on" id="gs-tab-1" role="tab" aria-selected="true" aria-controls="gs-panel-1" tabindex="0">Bibliothèque</button>
+                <button class="app__tab" id="gs-tab-2" role="tab" aria-selected="false" aria-controls="gs-panel-2" tabindex="-1">Assistant</button>
+              </div>
+              <p class="app__url"><span class="app__dot app__dot--local" aria-hidden="true"></span>gymshark-sync · local</p>
+            </div>
+            <div class="app__panels">
+              <div class="app__panel" id="gs-panel-1" role="tabpanel" aria-labelledby="gs-tab-1">
+                <img
+                  src="/assets/projects/gymshark-workflows.webp"
+                  alt="Bibliothèque des neuf workflows de l'assistant Gymshark-Sync"
+                  width="1400"
+                  height="757"
+                />
+              </div>
+              <div class="app__panel" id="gs-panel-2" role="tabpanel" aria-labelledby="gs-tab-2" hidden>
+                <img
+                  src="/assets/projects/gymshark-home.webp"
+                  alt="Accueil de Gymshark-Sync : l'assistant et sa barre de conversation"
+                  width="1400"
+                  height="757"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <div class="app__status">
+              <span>9 workflows</span>
+              <span>100 % local</span>
+              <span>API Swagger</span>
+            </div>
+          </div>
           <div class="track__text" data-reveal>
             <p>
               Un serveur Node.js et Express branché sur un modèle local via Ollama. Neuf

@@ -383,6 +383,108 @@ a:hover {
   filter: brightness(0.96);
 }
 
+/* ── Fenêtre d'application ── */
+
+.stack-media {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.app {
+  background: #0e1012;
+  color: #cfd6dc;
+  overflow: hidden;
+}
+
+.app__bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.35rem 0.5rem 0;
+  background: #0b0d0f;
+}
+
+.app__tabs {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.app__tab {
+  border: 0;
+  background: transparent;
+  color: #7d8993;
+  font: inherit;
+  font-size: 13px;
+  padding: 0.6rem 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.app__tab:hover {
+  color: #e6edf3;
+}
+
+.app__tab.is-on {
+  background: #171a1e;
+  color: #e6edf3;
+}
+
+.app__url {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: auto;
+  padding-right: 0.4rem;
+  font-size: 13px;
+  color: #7d8993;
+}
+
+.app__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5ac37d;
+}
+
+.app__dot--local {
+  background: #e6b34a;
+}
+
+.app__panels {
+  background: #171a1e;
+}
+
+.app__panel {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.app[data-ratio="wide"] .app__panel {
+  aspect-ratio: 16 / 9;
+}
+
+.app__panel[hidden] {
+  display: none;
+}
+
+.app__panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.app__status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+  padding: 0.55rem 0.9rem;
+  background: #0b0d0f;
+  font-size: 13px;
+  color: #7d8993;
+}
+
 .term {
   margin: 0;
   background: #0b0d0f;
@@ -409,7 +511,7 @@ a:hover {
 }
 
 .term__prompt {
-  color: #6f7a84;
+  color: #7d8993;
 }
 
 .term__form input {
@@ -458,7 +560,7 @@ a:hover {
   object-fit: cover;
   object-position: 55% 40%;
   filter: brightness(0.34) contrast(1.05);
-  mask-image: linear-gradient(90deg, transparent 0, #000 18%);
+  mask-image: linear-gradient( /* taste-skill-ignore */ 90deg, transparent 0, #000 18%);
 }
 
 

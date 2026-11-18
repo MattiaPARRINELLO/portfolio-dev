@@ -160,6 +160,48 @@ function initPhotos() {
   });
 }
 
+/* ── Fenêtres d'application : onglets accessibles ── */
+function initApps() {
+  document.querySelectorAll('[data-app]').forEach((app) => {
+    const tabs = [...app.querySelectorAll('[role="tab"]')];
+    const panels = [...app.querySelectorAll('[role="tabpanel"]')];
+    if (!tabs.length || !panels.length) return;
+
+    const select = (index) => {
+      tabs.forEach((tab, i) => {
+        const on = i === index;
+        tab.classList.toggle('is-on', on);
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+      });
+      panels.forEach((panel, i) => {
+        panel.hidden = i !== index;
+      });
+      const image = panels[index].querySelector('img');
+      if (image && image.animate) {
+        image.animate(
+          [
+            { opacity: 0.35, transform: 'translateY(4px)' },
+            { opacity: 1, transform: 'none' },
+          ],
+          { duration: 260, easing: 'ease-out' }
+        );
+      }
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        const next = (i + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        select(next);
+        tabs[next].focus();
+      });
+    });
+  });
+}
+
 /* ── Terminal de démonstration, dans Backstage ── */
 function initTerminal() {
   const root = document.querySelector('[data-term]');
@@ -255,6 +297,7 @@ function initContactForm() {
 
 function init() {
   initMotion();
+  initApps();
   initPhotos();
   initTerminal();
   initContactForm();
