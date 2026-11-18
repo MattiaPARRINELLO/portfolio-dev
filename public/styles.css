@@ -724,7 +724,9 @@ a:hover {
   object-fit: cover;
   object-position: 55% 40%;
   filter: brightness(0.34) contrast(1.05);
-  mask-image: linear-gradient( /* taste-skill-ignore */ 90deg, transparent 0, #000 18%);
+  mask-image: linear-gradient( /* taste-skill-ignore */ 90deg, transparent 0, #000 22%),
+    linear-gradient( /* taste-skill-ignore */ 180deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-composite: intersect;
 }
 
 
