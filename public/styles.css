@@ -441,13 +441,34 @@ a:hover {
 
 .pass-scene {
   position: relative;
-  height: 220svh;
+  height: 190svh;
+  overflow: clip;
 }
+
+/* Une projection derrière le pass, comme un mur de scène */
+.pass-photo {
+  position: absolute;
+  inset: 0 0 0 44%;
+  z-index: 0;
+}
+
+.pass-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 55% 40%;
+  filter: brightness(0.34) contrast(1.05);
+  mask-image: linear-gradient(90deg, transparent 0, #000 18%);
+}
+
+
 
 .pass-stage {
   position: sticky;
   top: 0;
+  z-index: 2;
   height: 100svh;
+  pointer-events: none;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
@@ -457,6 +478,7 @@ a:hover {
 
 .pass-copy {
   max-width: 34ch;
+  pointer-events: auto;
 }
 
 .pass-title {
@@ -503,9 +525,41 @@ a:hover {
   place-items: center;
 }
 
+/* Le pass quitte la scène et suit la visite */
+@media (min-width: 1001px) {
+  html.gsap .pass-wrap {
+    position: fixed;
+    top: 50%;
+    right: var(--pad);
+    z-index: 6;
+    pointer-events: none;
+  }
+
+  /* La carte reste cliquable pour la mise en page, sans capter les clics */
+  html.gsap .pass__face {
+    pointer-events: auto;
+  }
+
+  /* Rangée dans le coin, elle ne garde que le portrait */
+  .pass-wrap[data-docked="true"] .pass__brand,
+  .pass-wrap[data-docked="true"] .pass__name,
+  .pass-wrap[data-docked="true"] .pass__role,
+  .pass-wrap[data-docked="true"] .pass__facts,
+  .pass-wrap[data-docked="true"] .pass__url,
+  .pass-wrap[data-docked="true"] .pass__back-title,
+  .pass-wrap[data-docked="true"] .pass__back-sub {
+    visibility: hidden;
+  }
+
+  .pass-wrap[data-docked="true"] .pass__photo {
+    width: 70%;
+    margin: 22% auto 0;
+  }
+}
+
 .pass {
   position: relative;
-  width: clamp(15rem, 24vw, 21rem);
+  width: clamp(15rem, 27vw, 24rem);
   aspect-ratio: 0.66;
   transform-style: preserve-3d;
   transform: rotateY(var(--turn, -16deg))
@@ -526,15 +580,15 @@ a:hover {
 
 .pass__face--back {
   transform: rotateY(180deg) translateZ(1px);
-  background: #1b1715;
-  color: var(--ink);
+  background: #ddd7cb;
+  color: var(--paper-ink);
 }
 
 .pass__face--back .pass__role,
 .pass__face--back .pass__back-sub,
 .pass__face--back .pass__facts dt,
 .pass__face--back .pass__url {
-  color: #b8b0a4;
+  color: var(--paper-muted);
 }
 
 .pass__clip {
@@ -1077,6 +1131,16 @@ html.gsap .pass-step {
     grid-template-columns: minmax(0, 1fr);
     align-content: center;
     gap: clamp(2rem, 5vh, 3rem);
+  }
+
+  .pass-photo {
+    inset: 0;
+  }
+
+  .pass-photo img {
+    object-position: 62% 30%;
+    filter: brightness(0.24) contrast(1.05);
+    mask-image: none;
   }
 
   .pass-scene {

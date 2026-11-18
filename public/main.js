@@ -64,13 +64,47 @@ function initMotion() {
       });
     }
 
-    /* Le pass : un seul retournement, piloté au scroll */
-    const scene = document.getElementById('pass');
-    const card = document.querySelector('.pass');
-    if (scene && card) {
-      gsap.set(card, { rotationY: -16, rotationX: 9, y: 28 });
-      gsap.set('.pass-step', { autoAlpha: 0, y: 16 });
+    return () => {
+      document.documentElement.classList.remove('gsap');
+    };
+  });
+
+  /* Le pass : retournement au scroll, et sur grand écran il se range dans le coin */
+  mm.add(
+    {
+      motion: '(prefers-reduced-motion: no-preference)',
+      wide: '(min-width: 1001px)',
+    },
+    (context) => {
+      const { motion, wide } = context.conditions;
+      if (!motion) return;
+
+      const scene = document.getElementById('pass');
+      const card = document.querySelector('.pass');
+      const wrap = document.querySelector('.pass-wrap');
+      if (!scene || !card || !wrap) return;
+
+      const steps = document.querySelectorAll('.pass-step');
+      gsap.set(card, { rotationY: -16, rotationX: 9 });
+      gsap.set(steps, { autoAlpha: 0, y: 16 });
       scene.dataset.face = 'front';
+
+      let inset = 8;
+      let pad = 64;
+      const centered = () => -wrap.offsetHeight / 2;
+      const dockedY = () => window.innerHeight / 2 - inset - wrap.offsetHeight;
+      const dockedX = () => pad - inset;
+
+      if (wide) {
+        pad = parseFloat(getComputedStyle(wrap).right) || 64;
+        gsap.set(wrap, {
+          scale: 0.155,
+          x: dockedX,
+          y: dockedY,
+          transformOrigin: 'bottom right',
+        });
+        wrap.dataset.docked = 'true';
+      }
 
       const pass = gsap.timeline({
         defaults: { ease: 'none' },
@@ -79,29 +113,49 @@ function initMotion() {
           start: 'top top',
           end: 'bottom bottom',
           scrub: 0.5,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
-            // Une seule face existe à la fois
-            scene.dataset.face = self.progress < 0.48 ? 'front' : 'back';
+            const p = self.progress;
+            const front = wide ? p < 0.34 || p > 0.86 : p < 0.34;
+            scene.dataset.face = front ? 'front' : 'back';
+            if (wide) {
+              wrap.dataset.docked = p < 0.05 || p > 0.86 ? 'true' : 'false';
+            }
           },
         },
       });
 
-      pass
-        .to(card, { rotationY: 0, rotationX: 5, y: 6, duration: 0.35 })
-        .to(card, { rotationY: 180, rotationX: -4, y: -28, duration: 0.2 })
-        .to(card, { rotationY: 190, rotationX: -7, y: -56, duration: 0.45 })
-        .to('.pass-step--1', { autoAlpha: 1, y: 0, duration: 0.06 }, 0)
-        .to('.pass-step--1', { autoAlpha: 0, duration: 0.05 }, 0.34)
-        .to('.pass-step--2', { autoAlpha: 1, y: 0, duration: 0.06 }, 0.35)
-        .to('.pass-step--2', { autoAlpha: 0, duration: 0.05 }, 0.58)
-        .to('.pass-step--3', { autoAlpha: 1, y: 0, duration: 0.06 }, 0.6);
-    }
+      if (wide) {
+        pass.to(wrap, { scale: 1, x: 0, y: centered, duration: 0.12 }, 0);
+      }
 
-    return () => {
-      document.documentElement.classList.remove('gsap');
-    };
-  });
+      pass
+        .to(card, { rotationY: 0, rotationX: 5, duration: 0.12 }, 0.12)
+        .to(card, { rotationY: 180, rotationX: -4, duration: 0.2 }, 0.24)
+        .to(card, { rotationY: 190, rotationX: -7, duration: 0.1 }, 0.44)
+        .fromTo('.pass-step--1', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0)
+        .to('.pass-step--1', { autoAlpha: 0, duration: 0.04 }, 0.2)
+        .fromTo('.pass-step--2', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.21)
+        .to('.pass-step--2', { autoAlpha: 0, duration: 0.04 }, 0.5)
+        .fromTo('.pass-step--3', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.05 }, 0.51)
+        .to('.pass-step--3', { autoAlpha: 0, duration: 0.05 }, 0.9);
+
+      if (wide) {
+        pass
+          .to(card, { rotationY: 360, duration: 0.28 }, 0.72)
+          .to(wrap, { scale: 0.155, x: dockedX, y: dockedY, duration: 0.28 }, 0.72);
+      }
+
+      return () => {
+        if (!wide) return;
+        gsap.set(wrap, { clearProps: 'transform' });
+        delete wrap.dataset.docked;
+      };
+    }
+  );
+
 }
+
 
 /* ── Photos : la fiche de chaque image dans une feuille ── */
 function initPhotos() {
