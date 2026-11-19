@@ -18,6 +18,7 @@ const handoffInner = section ? section.querySelector('[data-handoff-inner]') : n
 const handoffVeil = section ? section.querySelector('.gs3d-veil') : null;
 const copy = section ? section.querySelector('.gs3d-copy') : null;
 const readout = section ? section.querySelector('.gs3d-readout') : null;
+const journalHeader = document.querySelector('#journal .track__head');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 const smooth = (a, b, value) => {
@@ -655,7 +656,13 @@ function frame() {
   if (handoffInner) {
     handoffInner.style.transform = `scale(${(0.035 + handoffLevel * 0.965).toFixed(3)})`;
     handoffInner.style.filter = `blur(${((1 - handoffLevel) * 7).toFixed(2)}px)`;
-    handoffInner.style.opacity = (1 - smooth(0.97, 1, progress)).toFixed(3);
+    handoffInner.style.opacity = (1 - smooth(0.95, 0.985, progress)).toFixed(3);
+    // Le teaser s'efface quand le vrai header du journal se révèle (60 % du viewport)
+    const headerReady = journalHeader
+      ? journalHeader.getBoundingClientRect().top < window.innerHeight * 0.6
+      : false;
+    handoffInner.style.visibility =
+      headerReady || target >= 0.995 ? 'hidden' : 'visible';
   }
   // La machine s'efface derrière un aplat quand le texte a fini de grandir
   if (handoffVeil) handoffVeil.style.opacity = smooth(0.84, 0.88, progress).toFixed(3);
