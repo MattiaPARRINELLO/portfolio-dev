@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Maquette Gymshark-Sync 3D, Mattia Parrinello</title>
+    <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/mockups/gymshark-3d.css" />
+  </head>
+  <body class="gs3d-page">
+    <a class="skip-link" href="#main">Aller au contenu</a>
+
+    <nav class="bar gs3d-bar" aria-label="Navigation de la maquette">
+      <a class="bar__name" href="/">Mattia Parrinello</a>
+      <p class="bar__meta">Maquette · Gymshark-Sync en 3D</p>
+      <a class="bar__action" href="/#gymshark">Retour au site</a>
+    </nav>
+
+    <main id="main">
+      <section class="gs3d-track" id="gymshark" data-scene>
+        <div class="gs3d-stage">
+          <header class="gs3d-copy">
+            <p class="track__time">21:09</p>
+            <h1 class="gs3d-title">Gymshark-Sync</h1>
+            <p class="gs3d-note">Projet de groupe. Le batteur, c'était moi.</p>
+
+            <div class="gs3d-steps">
+              <p class="gs3d-step" data-step="1">
+                <span>La machine</span>
+                Un serveur Node.js et Express, un modèle local via Ollama. Neuf workflows,
+                aucun appel à l'extérieur.
+              </p>
+              <p class="gs3d-step" data-step="2">
+                <span>L'intérieur</span>
+                Chaque roue est un workflow métier. Le scroll est la manivelle : les roues
+                s'engrènent et la machine tourne.
+              </p>
+              <p class="gs3d-step" data-step="3">
+                <span>La sortie</span>
+                Les tokens partent en streaming vers la sortie. Le tuyau réseau fait une
+                boucle et rentre dans la boîte : les données ne sortent pas de la machine.
+              </p>
+            </div>
+
+            <p class="gs3d-links">
+              <a class="link" href="https://github.com/mattia-school/gymshark-sync" target="_blank" rel="noopener noreferrer">Code source</a>
+              <a class="link" href="https://github.com/mattia-school/gymshark-sync#readme" target="_blank" rel="noopener noreferrer">API Swagger</a>
+            </p>
+
+            <ul class="gs3d-facts">
+              <li><span>9</span> workflows</li>
+              <li><span>100 %</span> local</li>
+              <li><span>0</span> appel externe</li>
+            </ul>
+          </header>
+
+          <div class="gs3d-viewport">
+            <canvas class="gs3d-canvas" data-canvas aria-label="Boîte mécanique ouverte, neuf roues dentées, un tapis de tokens et un tuyau réseau en boucle" role="img"></canvas>
+
+            <p class="gs3d-hint" data-hint>Faites défiler pour ouvrir la machine</p>
+
+            <div class="gs3d-readout" aria-hidden="true">
+              <p><span class="gs3d-dot"></span>alimentation locale</p>
+              <p class="gs3d-readout__row"><span>roues</span><b>09</b></p>
+              <p class="gs3d-readout__row"><span>réseau</span><b>boucle fermée</b></p>
+            </div>
+
+            <p class="gs3d-fallback" data-fallback hidden>
+              Le rendu 3D n'a pas pu démarrer sur cet appareil. La version actuelle de la
+              section reste disponible sur le site.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/vendor/gsap.min.js"></script>
+    <script src="/vendor/ScrollTrigger.min.js"></script>
+    <script type="module" src="/mockups/gymshark-3d.js"></script>
+  </body>
+</html>
