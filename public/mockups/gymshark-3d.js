@@ -602,8 +602,8 @@ function frame() {
   const spin = smooth(0.34, 0.52, progress);
   const tokenLevel = smooth(0.44, 0.64, progress);
   const portLevel = smooth(0.5, 0.72, progress);
-  const dive = smooth(0.72, 0.94, progress);
-  const handoffLevel = smooth(0.7, 0.94, progress);
+  const dive = smooth(0.68, 0.86, progress);
+  const handoffLevel = smooth(0.66, 0.86, progress);
 
   power += (spin - power) * (1 - Math.exp(-delta * 5));
 
@@ -648,22 +648,22 @@ function frame() {
   stage.rotation.x = (-0.015 + progress * 0.03) * (1 - dive * 0.6);
 
   // Le texte de la suite arrive en même temps que la caméra entre dans la boîte
-  if (handoff) handoff.style.opacity = smooth(0.72, 0.84, progress).toFixed(3);
+  if (handoff) handoff.style.opacity = smooth(0.68, 0.79, progress).toFixed(3);
   if (handoffInner) {
     handoffInner.style.transform = `scale(${(0.035 + handoffLevel * 0.965).toFixed(3)})`;
     handoffInner.style.filter = `blur(${((1 - handoffLevel) * 7).toFixed(2)}px)`;
   }
   // La machine s'efface derrière un aplat quand le texte a fini de grandir
-  if (handoffVeil) handoffVeil.style.opacity = smooth(0.92, 0.98, progress).toFixed(3);
+  if (handoffVeil) handoffVeil.style.opacity = smooth(0.84, 0.88, progress).toFixed(3);
 
   // La copie s'efface pendant la plongée, l'écran ne garde que la machine
-  const hide = smooth(0.7, 0.8, progress);
+  const hide = smooth(0.66, 0.76, progress);
   if (copy) copy.style.opacity = (1 - hide).toFixed(3);
   if (readout) readout.style.opacity = (1 - hide).toFixed(3);
 
   // Le cadre de la scène s'élargit pour que la machine remplisse l'écran
   if (viewport) {
-    const grow = smooth(0.84, 0.96, progress);
+    const grow = smooth(0.8, 0.88, progress);
     viewport.style.transform = `scale(${(1 + grow * 1.6).toFixed(3)})`;
   }
 
