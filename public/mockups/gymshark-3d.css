@@ -28,6 +28,7 @@
   align-items: center;
   gap: clamp(1.5rem, 4vw, 4.5rem);
   padding: 0 var(--pad) 1.5rem;
+  overflow: clip;
 }
 
 /* ── Copie ── */
@@ -110,6 +111,8 @@
   position: relative;
   height: min(78svh, 46rem);
   min-height: 20rem;
+  transform-origin: 50% 50%;
+  will-change: transform;
 }
 
 .gs3d-canvas {
@@ -184,6 +187,39 @@
   text-align: center;
 }
 
+/* Le zoom final se referme sur cette couleur, puis le site reprend */
+.gs3d-flood {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gs3d-next {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 5rem);
+  min-height: 70svh;
+  padding: clamp(3rem, 8vw, 7rem) var(--pad);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--bg);
+}
+
+.gs3d-next__title {
+  margin-top: 0.4rem;
+  font-size: clamp(2.4rem, 5.4vw, 4.6rem);
+}
+
+.gs3d-next__note {
+  max-width: 26rem;
+  justify-self: end;
+  color: var(--muted);
+  font-size: var(--t-4);
+}
+
 /* ── Adaptations ── */
 
 @media (max-width: 900px) {
@@ -237,6 +273,17 @@
 
   .gs3d-hint {
     bottom: 0.15rem;
+  }
+
+  .gs3d-next {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+    min-height: 60svh;
+  }
+
+  .gs3d-next__note {
+    justify-self: start;
   }
 }
 

@@ -12,6 +12,9 @@ const viewport = canvas ? canvas.parentElement : null;
 const steps = [...document.querySelectorAll('[data-step]')];
 const hint = document.querySelector('[data-hint]');
 const fallback = document.querySelector('[data-fallback]');
+const flood = document.querySelector('[data-flood]');
+const copy = document.querySelector('.gs3d-copy');
+const readout = document.querySelector('.gs3d-readout');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 const smooth = (a, b, value) => {
@@ -136,6 +139,13 @@ const panel = new THREE.MeshStandardMaterial({
   envMapIntensity: 1.1,
 });
 
+const panelInset = new THREE.MeshStandardMaterial({
+  color: 0x1f252a,
+  metalness: 0.62,
+  roughness: 0.48,
+  envMapIntensity: 0.95,
+});
+
 const steelBright = new THREE.MeshStandardMaterial({
   color: 0x767d84,
   metalness: 0.96,
@@ -226,33 +236,79 @@ for (const x of [-W / 2 + 0.09, W / 2 - 0.09]) {
   }
 }
 
-/* ── La façade : l'application elle-même ── */
+/* ── La façade : le site, puis le métal ── */
 
-const screenMaterial = new THREE.MeshBasicMaterial({
+const screenWidth = 2.88;
+const screenHeight = 1.56;
+const screenY = 0.02;
+
+const screenLeftMaterial = new THREE.MeshBasicMaterial({
   color: 0x0b1210,
   toneMapped: false,
   transparent: true,
   opacity: 1,
 });
 
-const screen = new THREE.Mesh(new THREE.PlaneGeometry(2.9, 1.568), screenMaterial);
-screen.position.set(0, 0.02, D / 2 + 0.027);
-machine.add(screen);
+const screenRightMaterial = new THREE.MeshBasicMaterial({
+  color: 0x0b1210,
+  toneMapped: false,
+  transparent: true,
+  opacity: 1,
+});
 
-// Le cadre de l'écran, posé dans le cadre avant
-const edge = 0.032;
-const front = D / 2 + 0.031;
-machine.add(boxOf(2.97, edge, 0.02, steelDark, 0, 0.836, front));
-machine.add(boxOf(2.97, edge, 0.02, steelDark, 0, -0.796, front));
-machine.add(boxOf(edge, 1.664, 0.02, steelDark, -1.466, 0.02, front));
-machine.add(boxOf(edge, 1.664, 0.02, steelDark, 1.466, 0.02, front));
+const doorLeft = new THREE.Group();
+doorLeft.position.set(-W / 2, 0, D / 2 + 0.03);
+machine.add(doorLeft);
+doorLeft.add(boxOf(W / 2 - 0.02, H - 0.06, 0.05, panel, W / 4, 0, 0));
+doorLeft.add(boxOf(W / 4 - 0.18, H - 0.34, 0.004, panelInset, W / 4, 0, 0.026));
+doorLeft.add(boxOf(0.03, 0.03, 0.012, glow, W / 2 - 0.13, -0.92, 0.031));
+
+const leftScreen = new THREE.Mesh(
+  new THREE.PlaneGeometry(screenWidth / 2, screenHeight),
+  screenLeftMaterial
+);
+leftScreen.position.set(W / 4, screenY, 0.032);
+doorLeft.add(leftScreen);
+
+const doorRight = new THREE.Group();
+doorRight.position.set(W / 2, 0, D / 2 + 0.03);
+machine.add(doorRight);
+doorRight.add(boxOf(W / 2 - 0.02, H - 0.06, 0.05, panel, -W / 4, 0, 0));
+doorRight.add(boxOf(W / 4 - 0.18, H - 0.34, 0.004, panelInset, -W / 4, 0, 0.026));
+doorRight.add(boxOf(0.03, 0.03, 0.012, glow, -W / 2 + 0.13, -0.92, 0.031));
+
+const rightScreen = new THREE.Mesh(
+  new THREE.PlaneGeometry(screenWidth / 2, screenHeight),
+  screenRightMaterial
+);
+rightScreen.position.set(-W / 4, screenY, 0.032);
+doorRight.add(rightScreen);
 
 new THREE.TextureLoader().load('/assets/projects/gymshark-home.webp', (texture) => {
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-  screenMaterial.map = texture;
-  screenMaterial.color.set(0xffffff);
-  screenMaterial.needsUpdate = true;
+  const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+
+  // Chaque porte porte la moitié de l'écran : fermées, elles reforment le site
+  const left = texture.clone();
+  left.needsUpdate = true;
+  left.anisotropy = anisotropy;
+  left.repeat.set(0.5, 1);
+  left.offset.set(0, 0);
+
+  const right = texture.clone();
+  right.needsUpdate = true;
+  right.anisotropy = anisotropy;
+  right.repeat.set(0.5, 1);
+  right.offset.set(0.5, 0);
+
+  screenLeftMaterial.map = left;
+  screenLeftMaterial.color.set(0xffffff);
+  screenLeftMaterial.needsUpdate = true;
+
+  screenRightMaterial.map = right;
+  screenRightMaterial.color.set(0xffffff);
+  screenRightMaterial.needsUpdate = true;
+
   if (reduceMotion.matches) renderer.render(scene, camera);
 });
 
@@ -293,18 +349,31 @@ function browserBarTexture() {
 }
 
 const browserBar = new THREE.Mesh(
-  new THREE.PlaneGeometry(2.9, 0.18),
+  new THREE.PlaneGeometry(2.88, 0.18),
   new THREE.MeshBasicMaterial({
     map: browserBarTexture(),
     toneMapped: false,
     transparent: true,
   })
 );
-browserBar.position.set(0, 0.935, D / 2 + 0.028);
+browserBar.position.set(0, 0.925, D / 2 + 0.062);
 machine.add(browserBar);
 
-// Le liseré sous l'écran : la machine reste sous tension
-machine.add(boxOf(2.9, 0.01, 0.01, glow, 0, -0.79, D / 2 + 0.035));
+// Le liseré entre les portes et sous l'écran : la machine reste sous tension
+const seam = boxOf(0.008, 1.58, 0.012, glow, 0, 0.02, D / 2 + 0.068);
+machine.add(seam);
+machine.add(boxOf(2.88, 0.01, 0.01, glow, 0, -0.79, D / 2 + 0.066));
+
+// Le balayage qui dissout l'interface en métal
+const scanMaterial = new THREE.MeshBasicMaterial({
+  color: 0xb7e3a1,
+  transparent: true,
+  opacity: 0,
+  toneMapped: false,
+});
+const scan = new THREE.Mesh(new THREE.PlaneGeometry(2.88, 0.012), scanMaterial);
+scan.position.set(0, 0.8, D / 2 + 0.07);
+machine.add(scan);
 
 /* ── Les roues ── */
 
@@ -429,43 +498,29 @@ for (let i = 0; i < 13; i += 1) {
 
 /* ── La signature : le mécanisme porte son auteur ── */
 
-const portraitMaterial = new THREE.MeshBasicMaterial({ color: 0x1a1f1c });
-
-const portrait = new THREE.Mesh(new THREE.CircleGeometry(0.142, 40), portraitMaterial);
-portrait.position.set(-1.3, 0.74, -D / 2 + 0.045);
-machine.add(portrait);
-
-new THREE.TextureLoader().load('/assets/photos/pass-portrait.webp', (texture) => {
-  texture.colorSpace = THREE.SRGBColorSpace;
-  portraitMaterial.map = texture;
-  portraitMaterial.color.set(0xffffff);
-  portraitMaterial.needsUpdate = true;
-});
-
-const portraitRing = new THREE.Mesh(
-  new THREE.TorusGeometry(0.15, 0.012, 10, 40),
-  steelBright
-);
-portraitRing.position.copy(portrait.position);
-machine.add(portraitRing);
-
 function makerPlateTexture() {
   const surface = document.createElement('canvas');
   surface.width = 512;
-  surface.height = 160;
+  surface.height = 200;
   const paint = surface.getContext('2d');
   paint.fillStyle = '#2b3034';
-  paint.fillRect(0, 0, 512, 160);
+  paint.fillRect(0, 0, 512, 200);
   paint.strokeStyle = '#4a5158';
   paint.lineWidth = 4;
-  paint.strokeRect(8, 8, 496, 144);
+  paint.strokeRect(10, 10, 492, 180);
+
   paint.textAlign = 'center';
-  paint.fillStyle = '#dfe5de';
-  paint.font = '700 62px "Space Grotesk", sans-serif';
-  paint.fillText('MPRNL', 256, 78);
+  paint.fillStyle = '#eef2ec';
+  paint.font = '700 76px "Space Grotesk", sans-serif';
+  paint.fillText('MPRNL', 256, 96);
+
+  paint.fillStyle = '#b7e3a1';
+  paint.font = '500 24px "JetBrains Mono", monospace';
+  paint.fillText('MATTIA PARRINELLO', 256, 138);
+
   paint.fillStyle = '#9aa39d';
-  paint.font = '500 26px "JetBrains Mono", monospace';
-  paint.fillText('conçu et codé · 2026', 256, 122);
+  paint.font = '500 20px "JetBrains Mono", monospace';
+  paint.fillText('conçu et codé · 2026', 256, 168);
 
   const texture = new THREE.CanvasTexture(surface);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -473,10 +528,10 @@ function makerPlateTexture() {
 }
 
 const makerPlate = new THREE.Mesh(
-  new THREE.PlaneGeometry(0.46, 0.144),
+  new THREE.PlaneGeometry(0.68, 0.266),
   new THREE.MeshStandardMaterial({ map: makerPlateTexture(), metalness: 0.7, roughness: 0.42 })
 );
-makerPlate.position.set(-1.3, 0.46, -D / 2 + 0.045);
+makerPlate.position.set(-1.2, 0.72, -D / 2 + 0.045);
 machine.add(makerPlate);
 
 /* ── La sortie : les tokens quittent la machine par une fente ── */
@@ -534,7 +589,7 @@ if (ScrollTrigger && !reduceMotion.matches) {
 }
 
 function updateCopy(value) {
-  const index = value < 0.3 ? 0 : value < 0.62 ? 1 : 2;
+  const index = value < 0.2 ? 0 : value < 0.62 ? 1 : 2;
   steps.forEach((step, i) => step.classList.toggle('is-on', i === index));
   if (hint) hint.classList.toggle('is-off', value > 0.06);
 }
@@ -578,16 +633,28 @@ function frame() {
   pointer.x += (pointerTarget.x - pointer.x) * (1 - Math.exp(-delta * 4));
   pointer.y += (pointerTarget.y - pointer.y) * (1 - Math.exp(-delta * 4));
 
-  const reveal = smooth(0.04, 0.28, progress);
-  const spin = smooth(0.3, 0.5, progress);
-  const tokenLevel = smooth(0.38, 0.6, progress);
-  const portLevel = smooth(0.42, 0.68, progress);
+  const dissolve = smooth(0.02, 0.14, progress);
+  const doorLevel = smooth(0.15, 0.38, progress);
+  const spin = smooth(0.34, 0.52, progress);
+  const tokenLevel = smooth(0.44, 0.64, progress);
+  const portLevel = smooth(0.5, 0.72, progress);
+  const dive = smooth(0.84, 1, progress);
 
   power += (spin - power) * (1 - Math.exp(-delta * 5));
 
-  // L'interface s'éteint, le mécanisme apparaît derrière
-  screenMaterial.opacity = 1 - reveal;
-  browserBar.material.opacity = 1 - reveal;
+  // Le site se dissout en métal, puis les portes s'ouvrent
+  screenLeftMaterial.opacity = 1 - dissolve;
+  screenRightMaterial.opacity = 1 - dissolve;
+  browserBar.material.opacity = 1 - dissolve;
+  browserBar.visible = dissolve < 0.99;
+
+  scan.position.y = 0.8 - dissolve * 1.56;
+  scanMaterial.opacity = Math.sin(Math.PI * dissolve) * 0.9;
+  scan.visible = dissolve > 0.01 && dissolve < 0.99;
+
+  doorLeft.rotation.y = -doorLevel * 1.64;
+  doorRight.rotation.y = doorLevel * 1.64;
+  seam.visible = doorLevel < 0.2;
 
   // La machine tourne, la vitesse suit le scroll
   gears.forEach((gear) => {
@@ -609,13 +676,26 @@ function frame() {
   beamIntensity(power);
 
   const zoom = smooth(0, 0.55, progress);
-  camera.position.x = pointer.x * 0.18;
-  camera.position.y = 0.42 + pointer.y * 0.12 - zoom * 0.05;
-  camera.position.z = baseZ - zoom * 0.75 + smooth(0.86, 1, progress) * 0.55;
-  camera.lookAt(0.1, 0.05, 0);
+  camera.position.x = pointer.x * 0.18 * (1 - dive);
+  camera.position.y = 0.42 + pointer.y * 0.12 - zoom * 0.05 - dive * 0.32;
+  camera.position.z = baseZ - zoom * 0.75 - dive * (baseZ - 1.5);
+  camera.lookAt(0.1 * (1 - dive), 0.05, 0);
 
-  stage.rotation.y = -0.14 + progress * 0.3;
-  stage.rotation.x = -0.015 + progress * 0.03;
+  stage.rotation.y = (-0.14 + progress * 0.3) * (1 - dive * 0.6);
+  stage.rotation.x = (-0.015 + progress * 0.03) * (1 - dive * 0.6);
+
+  if (flood) flood.style.opacity = smooth(0.9, 0.99, progress).toFixed(3);
+
+  // La copie s'efface pendant la plongée, l'écran ne garde que la machine
+  const hide = smooth(0.86, 0.94, progress);
+  if (copy) copy.style.opacity = (1 - hide).toFixed(3);
+  if (readout) readout.style.opacity = (1 - hide).toFixed(3);
+
+  // Le cadre de la scène s'élargit pour que la machine remplisse l'écran
+  if (viewport) {
+    const grow = smooth(0.9, 0.99, progress);
+    viewport.style.transform = `scale(${(1 + grow * 1.6).toFixed(3)})`;
+  }
 
   updateCopy(progress);
   renderer.render(scene, camera);
@@ -632,8 +712,15 @@ canvas.addEventListener('webglcontextlost', (event) => {
 
 if (reduceMotion.matches) {
   // Pas de scroll, pas de boucle : le mécanisme ouvert, immobile
-  screenMaterial.opacity = 0;
+  screenLeftMaterial.opacity = 0;
+  screenRightMaterial.opacity = 0;
   browserBar.material.opacity = 0;
+  browserBar.visible = false;
+  scan.visible = false;
+  seam.visible = false;
+  doorLeft.rotation.y = -1.64;
+  doorRight.rotation.y = 1.64;
+  if (flood) flood.style.opacity = '0';
   gears.forEach((gear, i) => {
     gear.group.rotation.z = gear.offset + i * 0.12;
   });
