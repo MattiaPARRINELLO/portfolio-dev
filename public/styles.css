@@ -1411,8 +1411,40 @@ a:hover {
 }
 
 #journal {
+  position: relative;
   min-height: 100svh;
   padding-top: clamp(2rem, 4vw, 3rem);
+}
+
+/* Le noir du handoff se fond dans la lumière de la salle */
+#journal::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 14vh;
+  background: linear-gradient(
+    180deg,
+    var(--bg) 0%,
+    rgba(7, 6, 7, 0.5) 32%,
+    rgba(7, 6, 7, 0) 100%
+  );
+  pointer-events: none;
+}
+
+#journal > .track__body {
+  position: relative;
+  z-index: 1;
+}
+
+/* Un point d'accroche invisible pour que la lumière suive le log */
+.journal__focus {
+  position: absolute;
+  top: 44%;
+  left: var(--pad);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 #journal .track__body {

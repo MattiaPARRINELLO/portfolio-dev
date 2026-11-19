@@ -16,7 +16,7 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const headings = [
     ...document.querySelectorAll('.poster__name, .pass-title, .track__title'),
-  ];
+  ].filter((heading) => !heading.closest('.sr-only'));
   const sections = [...document.querySelectorAll('[data-cue]')];
 
   const DEFAULT = { r: 223, g: 232, b: 255 };
