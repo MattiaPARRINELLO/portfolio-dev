@@ -655,6 +655,7 @@ function frame() {
   if (handoffInner) {
     handoffInner.style.transform = `scale(${(0.035 + handoffLevel * 0.965).toFixed(3)})`;
     handoffInner.style.filter = `blur(${((1 - handoffLevel) * 7).toFixed(2)}px)`;
+    handoffInner.style.opacity = (1 - smooth(0.97, 1, progress)).toFixed(3);
   }
   // La machine s'efface derrière un aplat quand le texte a fini de grandir
   if (handoffVeil) handoffVeil.style.opacity = smooth(0.84, 0.88, progress).toFixed(3);

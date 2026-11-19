@@ -242,6 +242,42 @@ function initMotion() {
       // la carte reste en place : la scène s'arrête sans la faire disparaître
       .to({}, { duration: 0.07 }, 0.93);
   });
+
+  /* Le journal : les commits tombent pendant que la ligne se dessine */
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const journalSection = document.querySelector('#journal');
+    const journal = journalSection ? journalSection.querySelector('[data-journal]') : null;
+    if (!journal) return;
+
+    const rows = [...journal.querySelectorAll('.journal__row')];
+    const rail = journal.querySelector('.journal__rail');
+    if (!rows.length) return;
+
+    gsap.set(rows, { autoAlpha: 0, y: 14 });
+    if (rail) gsap.set(rail, { scaleY: 0, transformOrigin: 'top' });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: journalSection,
+        start: 'top top',
+        once: true,
+      },
+    });
+
+    if (rail) tl.to(rail, { scaleY: 1, duration: 1.2, ease: 'power2.inOut' }, 0);
+
+    rows.forEach((row, index) => {
+      const at = 0.12 + index * 0.12;
+      tl.to(row, { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power2.out' }, at);
+      const dot = row.querySelector('.journal__dot');
+      if (dot) tl.from(dot, { scale: 0, duration: 0.3, ease: 'back.out(2)' }, at + 0.05);
+    });
+
+    return () => {
+      gsap.set(rows, { clearProps: 'all' });
+      if (rail) gsap.set(rail, { clearProps: 'all' });
+    };
+  });
 }
 
 /* ── Photos : la fiche de chaque image dans une feuille ── */
