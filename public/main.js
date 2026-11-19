@@ -190,29 +190,9 @@ function initMotion() {
       if (dot) tl.from(dot, { scale: 0, duration: 0.3, ease: 'back.out(2)' }, at + 0.05);
     });
 
-    // La lumière remonte du bas une fois que le stage 3D a quitté l'écran
-    const light = journalSection.querySelector('.journal__light');
-    if (light) {
-      gsap.fromTo(
-        light,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: journalSection,
-            start: 'top 30%',
-            end: 'top top',
-            scrub: 0.6,
-          },
-        }
-      );
-    }
-
     return () => {
       gsap.set(rows, { clearProps: 'all' });
       if (rail) gsap.set(rail, { clearProps: 'all' });
-      if (light) gsap.set(light, { clearProps: 'opacity' });
     };
   });
 }

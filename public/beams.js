@@ -16,12 +16,8 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const headings = [
     ...document.querySelectorAll('.poster__name, .pass-title, .track__title'),
-  ].filter(
-    (heading) =>
-      !heading.closest('.sr-only') && !heading.classList.contains('gs3d-handoff-title')
-  );
+  ];
   const sections = [...document.querySelectorAll('[data-cue]')];
-  const journal = document.getElementById('journal');
 
   const DEFAULT = { r: 223, g: 232, b: 255 };
   let width = 0;
@@ -152,19 +148,10 @@
     ctx.fill();
   }
 
-  // La salle s'éteint au fur et à mesure que le journal prend l'écran
-  function journalCoverage() {
-    if (!journal) return 0;
-    const rect = journal.getBoundingClientRect();
-    const overlap = Math.max(0, Math.min(rect.bottom, height) - Math.max(rect.top, 0));
-    return Math.min(1, overlap / Math.min(rect.height || height, height));
-  }
-
   function draw() {
     ctx.clearRect(0, 0, width, height);
 
     const cue = cueAt();
-    cue.light *= 1 - journalCoverage();
     if (cue.light < 0.02) return;
 
     const tint = `${Math.round(cue.r)}, ${Math.round(cue.g)}, ${Math.round(cue.b)}`;

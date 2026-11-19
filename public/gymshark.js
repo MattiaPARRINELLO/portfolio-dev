@@ -13,11 +13,6 @@ const steps = section ? [...section.querySelectorAll('[data-step]')] : [];
 const hint = section ? section.querySelector('[data-hint]') : null;
 const fallback = section ? section.querySelector('[data-fallback]') : null;
 const still = section ? section.querySelector('[data-still]') : null;
-const handoff = section ? section.querySelector('[data-handoff]') : null;
-const handoffInner = section ? section.querySelector('[data-handoff-inner]') : null;
-const handoffVeil = section ? section.querySelector('.gs3d-veil') : null;
-const copy = section ? section.querySelector('.gs3d-copy') : null;
-const readout = section ? section.querySelector('.gs3d-readout') : null;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 const smooth = (a, b, value) => {
@@ -605,8 +600,6 @@ function frame() {
   const spin = smooth(0.34, 0.52, progress);
   const tokenLevel = smooth(0.44, 0.64, progress);
   const portLevel = smooth(0.5, 0.72, progress);
-  const dive = smooth(0.68, 0.86, progress);
-  const handoffLevel = smooth(0.66, 0.86, progress);
 
   power += (spin - power) * (1 - Math.exp(-delta * 5));
 
@@ -642,34 +635,13 @@ function frame() {
   beamIntensity(power);
 
   const zoom = smooth(0, 0.55, progress);
-  camera.position.x = pointer.x * 0.18 * (1 - dive);
-  camera.position.y = 0.42 + pointer.y * 0.12 - zoom * 0.05 - dive * 0.32;
-  camera.position.z = baseZ - zoom * 0.75 - dive * (baseZ - 1.5);
-  camera.lookAt(0.1 * (1 - dive), 0.05, 0);
+  camera.position.x = pointer.x * 0.18;
+  camera.position.y = 0.42 + pointer.y * 0.12 - zoom * 0.05;
+  camera.position.z = baseZ - zoom * 0.75;
+  camera.lookAt(0.1, 0.05, 0);
 
-  stage.rotation.y = (-0.14 + progress * 0.3) * (1 - dive * 0.6);
-  stage.rotation.x = (-0.015 + progress * 0.03) * (1 - dive * 0.6);
-
-  // Le texte de la suite arrive en même temps que la caméra entre dans la boîte
-  if (handoff) handoff.style.opacity = smooth(0.68, 0.79, progress).toFixed(3);
-  if (handoffInner) {
-    handoffInner.style.transform = `scale(${(0.035 + handoffLevel * 0.965).toFixed(3)})`;
-    handoffInner.style.filter = `blur(${((1 - handoffLevel) * 7).toFixed(2)}px)`;
-    handoffInner.style.opacity = '1';
-  }
-  // La machine s'efface derrière un aplat quand le texte a fini de grandir
-  if (handoffVeil) handoffVeil.style.opacity = smooth(0.84, 0.88, progress).toFixed(3);
-
-  // La copie s'efface pendant la plongée, l'écran ne garde que la machine
-  const hide = smooth(0.66, 0.76, progress);
-  if (copy) copy.style.opacity = (1 - hide).toFixed(3);
-  if (readout) readout.style.opacity = (1 - hide).toFixed(3);
-
-  // Le cadre de la scène s'élargit pour que la machine remplisse l'écran
-  if (viewport) {
-    const grow = smooth(0.8, 0.88, progress);
-    viewport.style.transform = `scale(${(1 + grow * 1.6).toFixed(3)})`;
-  }
+  stage.rotation.y = -0.14 + progress * 0.3;
+  stage.rotation.x = -0.015 + progress * 0.03;
 
   updateCopy(progress);
   renderer.render(scene, camera);
@@ -695,7 +667,6 @@ if (reduceMotion.matches) {
   scan.visible = false;
   doorLeft.rotation.y = -1.64;
   doorRight.rotation.y = 1.64;
-  if (handoff) handoff.style.opacity = '0';
   gears.forEach((gear, i) => {
     gear.group.rotation.z = gear.offset + i * 0.12;
   });

@@ -14,7 +14,7 @@
 
 .gs3d-track {
   position: relative;
-  height: 320svh;
+  height: 260svh;
   background: radial-gradient(
     ellipse at 70% 42%,
     rgba(183, 227, 161, 0.05),
@@ -102,8 +102,6 @@
   position: relative;
   height: min(78svh, 46rem);
   min-height: 20rem;
-  transform-origin: 50% 50%;
-  will-change: transform;
 }
 
 .gs3d-canvas {
@@ -202,57 +200,11 @@
   text-align: center;
 }
 
-/* ── Le texte du journal, qui grandit pendant le zoom ── */
-
-.gs3d-handoff {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  display: grid;
-  opacity: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.gs3d-veil {
-  position: absolute;
-  inset: 0;
-  background: var(--bg);
-  opacity: 0;
-}
-
-.gs3d-handoff-inner {
-  position: relative;
-  display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr) minmax(0, 0.9fr);
-  align-content: end;
-  align-items: end;
-  gap: 0.5rem clamp(1rem, 3vw, 3rem);
-  min-height: 100svh;
-  padding: clamp(3rem, 8vw, 7rem) var(--pad) clamp(2rem, 5vh, 3.5rem);
-  transform-origin: 50% 50%;
-  will-change: transform, filter;
-}
-
-.gs3d-handoff-title {
-  margin-top: 0;
-  font-family: "Space Grotesk", "Inter", sans-serif;
-  font-weight: 700;
-  line-height: 0.86;
-  letter-spacing: -0.045em;
-  text-wrap: balance;
-}
-
-.gs3d-handoff-note {
-  padding-bottom: 0.4rem;
-  justify-self: start;
-}
-
 /* ── Adaptations ── */
 
 @media (max-width: 900px) {
   .gs3d-track {
-    height: 270svh;
+    height: 210svh;
   }
 
   .gs3d-stage {
@@ -293,17 +245,6 @@
   .gs3d-hint {
     bottom: 0.15rem;
   }
-
-  .gs3d-handoff-inner {
-    grid-template-columns: minmax(0, 1fr);
-    align-content: end;
-    gap: 1rem;
-    padding-bottom: 1.5rem;
-  }
-
-  .gs3d-handoff-note {
-    justify-self: start;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -327,10 +268,6 @@
     opacity: 1;
     transform: none;
     margin-bottom: 1.2rem;
-  }
-
-  .gs3d-handoff {
-    display: none;
   }
 
   .gs3d-dot {
