@@ -13,7 +13,7 @@
 
 .gs3d-track {
   position: relative;
-  height: 260svh;
+  height: 300svh;
   background:
     radial-gradient(ellipse at 70% 42%, rgba(183, 227, 161, 0.05), transparent 55%),
     var(--bg);
@@ -244,7 +244,7 @@
 
 @media (max-width: 900px) {
   .gs3d-track {
-    height: 210svh;
+    height: 250svh;
   }
 
   .gs3d-stage {
