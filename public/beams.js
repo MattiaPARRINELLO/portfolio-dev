@@ -122,12 +122,6 @@
     ctx.arc(focus.x, focus.y, radius, 0, Math.PI * 2);
     ctx.fillStyle = gradient;
     ctx.fill();
-    ctx.filter = 'none';
-    ctx.beginPath();
-    ctx.arc(focus.x, focus.y, radius * 0.92, 0, Math.PI * 2);
-    ctx.lineWidth = 1.5;
-    ctx.strokeStyle = `rgba(${tint}, ${0.16 * strength})`;
-    ctx.stroke();
     ctx.restore();
   }
 

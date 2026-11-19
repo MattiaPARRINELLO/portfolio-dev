@@ -823,6 +823,18 @@ a:hover {
   place-items: center;
 }
 
+.pass3d {
+  display: block;
+  width: 100%;
+  height: min(78svh, 46rem);
+}
+
+@media (max-width: 900px) {
+  .pass3d {
+    height: 60svh;
+  }
+}
+
 
 
 
@@ -1257,9 +1269,185 @@ a:hover {
   max-width: 40ch;
 }
 
+/* Le journal : le log se dessine au scroll */
+
+.journal {
+  min-width: 0;
+}
+
+.journal__list {
+  position: relative;
+}
+
+.journal__rail {
+  position: absolute;
+  left: 1.05rem;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.24));
+  transform-origin: top;
+}
+
+.journal__rows {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journal__row {
+  display: grid;
+  grid-template-columns: 2.1rem 5rem 3.4rem 5.2rem minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: center;
+  min-height: 3.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: clamp(0.72rem, 0.66rem + 0.25vw, 0.84rem);
+}
+
+.journal__row:last-child {
+  border-bottom: 0;
+}
+
+.journal__graph {
+  position: relative;
+  align-self: stretch;
+}
+
+.journal__dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: #9fd0ff;
+  box-shadow: 0 0 0 3px rgba(159, 208, 255, 0.08);
+}
+
+.journal__row[data-branch="perso"] .journal__dot {
+  left: calc(50% + 0.42rem);
+  background: #ffb38a;
+  box-shadow: 0 0 0 3px rgba(255, 179, 138, 0.08);
+}
+
+.journal__row[data-branch="ecole"] .journal__dot {
+  left: calc(50% - 0.42rem);
+  background: #b7e3a1;
+  box-shadow: 0 0 0 3px rgba(183, 227, 161, 0.08);
+}
+
+.journal__row[data-branch="head"] .journal__dot {
+  width: 9px;
+  height: 9px;
+  background: var(--ink);
+  box-shadow: 0 0 0 3px rgba(242, 241, 238, 0.1);
+  animation: journal-head 2.6s var(--ease) infinite;
+}
+
+.journal__row[data-branch="perso"] .journal__graph::before,
+.journal__row[data-branch="ecole"] .journal__graph::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 0.42rem;
+  height: 1px;
+  opacity: 0.55;
+}
+
+.journal__row[data-branch="perso"] .journal__graph::before {
+  left: 50%;
+  background: #ffb38a;
+}
+
+.journal__row[data-branch="ecole"] .journal__graph::before {
+  left: calc(50% - 0.42rem);
+  background: #b7e3a1;
+}
+
+@keyframes journal-head {
+  50% {
+    box-shadow: 0 0 0 9px rgba(242, 241, 238, 0);
+  }
+}
+
+.journal__ref {
+  color: #7c858d;
+}
+
+.journal__ref--main {
+  color: #9fd0ff;
+}
+
+.journal__ref--perso {
+  color: #ffb38a;
+}
+
+.journal__ref--ecole {
+  color: #b7e3a1;
+}
+
+.journal__year {
+  color: var(--muted);
+}
+
+.journal__hash {
+  color: #8a939c;
+}
+
+.journal__msg {
+  color: #c7d0d8;
+  overflow-wrap: anywhere;
+}
+
+.journal__row--head .journal__ref,
+.journal__row--head .journal__msg {
+  color: var(--ink);
+}
+
 #journal .track__body {
   grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
   align-items: end;
+}
+
+@media (max-width: 620px) {
+  .journal__rail {
+    left: 0.75rem;
+  }
+
+  .journal__row {
+    grid-template-columns: 1.5rem auto auto minmax(0, 1fr);
+    grid-template-areas:
+      "graph ref year hash"
+      "graph msg msg msg";
+    gap: 0.12rem 0.45rem;
+    padding-block: 0.55rem;
+  }
+
+  .journal__graph {
+    grid-area: graph;
+  }
+
+  .journal__ref {
+    grid-area: ref;
+  }
+
+  .journal__year {
+    grid-area: year;
+  }
+
+  .journal__hash {
+    grid-area: hash;
+  }
+
+  .journal__msg {
+    grid-area: msg;
+  }
 }
 
 /* Projections */
