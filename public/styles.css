@@ -1411,8 +1411,35 @@ a:hover {
 }
 
 #journal {
+  position: relative;
   min-height: 100svh;
   padding-top: clamp(2rem, 4vw, 3rem);
+}
+
+/* La lumière remonte du bas, seulement quand la 3D a fini de s'effacer */
+.journal__light {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(
+      0deg,
+      rgba(255, 179, 138, 0.2) 0%,
+      rgba(255, 179, 138, 0.07) 35%,
+      rgba(255, 179, 138, 0) 72%
+    ),
+    radial-gradient(
+      ellipse 60% 58% at 50% 104%,
+      rgba(255, 179, 138, 0.34) 0%,
+      rgba(255, 179, 138, 0) 78%
+    );
+  opacity: 0;
+  pointer-events: none;
+}
+
+#journal > .track__body {
+  position: relative;
+  z-index: 1;
 }
 
 #journal .track__body {
