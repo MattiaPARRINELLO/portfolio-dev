@@ -138,6 +138,8 @@ const FOIL_EFFECT = /* glsl */ `
   /* L'iridescence vit sur les zones claires : le AAA sombre reste lisible */
   float luma = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
   float mask = smoothstep(0.35, 0.75, luma);
+  // les glyphes sombres (AAA, microtextes) restent hors des reflets
+  float textMask = smoothstep(0.20, 0.52, luma);
 
   /* Réseau de diffraction : key, rim, glint ; 1 ordre sur mobile */
   float orders = quality < 0.75 ? 1.0 : 2.0;
@@ -204,8 +206,8 @@ const FOIL_EFFECT = /* glsl */ `
   diffuseColor.rgb *= 1.0 + (guilloche - 0.5) * 0.16 * mask;
 
   foilAdd = diffr * (F * 0.7 + 0.3) * mask * 0.5;
-  foilAdd += glintCol * (0.3 + 0.7 * mask);
-  foilAdd += rimCol * (0.5 + 0.5 * mask);
+  foilAdd += glintCol * (0.12 + 0.88 * textMask);
+  foilAdd += rimCol * (0.25 + 0.75 * textMask);
 `;
 
 const FOIL_ADD = /* glsl */ `
@@ -754,7 +756,7 @@ function initPass() {
         map: foilBase,
         metalness: 0.74,
         roughness: 0.24,
-        clearcoat: 0.35,
+        clearcoat: 0.28,
         clearcoatRoughness: 0.18,
         envMapIntensity: 0.9,
         side: THREE.DoubleSide,
@@ -949,12 +951,12 @@ function initPass() {
     const tilt = smooth(0.46, 0.94, progress);
 
     card.rotation.y =
-      -0.28 + settle * 0.28 + flip * Math.PI + tilt * 0.17 + pointer.x * 0.07;
+      -0.28 + settle * 0.28 + flip * Math.PI + tilt * 0.17 + pointer.x * 0.16;
     card.rotation.x =
-      0.08 - settle * 0.03 - flip * 0.03 + Math.sin(elapsed * 0.7) * 0.012 + pointer.y * 0.06;
-    card.rotation.z = -0.02 + Math.sin(elapsed * 0.55) * 0.008;
-    card.position.y = Math.sin(elapsed * 0.8) * 0.008;
-    card.position.x = pointer.x * 0.02;
+      0.08 - settle * 0.03 - flip * 0.03 + Math.sin(elapsed * 0.7) * 0.012 + pointer.y * 0.12;
+    card.rotation.z = -0.02 + Math.sin(elapsed * 0.55) * 0.008 + pointer.x * 0.02;
+    card.position.y = Math.sin(elapsed * 0.8) * 0.008 - pointer.y * 0.03;
+    card.position.x = pointer.x * 0.05;
 
     // La lumière suit le scroll et le curseur : la bande iridescente réagit
     glint.position.x = 1.1 + Math.sin(elapsed * 0.45) * 1.3 + pointer.x * 1.4;
