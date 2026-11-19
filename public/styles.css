@@ -823,6 +823,18 @@ a:hover {
   place-items: center;
 }
 
+.pass3d {
+  display: block;
+  width: 100%;
+  height: min(78svh, 46rem);
+}
+
+@media (max-width: 900px) {
+  .pass3d {
+    height: 60svh;
+  }
+}
+
 
 
 
