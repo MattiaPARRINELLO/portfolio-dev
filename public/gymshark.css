@@ -120,6 +120,10 @@
   object-fit: contain;
 }
 
+.gs3d-still[hidden] {
+  display: none;
+}
+
 /* Sans WebGL, la section reste lisible : la capture et les trois temps */
 .gs3d--fallback .gs3d-step {
   position: static;
