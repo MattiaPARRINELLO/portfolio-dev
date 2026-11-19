@@ -226,28 +226,85 @@ for (const x of [-W / 2 + 0.09, W / 2 - 0.09]) {
   }
 }
 
-/* ── Les portes ── */
+/* ── La façade : l'application elle-même ── */
 
-const doorLeft = new THREE.Group();
-doorLeft.position.set(-W / 2, 0, D / 2 + 0.03);
-machine.add(doorLeft);
-doorLeft.add(boxOf(W / 2 - 0.04, H - 0.06, 0.05, panel, W / 4, 0, 0));
-doorLeft.add(boxOf(W / 4 - 0.16, H - 0.28, 0.012, steelDark, W / 4, 0, 0.032));
-doorLeft.add(boxOf(0.032, 0.032, 0.012, glow, W / 2 - 0.14, 0.42, 0.032));
-doorLeft.add(boxOf(0.02, 0.5, 0.06, steelBright, W / 2 - 0.055, 0, 0.035));
+const screenMaterial = new THREE.MeshBasicMaterial({
+  color: 0x0b1210,
+  toneMapped: false,
+  transparent: true,
+  opacity: 1,
+});
 
-const doorRight = new THREE.Group();
-doorRight.position.set(W / 2, 0, D / 2 + 0.03);
-machine.add(doorRight);
-doorRight.add(boxOf(W / 2 - 0.04, H - 0.06, 0.05, panel, -W / 4, 0, 0));
-doorRight.add(boxOf(W / 4 - 0.16, H - 0.28, 0.012, steelDark, -W / 4, 0, 0.032));
-doorRight.add(boxOf(0.032, 0.032, 0.012, glow, -W / 2 + 0.14, 0.42, 0.032));
-doorRight.add(boxOf(0.02, 0.5, 0.06, steelBright, -W / 2 + 0.055, 0, 0.035));
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(2.9, 1.568), screenMaterial);
+screen.position.set(0, 0.02, D / 2 + 0.027);
+machine.add(screen);
 
-// Le liseré entre les deux portes : la machine est sous tension, porte fermée
-const seam = boxOf(0.012, H - 0.1, 0.012, glow, 0, 0, D / 2 + 0.062);
-seam.visible = true;
-machine.add(seam);
+// Le cadre de l'écran, posé dans le cadre avant
+const edge = 0.032;
+const front = D / 2 + 0.031;
+machine.add(boxOf(2.97, edge, 0.02, steelDark, 0, 0.836, front));
+machine.add(boxOf(2.97, edge, 0.02, steelDark, 0, -0.796, front));
+machine.add(boxOf(edge, 1.664, 0.02, steelDark, -1.466, 0.02, front));
+machine.add(boxOf(edge, 1.664, 0.02, steelDark, 1.466, 0.02, front));
+
+new THREE.TextureLoader().load('/assets/projects/gymshark-home.webp', (texture) => {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  screenMaterial.map = texture;
+  screenMaterial.color.set(0xffffff);
+  screenMaterial.needsUpdate = true;
+  if (reduceMotion.matches) renderer.render(scene, camera);
+});
+
+// La barre de navigateur : ce que l'on voit est bien le site, pas une maquette
+function browserBarTexture() {
+  const surface = document.createElement('canvas');
+  surface.width = 1024;
+  surface.height = 64;
+  const paint = surface.getContext('2d');
+  paint.fillStyle = '#14181a';
+  paint.fillRect(0, 0, 1024, 64);
+
+  ['#ff5f57', '#febc2e', '#28c840'].forEach((color, i) => {
+    paint.beginPath();
+    paint.fillStyle = color;
+    paint.arc(28 + i * 22, 32, 7, 0, Math.PI * 2);
+    paint.fill();
+  });
+
+  paint.fillStyle = '#9aa39d';
+  paint.font = '500 24px "JetBrains Mono", monospace';
+  paint.textBaseline = 'middle';
+  paint.fillText('gymshark-sync  ·  local', 118, 34);
+
+  // La marque de l'auteur, visible avant même d'ouvrir
+  paint.fillStyle = '#b7e3a1';
+  paint.textAlign = 'right';
+  paint.font = '600 22px "JetBrains Mono", monospace';
+  paint.fillText('mprnl.fr', 982, 34);
+
+  paint.beginPath();
+  paint.arc(1002, 32, 6, 0, Math.PI * 2);
+  paint.fill();
+
+  const texture = new THREE.CanvasTexture(surface);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+const browserBar = new THREE.Mesh(
+  new THREE.PlaneGeometry(2.9, 0.18),
+  new THREE.MeshBasicMaterial({
+    map: browserBarTexture(),
+    toneMapped: false,
+    transparent: true,
+  })
+);
+browserBar.position.set(0, 0.935, D / 2 + 0.028);
+machine.add(browserBar);
+
+// Le liseré sous l'écran : la machine reste sous tension
+machine.add(boxOf(2.9, 0.01, 0.01, glow, 0, -0.79, D / 2 + 0.035));
 
 /* ── Les roues ── */
 
@@ -370,32 +427,57 @@ for (let i = 0; i < 13; i += 1) {
   tokens.push(token);
 }
 
-/* ── Le tuyau réseau, qui fait une boucle et rentre ── */
+/* ── La signature : le mécanisme porte son auteur ── */
 
-const pipeCurve = new THREE.CatmullRomCurve3(
-  [
-    new THREE.Vector3(-1.14, -0.84, -0.2),
-    new THREE.Vector3(-1.45, -0.2, 0.02),
-    new THREE.Vector3(-1.12, 0.56, -0.28),
-    new THREE.Vector3(-0.79, -0.08, -0.5),
-  ],
-  true,
-  'catmullrom',
-  0.4
-);
+const portraitMaterial = new THREE.MeshBasicMaterial({ color: 0x1a1f1c });
 
-const pipeMaterial = new THREE.MeshStandardMaterial({
-  color: 0x0e1a12,
-  emissive: 0xb7e3a1,
-  emissiveIntensity: 0.9,
-  metalness: 0.3,
-  roughness: 0.55,
+const portrait = new THREE.Mesh(new THREE.CircleGeometry(0.142, 40), portraitMaterial);
+portrait.position.set(-1.3, 0.74, -D / 2 + 0.045);
+machine.add(portrait);
+
+new THREE.TextureLoader().load('/assets/photos/pass-portrait.webp', (texture) => {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  portraitMaterial.map = texture;
+  portraitMaterial.color.set(0xffffff);
+  portraitMaterial.needsUpdate = true;
 });
 
-machine.add(new THREE.Mesh(new THREE.TubeGeometry(pipeCurve, 120, 0.021, 8, true), pipeMaterial));
+const portraitRing = new THREE.Mesh(
+  new THREE.TorusGeometry(0.15, 0.012, 10, 40),
+  steelBright
+);
+portraitRing.position.copy(portrait.position);
+machine.add(portraitRing);
 
-const pipeBead = new THREE.Mesh(new THREE.SphereGeometry(0.034, 12, 12), glow);
-machine.add(pipeBead);
+function makerPlateTexture() {
+  const surface = document.createElement('canvas');
+  surface.width = 512;
+  surface.height = 160;
+  const paint = surface.getContext('2d');
+  paint.fillStyle = '#2b3034';
+  paint.fillRect(0, 0, 512, 160);
+  paint.strokeStyle = '#4a5158';
+  paint.lineWidth = 4;
+  paint.strokeRect(8, 8, 496, 144);
+  paint.textAlign = 'center';
+  paint.fillStyle = '#dfe5de';
+  paint.font = '700 62px "Space Grotesk", sans-serif';
+  paint.fillText('MPRNL', 256, 78);
+  paint.fillStyle = '#9aa39d';
+  paint.font = '500 26px "JetBrains Mono", monospace';
+  paint.fillText('conçu et codé · 2026', 256, 122);
+
+  const texture = new THREE.CanvasTexture(surface);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+const makerPlate = new THREE.Mesh(
+  new THREE.PlaneGeometry(0.46, 0.144),
+  new THREE.MeshStandardMaterial({ map: makerPlateTexture(), metalness: 0.7, roughness: 0.42 })
+);
+makerPlate.position.set(-1.3, 0.46, -D / 2 + 0.045);
+machine.add(makerPlate);
 
 /* ── La sortie : les tokens quittent la machine par une fente ── */
 
@@ -436,7 +518,6 @@ new ResizeObserver(resize).observe(viewport);
 
 let target = reduceMotion.matches ? 0.64 : 0;
 let progress = target;
-let doorLevel = 0;
 let power = 0;
 
 const { ScrollTrigger } = window;
@@ -497,29 +578,23 @@ function frame() {
   pointer.x += (pointerTarget.x - pointer.x) * (1 - Math.exp(-delta * 4));
   pointer.y += (pointerTarget.y - pointer.y) * (1 - Math.exp(-delta * 4));
 
-  const door = smooth(0.06, 0.34, progress);
+  const reveal = smooth(0.04, 0.28, progress);
   const spin = smooth(0.3, 0.5, progress);
   const tokenLevel = smooth(0.38, 0.6, progress);
   const portLevel = smooth(0.42, 0.68, progress);
 
-  doorLevel += (door - doorLevel) * (1 - Math.exp(-delta * 6));
   power += (spin - power) * (1 - Math.exp(-delta * 5));
 
-  doorLeft.rotation.y = -doorLevel * 1.64;
-  doorRight.rotation.y = doorLevel * 1.64;
-  seam.visible = doorLevel < 0.4;
+  // L'interface s'éteint, le mécanisme apparaît derrière
+  screenMaterial.opacity = 1 - reveal;
+  browserBar.material.opacity = 1 - reveal;
 
   // La machine tourne, la vitesse suit le scroll
   gears.forEach((gear) => {
     gear.group.rotation.z += delta * gear.rate * gear.dir * (0.02 + power * 3.4);
   });
 
-  // Le tuyau pulse et son témoin circule
-  pipeMaterial.emissiveIntensity = 0.45 + power * 1.2;
-  pipeBead.position.copy(pipeCurve.getPointAt((elapsed * 0.09) % 1));
-  pipeBead.visible = power > 0.15;
-
-  // Les tokens avancent vers l'écran
+  // Les tokens avancent vers la sortie
   tokenMaterial.opacity = tokenLevel * 0.95;
   tokens.forEach((token, i) => {
     const t = ((elapsed * (0.06 + power * 0.18) + i / tokens.length) % 1 + 1) % 1;
@@ -556,10 +631,9 @@ canvas.addEventListener('webglcontextlost', (event) => {
 });
 
 if (reduceMotion.matches) {
-  // Pas de scroll, pas de boucle : une machine ouverte, immobile
-  doorLeft.rotation.y = -1.64;
-  doorRight.rotation.y = 1.64;
-  seam.visible = false;
+  // Pas de scroll, pas de boucle : le mécanisme ouvert, immobile
+  screenMaterial.opacity = 0;
+  browserBar.material.opacity = 0;
   gears.forEach((gear, i) => {
     gear.group.rotation.z = gear.offset + i * 0.12;
   });
@@ -568,7 +642,7 @@ if (reduceMotion.matches) {
     token.visible = true;
   });
   inner.intensity = 13;
-  pipeMaterial.emissiveIntensity = 1.4;
+  portGlow.intensity = 4;
   camera.position.set(0, 0.35, baseZ - 0.5);
   camera.lookAt(0.1, 0.05, 0);
   renderer.render(scene, camera);
