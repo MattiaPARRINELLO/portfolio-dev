@@ -18,8 +18,6 @@ const handoffInner = section ? section.querySelector('[data-handoff-inner]') : n
 const handoffVeil = section ? section.querySelector('.gs3d-veil') : null;
 const copy = section ? section.querySelector('.gs3d-copy') : null;
 const readout = section ? section.querySelector('.gs3d-readout') : null;
-const journalHeader = document.querySelector('#journal .track__head');
-let journalHeaderRevealed = false;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 const smooth = (a, b, value) => {
@@ -657,21 +655,7 @@ function frame() {
   if (handoffInner) {
     handoffInner.style.transform = `scale(${(0.035 + handoffLevel * 0.965).toFixed(3)})`;
     handoffInner.style.filter = `blur(${((1 - handoffLevel) * 7).toFixed(2)}px)`;
-    handoffInner.style.opacity = (1 - smooth(0.95, 0.985, progress)).toFixed(3);
-    // On n'affiche jamais le teaser en même temps que le vrai header
-    if (journalHeader) {
-      if (
-        !journalHeaderRevealed &&
-        Number.parseFloat(getComputedStyle(journalHeader).opacity) > 0.6
-      ) {
-        journalHeaderRevealed = true;
-      }
-
-      const rect = journalHeader.getBoundingClientRect();
-      const headerInView = rect.top < window.innerHeight && rect.bottom > 0;
-      const clash = journalHeaderRevealed && headerInView;
-      handoffInner.style.visibility = clash || target >= 0.995 ? 'hidden' : 'visible';
-    }
+    handoffInner.style.opacity = '1';
   }
   // La machine s'efface derrière un aplat quand le texte a fini de grandir
   if (handoffVeil) handoffVeil.style.opacity = smooth(0.84, 0.88, progress).toFixed(3);

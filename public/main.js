@@ -176,7 +176,7 @@ function initMotion() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: journalSection,
-        start: 'top top',
+        start: 'top 80%',
         once: true,
       },
     });

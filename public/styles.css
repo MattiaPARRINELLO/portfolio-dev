@@ -1412,6 +1412,7 @@ a:hover {
 
 #journal {
   min-height: 100svh;
+  padding-top: clamp(2rem, 4vw, 3rem);
 }
 
 #journal .track__body {
@@ -1451,6 +1452,19 @@ a:hover {
 
   .journal__msg {
     grid-area: msg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Sans le handoff, le titre du journal doit rester visible */
+  #journal .track__head.sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0 0 2rem;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
   }
 }
 
