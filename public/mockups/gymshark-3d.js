@@ -12,7 +12,9 @@ const viewport = canvas ? canvas.parentElement : null;
 const steps = [...document.querySelectorAll('[data-step]')];
 const hint = document.querySelector('[data-hint]');
 const fallback = document.querySelector('[data-fallback]');
-const flood = document.querySelector('[data-flood]');
+const handoff = document.querySelector('[data-handoff]');
+const handoffInner = document.querySelector('[data-handoff-inner]');
+const handoffVeil = document.querySelector('.gs3d-handoff__veil');
 const copy = document.querySelector('.gs3d-copy');
 const readout = document.querySelector('.gs3d-readout');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -238,37 +240,12 @@ for (const x of [-W / 2 + 0.09, W / 2 - 0.09]) {
 
 /* ── La façade : le site, puis le métal ── */
 
-const screenWidth = 2.88;
-const screenHeight = 1.56;
-const screenY = 0.02;
-
-const screenLeftMaterial = new THREE.MeshBasicMaterial({
-  color: 0x0b1210,
-  toneMapped: false,
-  transparent: true,
-  opacity: 1,
-});
-
-const screenRightMaterial = new THREE.MeshBasicMaterial({
-  color: 0x0b1210,
-  toneMapped: false,
-  transparent: true,
-  opacity: 1,
-});
-
 const doorLeft = new THREE.Group();
 doorLeft.position.set(-W / 2, 0, D / 2 + 0.03);
 machine.add(doorLeft);
 doorLeft.add(boxOf(W / 2 - 0.02, H - 0.06, 0.05, panel, W / 4, 0, 0));
 doorLeft.add(boxOf(W / 4 - 0.18, H - 0.34, 0.004, panelInset, W / 4, 0, 0.026));
 doorLeft.add(boxOf(0.03, 0.03, 0.012, glow, W / 2 - 0.13, -0.92, 0.031));
-
-const leftScreen = new THREE.Mesh(
-  new THREE.PlaneGeometry(screenWidth / 2, screenHeight),
-  screenLeftMaterial
-);
-leftScreen.position.set(W / 4, screenY, 0.032);
-doorLeft.add(leftScreen);
 
 const doorRight = new THREE.Group();
 doorRight.position.set(W / 2, 0, D / 2 + 0.03);
@@ -277,38 +254,30 @@ doorRight.add(boxOf(W / 2 - 0.02, H - 0.06, 0.05, panel, -W / 4, 0, 0));
 doorRight.add(boxOf(W / 4 - 0.18, H - 0.34, 0.004, panelInset, -W / 4, 0, 0.026));
 doorRight.add(boxOf(0.03, 0.03, 0.012, glow, -W / 2 + 0.13, -0.92, 0.031));
 
-const rightScreen = new THREE.Mesh(
-  new THREE.PlaneGeometry(screenWidth / 2, screenHeight),
-  screenRightMaterial
-);
-rightScreen.position.set(-W / 4, screenY, 0.032);
-doorRight.add(rightScreen);
+// Le cadre avant est d'une seule pièce : il masque la jointure des portes
+machine.add(boxOf(W, 0.09, 0.025, panel, 0, 1.03, D / 2 + 0.062));
+machine.add(boxOf(W, 0.09, 0.025, panel, 0, -1.03, D / 2 + 0.062));
+machine.add(boxOf(0.09, H, 0.025, panel, -1.605, 0, D / 2 + 0.062));
+machine.add(boxOf(0.09, H, 0.025, panel, 1.605, 0, D / 2 + 0.062));
+
+// La page est une seule surface devant les portes : aucune coupure au milieu
+const appMaterial = new THREE.MeshBasicMaterial({
+  color: 0x0b1210,
+  toneMapped: false,
+  transparent: true,
+  opacity: 1,
+});
+
+const appPlane = new THREE.Mesh(new THREE.PlaneGeometry(3.12, 1.79), appMaterial);
+appPlane.position.set(0, -0.09, D / 2 + 0.075);
+machine.add(appPlane);
 
 new THREE.TextureLoader().load('/assets/projects/gymshark-home.webp', (texture) => {
   texture.colorSpace = THREE.SRGBColorSpace;
-  const anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-
-  // Chaque porte porte la moitié de l'écran : fermées, elles reforment le site
-  const left = texture.clone();
-  left.needsUpdate = true;
-  left.anisotropy = anisotropy;
-  left.repeat.set(0.5, 1);
-  left.offset.set(0, 0);
-
-  const right = texture.clone();
-  right.needsUpdate = true;
-  right.anisotropy = anisotropy;
-  right.repeat.set(0.5, 1);
-  right.offset.set(0.5, 0);
-
-  screenLeftMaterial.map = left;
-  screenLeftMaterial.color.set(0xffffff);
-  screenLeftMaterial.needsUpdate = true;
-
-  screenRightMaterial.map = right;
-  screenRightMaterial.color.set(0xffffff);
-  screenRightMaterial.needsUpdate = true;
-
+  texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  appMaterial.map = texture;
+  appMaterial.color.set(0xffffff);
+  appMaterial.needsUpdate = true;
   if (reduceMotion.matches) renderer.render(scene, camera);
 });
 
@@ -349,20 +318,15 @@ function browserBarTexture() {
 }
 
 const browserBar = new THREE.Mesh(
-  new THREE.PlaneGeometry(2.88, 0.18),
+  new THREE.PlaneGeometry(3.12, 0.18),
   new THREE.MeshBasicMaterial({
     map: browserBarTexture(),
     toneMapped: false,
     transparent: true,
   })
 );
-browserBar.position.set(0, 0.925, D / 2 + 0.062);
+browserBar.position.set(0, 0.895, D / 2 + 0.075);
 machine.add(browserBar);
-
-// Le liseré entre les portes et sous l'écran : la machine reste sous tension
-const seam = boxOf(0.008, 1.58, 0.012, glow, 0, 0.02, D / 2 + 0.068);
-machine.add(seam);
-machine.add(boxOf(2.88, 0.01, 0.01, glow, 0, -0.79, D / 2 + 0.066));
 
 // Le balayage qui dissout l'interface en métal
 const scanMaterial = new THREE.MeshBasicMaterial({
@@ -371,8 +335,8 @@ const scanMaterial = new THREE.MeshBasicMaterial({
   opacity: 0,
   toneMapped: false,
 });
-const scan = new THREE.Mesh(new THREE.PlaneGeometry(2.88, 0.012), scanMaterial);
-scan.position.set(0, 0.8, D / 2 + 0.07);
+const scan = new THREE.Mesh(new THREE.PlaneGeometry(3.12, 0.012), scanMaterial);
+scan.position.set(0, 0.985, D / 2 + 0.08);
 machine.add(scan);
 
 /* ── Les roues ── */
@@ -638,23 +602,22 @@ function frame() {
   const spin = smooth(0.34, 0.52, progress);
   const tokenLevel = smooth(0.44, 0.64, progress);
   const portLevel = smooth(0.5, 0.72, progress);
-  const dive = smooth(0.84, 1, progress);
+  const dive = smooth(0.8, 1, progress);
+  const handoffLevel = smooth(0.78, 1, progress);
 
   power += (spin - power) * (1 - Math.exp(-delta * 5));
 
   // Le site se dissout en métal, puis les portes s'ouvrent
-  screenLeftMaterial.opacity = 1 - dissolve;
-  screenRightMaterial.opacity = 1 - dissolve;
+  appMaterial.opacity = 1 - dissolve;
   browserBar.material.opacity = 1 - dissolve;
   browserBar.visible = dissolve < 0.99;
 
-  scan.position.y = 0.8 - dissolve * 1.56;
+  scan.position.y = 0.985 - dissolve * 1.97;
   scanMaterial.opacity = Math.sin(Math.PI * dissolve) * 0.9;
   scan.visible = dissolve > 0.01 && dissolve < 0.99;
 
   doorLeft.rotation.y = -doorLevel * 1.64;
   doorRight.rotation.y = doorLevel * 1.64;
-  seam.visible = doorLevel < 0.2;
 
   // La machine tourne, la vitesse suit le scroll
   gears.forEach((gear) => {
@@ -684,10 +647,17 @@ function frame() {
   stage.rotation.y = (-0.14 + progress * 0.3) * (1 - dive * 0.6);
   stage.rotation.x = (-0.015 + progress * 0.03) * (1 - dive * 0.6);
 
-  if (flood) flood.style.opacity = smooth(0.9, 0.99, progress).toFixed(3);
+  // Le texte de la suite arrive en même temps que la caméra entre dans la boîte
+  if (handoff) handoff.style.opacity = smooth(0.8, 0.9, progress).toFixed(3);
+  if (handoffInner) {
+    handoffInner.style.transform = `scale(${(0.035 + handoffLevel * 0.965).toFixed(3)})`;
+    handoffInner.style.filter = `blur(${((1 - handoffLevel) * 7).toFixed(2)}px)`;
+  }
+  // La machine s'efface derrière un aplat quand le texte a fini de grandir
+  if (handoffVeil) handoffVeil.style.opacity = smooth(0.94, 1, progress).toFixed(3);
 
   // La copie s'efface pendant la plongée, l'écran ne garde que la machine
-  const hide = smooth(0.86, 0.94, progress);
+  const hide = smooth(0.78, 0.88, progress);
   if (copy) copy.style.opacity = (1 - hide).toFixed(3);
   if (readout) readout.style.opacity = (1 - hide).toFixed(3);
 
@@ -712,15 +682,13 @@ canvas.addEventListener('webglcontextlost', (event) => {
 
 if (reduceMotion.matches) {
   // Pas de scroll, pas de boucle : le mécanisme ouvert, immobile
-  screenLeftMaterial.opacity = 0;
-  screenRightMaterial.opacity = 0;
+  appMaterial.opacity = 0;
   browserBar.material.opacity = 0;
   browserBar.visible = false;
   scan.visible = false;
-  seam.visible = false;
   doorLeft.rotation.y = -1.64;
   doorRight.rotation.y = 1.64;
-  if (flood) flood.style.opacity = '0';
+  if (handoff) handoff.style.opacity = '0';
   gears.forEach((gear, i) => {
     gear.group.rotation.z = gear.offset + i * 0.12;
   });

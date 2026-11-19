@@ -187,37 +187,57 @@
   text-align: center;
 }
 
-/* Le zoom final se referme sur cette couleur, puis le site reprend */
-.gs3d-flood {
+/* Le texte de la suite zoome en même temps que la caméra entre dans la machine */
+.gs3d-handoff {
   position: absolute;
   inset: 0;
-  z-index: 4;
-  background: var(--bg);
+  z-index: 5;
+  display: grid;
   opacity: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
-.gs3d-next {
+.gs3d-handoff__veil {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0;
+}
+
+.gs3d-handoff__inner {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
   align-items: center;
   gap: clamp(1.5rem, 5vw, 5rem);
-  min-height: 70svh;
+  min-height: 100svh;
   padding: clamp(3rem, 8vw, 7rem) var(--pad);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: var(--bg);
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
 }
 
-.gs3d-next__title {
+.gs3d-handoff__title {
   margin-top: 0.4rem;
   font-size: clamp(2.4rem, 5.4vw, 4.6rem);
 }
 
-.gs3d-next__note {
+.gs3d-handoff__note {
   max-width: 26rem;
   justify-self: end;
   color: var(--muted);
   font-size: var(--t-4);
+}
+
+.gs3d-next {
+  min-height: 80svh;
+  padding: clamp(4rem, 10vw, 8rem) var(--pad);
+  background: var(--bg);
+}
+
+.gs3d-next .log {
+  max-width: 62rem;
 }
 
 /* ── Adaptations ── */
@@ -275,15 +295,18 @@
     bottom: 0.15rem;
   }
 
-  .gs3d-next {
+  .gs3d-handoff__inner {
     grid-template-columns: minmax(0, 1fr);
-    align-items: start;
+    align-content: center;
     gap: 1rem;
-    min-height: 60svh;
   }
 
-  .gs3d-next__note {
+  .gs3d-handoff__note {
     justify-self: start;
+  }
+
+  .gs3d-next {
+    min-height: 70svh;
   }
 }
 
