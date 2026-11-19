@@ -16,7 +16,10 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const headings = [
     ...document.querySelectorAll('.poster__name, .pass-title, .track__title'),
-  ].filter((heading) => !heading.closest('.sr-only'));
+  ].filter(
+    (heading) =>
+      !heading.closest('.sr-only') && !heading.classList.contains('gs3d-handoff-title')
+  );
   const sections = [...document.querySelectorAll('[data-cue]')];
 
   const DEFAULT = { r: 223, g: 232, b: 255 };
