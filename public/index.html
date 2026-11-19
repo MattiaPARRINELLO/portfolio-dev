@@ -53,6 +53,7 @@
     />
     <link rel="preload" href="/assets/photos/hero-concert.webp" as="image" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="gymshark.css" />
 
     <script type="application/ld+json">
       {
@@ -589,58 +590,73 @@
       </section>
 
       <!-- ═══════════════ 3. GYMSHARK-SYNC ═══════════════ -->
-      <section class="track track--split track--reverse" id="gymshark" data-cue="#b7e3a1" style="--cue: #b7e3a1">
-        <header class="track__head" data-reveal>
+      <section class="gymshark" id="gymshark" data-cue="#b7e3a1" style="--cue: #b7e3a1">
+        <header class="track__head gymshark__head" data-reveal>
           <p class="track__time">21:09</p>
           <h2 class="track__title">Gymshark-Sync</h2>
-          <p class="track__note">Projet de groupe. Le batteur, c'était moi.</p>
+          <p class="track__note">Projet de groupe. Le serveur, c'était moi.</p>
         </header>
-        <div class="track__body">
-          <div class="app" data-app data-ui data-ratio="wide" data-reveal>
-            <div class="app__bar">
-              <div class="app__tabs" role="tablist" aria-label="Vues de Gymshark-Sync">
-                <button class="app__tab is-on" id="gs-tab-1" role="tab" aria-selected="true" aria-controls="gs-panel-1" tabindex="0">Bibliothèque</button>
-                <button class="app__tab" id="gs-tab-2" role="tab" aria-selected="false" aria-controls="gs-panel-2" tabindex="-1">Assistant</button>
+
+        <div class="gs3d-track" data-scene>
+          <div class="gs3d-stage">
+            <div class="gs3d-copy">
+              <div class="gs3d-steps">
+                <p class="gs3d-step" data-step="1">
+                  <span>L'application</span>
+                  D'abord ce que l'on voit : l'app en production. Neuf workflows, une
+                  interface d'assistant, rien d'autre à installer.
+                </p>
+                <p class="gs3d-step" data-step="2">
+                  <span>La mécanique</span>
+                  L'interface se dissout en métal, puis les portes s'ouvrent. Derrière : les
+                  neuf roues que j'ai montées, une par workflow, et le serveur qui les fait
+                  tourner.
+                </p>
+                <p class="gs3d-step" data-step="3">
+                  <span>L'auteur</span>
+                  Les tokens sortent par la fente. Le mécanisme porte ma signature : le
+                  serveur, les workflows et le streaming, c'est moi.
+                </p>
               </div>
-              <p class="app__url"><span class="app__dot app__dot--local" aria-hidden="true"></span>gymshark-sync · local</p>
+
+              <p class="gs3d-links">
+                <a class="link" href="https://github.com/mattia-school/gymshark-sync" target="_blank" rel="noopener noreferrer">Code source</a>
+                <a class="link" href="https://github.com/mattia-school/gymshark-sync#readme" target="_blank" rel="noopener noreferrer">API Swagger</a>
+              </p>
+
+              <ul class="gs3d-facts">
+                <li><span>9</span> workflows</li>
+                <li><span>100 %</span> local</li>
+                <li><span>0</span> appel externe</li>
+              </ul>
             </div>
-            <div class="app__panels">
-              <div class="app__panel" id="gs-panel-1" role="tabpanel" aria-labelledby="gs-tab-1">
-                <img
-                  src="/assets/projects/gymshark-workflows.webp"
-                  alt="Bibliothèque des neuf workflows de l'assistant Gymshark-Sync"
-                  width="1400"
-                  height="757"
-                />
+
+            <div class="gs3d-viewport">
+              <canvas class="gs3d-canvas" data-canvas aria-label="L'écran de l'application Gymshark-Sync s'efface et révèle un mécanisme de neuf roues dentées signé MPRNL" role="img"></canvas>
+              <img class="gs3d-still" data-still src="/assets/projects/gymshark-home.webp" alt="Accueil de Gymshark-Sync : l'assistant et sa barre de conversation" width="1400" height="757" hidden />
+
+              <p class="gs3d-hint" data-hint>Faites défiler pour ouvrir le site</p>
+
+              <div class="gs3d-readout" aria-hidden="true">
+                <p><span class="gs3d-dot"></span>alimentation locale</p>
+                <p class="gs3d-readout__row"><span>roues</span><b>09</b></p>
+                <p class="gs3d-readout__row"><span>auteur</span><b>MPRNL</b></p>
               </div>
-              <div class="app__panel" id="gs-panel-2" role="tabpanel" aria-labelledby="gs-tab-2" hidden>
-                <img
-                  src="/assets/projects/gymshark-home.webp"
-                  alt="Accueil de Gymshark-Sync : l'assistant et sa barre de conversation"
-                  width="1400"
-                  height="757"
-                  loading="lazy"
-                />
+
+              <p class="gs3d-fallback" data-fallback hidden>
+                Le rendu 3D n'a pas pu démarrer sur cet appareil. La version actuelle de la
+                section reste disponible sur le site.
+              </p>
+            </div>
+
+            <div class="gs3d-handoff" data-handoff aria-hidden="true" style="--cue: #ffb38a">
+              <div class="gs3d-veil"></div>
+              <div class="gs3d-handoff-inner" data-handoff-inner>
+                <p class="track__time">21:14</p>
+                <p class="track__title gs3d-handoff-title">Le journal</p>
+                <p class="track__note gs3d-handoff-note">Six ans de répétitions, dans l'ordre.</p>
               </div>
             </div>
-            <div class="app__status">
-              <span>9 workflows</span>
-              <span>100 % local</span>
-              <span>API Swagger</span>
-            </div>
-          </div>
-          <div class="track__text" data-reveal>
-            <p>
-              Un serveur Node.js et Express branché sur un modèle local via Ollama. Neuf
-              workflows métier, réponses en streaming, API documentée avec Swagger.
-            </p>
-            <p class="small">
-              J'ai écrit le serveur. Neuf workflows, zéro appel à l'extérieur : les données
-              ne sortent pas de la machine.
-            </p>
-            <p class="links">
-              <a class="link" href="https://github.com/mattia-school/gymshark-sync" target="_blank" rel="noopener noreferrer">Code source</a>
-            </p>
           </div>
         </div>
       </section>
@@ -817,5 +833,6 @@
     <script src="/vendor/ScrollTrigger.min.js"></script>
     <script src="beams.js" defer></script>
     <script src="main.js"></script>
+    <script type="module" src="gymshark.js"></script>
   </body>
 </html>

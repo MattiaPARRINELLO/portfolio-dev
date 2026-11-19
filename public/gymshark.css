@@ -1,0 +1,334 @@
+/* =========================================================
+   Gymshark-Sync, la machine locale.
+   La page du projet se dissout en métal, les portes s'ouvrent,
+   puis la caméra entre dans la machine et amène le journal.
+   ========================================================= */
+
+.gymshark__head {
+  padding: clamp(4rem, 7vw, 6.5rem) var(--pad) clamp(2.5rem, 5vw, 4rem);
+}
+
+.gymshark__head.track__head {
+  margin-bottom: 0;
+}
+
+.gs3d-track {
+  position: relative;
+  height: 320svh;
+  background: radial-gradient(
+    ellipse at 70% 42%,
+    rgba(183, 227, 161, 0.05),
+    transparent 55%
+  );
+}
+
+.gs3d-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4.5rem);
+  padding: 0 var(--pad) 1.5rem;
+  overflow: clip;
+}
+
+/* ── Copie ── */
+
+.gs3d-copy {
+  max-width: 34rem;
+}
+
+.gs3d-steps {
+  position: relative;
+  min-height: clamp(7.5rem, 17vh, 9.5rem);
+}
+
+.gs3d-step {
+  position: absolute;
+  inset: 0;
+  max-width: 30rem;
+  font-size: var(--t-3);
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.45s var(--ease),
+    transform 0.45s var(--ease);
+}
+
+.gs3d-step.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.gs3d-step span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--cue, #b7e3a1);
+  font-size: var(--t-5);
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.02em;
+}
+
+.gs3d-links {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: clamp(1.4rem, 3vh, 2rem);
+  font-size: var(--t-5);
+}
+
+.gs3d-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  margin: clamp(1.4rem, 3.6vh, 2.2rem) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+}
+
+.gs3d-facts span {
+  color: var(--ink);
+}
+
+/* ── Scène ── */
+
+.gs3d-viewport {
+  position: relative;
+  height: min(78svh, 46rem);
+  min-height: 20rem;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.gs3d-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gs3d-still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Sans WebGL, la section reste lisible : la capture et les trois temps */
+.gs3d--fallback .gs3d-step {
+  position: static;
+  opacity: 1;
+  transform: none;
+  margin-bottom: 1rem;
+}
+
+.gs3d--fallback .gs3d-steps {
+  min-height: 0;
+}
+
+.gs3d-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 0.5rem;
+  translate: -50% 0;
+  color: var(--muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: opacity 0.4s var(--ease);
+  white-space: nowrap;
+}
+
+.gs3d-hint.is-off {
+  opacity: 0;
+}
+
+.gs3d-readout {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0;
+  display: grid;
+  gap: 0.3rem;
+  color: var(--muted);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+.gs3d-readout p {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.9rem;
+}
+
+.gs3d-readout b {
+  color: #b7e3a1;
+  font-weight: 500;
+}
+
+.gs3d-dot {
+  width: 5px;
+  height: 5px;
+  margin-top: 0.38rem;
+  border-radius: 50%;
+  background: #b7e3a1;
+  box-shadow: 0 0 8px #b7e3a1;
+  animation: gs3d-pulse 2.4s var(--ease) infinite;
+}
+
+@keyframes gs3d-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.gs3d-fallback {
+  position: absolute;
+  inset: auto 0 40%;
+  color: var(--muted);
+  font-size: var(--t-5);
+  text-align: center;
+}
+
+/* ── Le texte du journal, qui grandit pendant le zoom ── */
+
+.gs3d-handoff {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.gs3d-veil {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  opacity: 0;
+}
+
+.gs3d-handoff-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) minmax(0, 0.9fr);
+  align-content: center;
+  align-items: end;
+  gap: 0.5rem clamp(1rem, 3vw, 3rem);
+  min-height: 100svh;
+  padding: clamp(3rem, 8vw, 7rem) var(--pad);
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
+}
+
+.gs3d-handoff-title {
+  margin-top: 0;
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.gs3d-handoff-note {
+  padding-bottom: 0.4rem;
+  justify-self: start;
+}
+
+/* ── Adaptations ── */
+
+@media (max-width: 900px) {
+  .gs3d-track {
+    height: 270svh;
+  }
+
+  .gs3d-stage {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 48svh) auto;
+    align-content: center;
+    gap: clamp(0.8rem, 2vh, 1.4rem);
+    padding-top: 0.5rem;
+  }
+
+  .gs3d-viewport {
+    order: -1;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .gs3d-copy {
+    max-width: none;
+  }
+
+  .gs3d-steps {
+    min-height: 6.6rem;
+  }
+
+  .gs3d-step {
+    font-size: 1rem;
+  }
+
+  .gs3d-links,
+  .gs3d-facts {
+    margin-top: 1rem;
+  }
+
+  .gs3d-readout {
+    display: none;
+  }
+
+  .gs3d-hint {
+    bottom: 0.15rem;
+  }
+
+  .gs3d-handoff-inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    gap: 1rem;
+  }
+
+  .gs3d-handoff-note {
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gs3d-track {
+    height: auto;
+  }
+
+  .gs3d-stage {
+    position: static;
+    height: auto;
+    min-height: 100svh;
+    padding-block: 2rem;
+  }
+
+  .gs3d-steps {
+    min-height: 0;
+  }
+
+  .gs3d-step {
+    position: static;
+    opacity: 1;
+    transform: none;
+    margin-bottom: 1.2rem;
+  }
+
+  .gs3d-handoff {
+    display: none;
+  }
+
+  .gs3d-dot {
+    animation: none;
+  }
+}
