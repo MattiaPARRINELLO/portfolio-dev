@@ -6,6 +6,196 @@
 
 import * as THREE from '/vendor/three.module.min.js';
 
+/* ── Le foil : fonctions GLSL injectées dans le matériau PBR ──
+   Le matériau Three garde l'éclairage, l'environnement et l'ombre.
+   On y ajoute l'interférence en couche mince, le réseau de
+   diffraction, la guilloche, le glint et le shimmer. */
+
+const FOIL_UNIFORMS = /* glsl */ `
+uniform float uTime;
+uniform vec2 uCardRotation;
+uniform float uHueShift;
+uniform vec3 uGlintPosW;
+uniform vec2 uGlintUv;
+uniform vec3 uRimPosW;
+uniform float uGlintIntensity;
+uniform float uRimIntensity;
+uniform float uQuality;
+uniform float uReducedMotion;
+uniform vec3 uTangentW;
+uniform float uFlip;
+
+float foilHash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float foilNoise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  float a = foilHash(i);
+  float b = foilHash(i + vec2(1.0, 0.0));
+  float c = foilHash(i + vec2(0.0, 1.0));
+  float d = foilHash(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+vec3 foilSpectrum(float lambda) {
+  return vec3(
+    exp(-pow((lambda - 600.0) / 40.0, 2.0)),
+    exp(-pow((lambda - 540.0) / 35.0, 2.0)),
+    exp(-pow((lambda - 450.0) / 35.0, 2.0))
+  );
+}
+
+vec3 foilDiffract(vec3 L, vec3 V, vec3 T, float gain, float orderLimit) {
+  float dsin = dot(V, T) - dot(L, T);
+  vec3 sum = vec3(0.0);
+  for (int m = 1; m <= 2; m++) {
+    float fm = float(m);
+    float lambda = abs(dsin) * 1600.0 / fm;
+    if (lambda > 380.0 && lambda < 720.0) {
+      float w = 1.0 - abs(lambda - 550.0) / 170.0;
+      sum += foilSpectrum(lambda) * (gain * max(w, 0.0) / fm);
+    }
+    if (fm >= orderLimit) break;
+  }
+  return sum;
+}
+`;
+
+const FOIL_EFFECT = /* glsl */ `
+  vec3 foilAdd = vec3(0.0);
+  vec3 N = normalize(normal);
+  vec3 V = normalize(vViewPosition);
+  vec2 fuv = vMapUv;
+  fuv.x = mix(fuv.x, 1.0 - fuv.x, uFlip);
+
+  mat3 viewRot = mat3(viewMatrix);
+  vec3 Tv = viewRot * normalize(uTangentW);
+  Tv = normalize(Tv - N * dot(N, Tv));
+  vec3 T = Tv;
+
+  vec3 Lkey = normalize(viewRot * normalize(vec3(2.2, 2.6, 4.0)));
+  vec3 Lrim = normalize((viewMatrix * vec4(uRimPosW, 1.0)).xyz + vViewPosition);
+  vec3 Lglint = normalize((viewMatrix * vec4(uGlintPosW, 1.0)).xyz + vViewPosition);
+
+  float NdotV = clamp(dot(N, V), 0.0, 1.0);
+  float F = 0.34 + 0.66 * pow(1.0 - NdotV, 2.6);
+
+  float quality = clamp(uQuality, 0.4, 1.0);
+  float freq = mix(0.6, 1.0, quality);
+
+  /* Guilloche : deux sinus croisés. Fréquence tenue sous l'aliasing
+     à la taille réelle de la bande, encore plus basse sur mobile. */
+  float g1 = sin(fuv.x * 72.0 * freq + sin(fuv.y * 18.0) * 2.5);
+  float g2 = sin(fuv.y * 46.0 * freq + sin(fuv.x * 12.0) * 2.0);
+  float guilloche = 0.5 + 0.5 * g1 * g2;
+
+  /* Shimmer au repos : bruit lent, jamais un clignotement */
+  float motion = 1.0 - uReducedMotion;
+  float shimmerNoise = foilNoise(
+    vec2(fuv.x * 4.0 + uTime * 0.08 * motion, fuv.y * 2.0 - uTime * 0.05 * motion)
+  );
+  float dNoise = foilNoise(fuv * 3.0 + vec2(uTime * 0.05, uTime * 0.03) * motion);
+
+  /* Interférence en couche mince */
+  float n = 1.5;
+  float cosThetaT = sqrt(max(0.0, 1.0 - (1.0 - NdotV * NdotV) / (n * n)));
+  float thickness = mix(250.0, 700.0, 0.5 + 0.5 * dNoise);
+  thickness += (guilloche - 0.5) * 60.0;
+  thickness += (shimmerNoise - 0.5) * 40.0;
+  // Le bord long de la bande prend une teinte différente de l'autre :
+  // c'est ce qui rend la rotation lisible, même presque de face.
+  thickness += (fuv.x - 0.5) * 150.0;
+  // Deux ou trois franges de diffraction en travers de la bande
+  thickness += sin(fuv.x * 11.0 + uHueShift * 5.0 + fuv.y * 1.6) * 55.0;
+  // L'angle de la carte décale l'épaisseur optique : la teinte change
+  // franchement d'une progression à l'autre, comme sur l'ancien CSS.
+  thickness += (uHueShift - 0.5) * 220.0;
+
+  float opd = 2.0 * n * thickness * cosThetaT;
+  vec3 lambda = vec3(650.0, 530.0, 450.0);
+  vec3 phi = 6.2831853 * opd / lambda + 3.1415926;
+  vec3 irid = 0.5 + 0.5 * cos(phi);
+
+  /* Palette holographique sobre : pétrole, nacre, argent chauffé */
+  float x = NdotV * 1.5 + fuv.x * 1.1 + uHueShift;
+  vec3 holo = vec3(0.55, 0.55, 0.58)
+    + vec3(0.22, 0.20, 0.24) * cos(6.2831853 * (vec3(x) + vec3(0.0, 0.15, 0.30)));
+
+  vec3 foilColor = mix(holo, irid, 0.34);
+  float gray = dot(foilColor, vec3(0.299, 0.587, 0.114));
+  foilColor = mix(vec3(gray), foilColor, 0.7);
+  foilColor = mix(vec3(0.62), foilColor, 0.9);
+
+  float warm = clamp(uCardRotation.x * 3.0 + (uHueShift - 0.5) * 2.2, -0.6, 0.6);
+  foilColor *= mix(vec3(1.07, 0.97, 0.88), vec3(1.0), clamp(0.5 + warm, 0.0, 1.0));
+  foilColor *= mix(vec3(1.0), vec3(0.94, 1.0, 1.05), clamp(0.5 - warm, 0.0, 1.0));
+
+  /* L'iridescence vit sur les zones claires : le AAA sombre reste lisible */
+  float luma = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+  float mask = smoothstep(0.35, 0.75, luma);
+
+  /* Réseau de diffraction : key, rim, glint ; 1 ordre sur mobile */
+  float orders = quality < 0.75 ? 1.0 : 2.0;
+  vec3 diffr = foilDiffract(Lkey, V, T, 0.9, orders);
+  if (quality >= 0.75) {
+    diffr += foilDiffract(Lrim, V, T, uRimIntensity * 0.75, orders);
+    diffr += foilDiffract(Lglint, V, T, uGlintIntensity * 0.85, orders);
+  }
+  diffr *= NdotV * 0.6 + 0.4;
+
+  /* Glint froid allongé et rim chaud */
+  vec3 Nspec = normalize(N + T * (guilloche - 0.5) * 0.08);
+
+  vec3 Hg = normalize(Lglint + V);
+  float NdotHg = clamp(dot(Nspec, Hg), 0.0, 1.0);
+  float TdotHg = dot(T, Hg);
+  float spec = pow(NdotHg, 48.0) * exp(-TdotHg * TdotHg * 12.0);
+  spec += 0.2 * pow(NdotHg, 8.0);
+  vec3 glintCol = vec3(0.85, 0.92, 1.0) * spec * uGlintIntensity * 0.45;
+
+  // Le reflet visible : une lame froide, fine, qui traverse la bande
+  // et suit le pointeur dans ses coordonnées.
+  float glintX = clamp(0.5 + uGlintUv.x * 1.3, -0.5, 1.5);
+  float gdy = (fuv.y - clamp(0.5 + uGlintUv.y * 0.35, 0.2, 0.8)) / 0.5;
+  float gdx = (fuv.x - glintX) / 0.04;
+  float streak = exp(-gdx * gdx - gdy * gdy * 0.3);
+  float halo = exp(-pow((fuv.x - glintX) / 0.16, 2.0) - gdy * gdy * 0.5);
+  glintCol += vec3(0.85, 0.92, 1.0) * streak * uGlintIntensity * 0.95;
+  glintCol += vec3(0.85, 0.92, 1.0) * halo * uGlintIntensity * 0.16;
+
+  vec3 Hr = normalize(Lrim + V);
+  float rimSpec = pow(clamp(dot(Nspec, Hr), 0.0, 1.0), 24.0)
+    * exp(-pow(dot(T, Hr), 2.0) * 12.0);
+  vec3 rimCol = vec3(1.0, 0.88, 0.75) * rimSpec * uRimIntensity;
+
+  // Le rim chaud se pose sur le bord opposé au glint
+  float rimX = 1.0 - glintX;
+  float rdx = (fuv.x - rimX) / 0.22;
+  float rimBand = exp(-rdx * rdx) * exp(-pow((fuv.y - 0.45) / 0.6, 2.0));
+  rimCol += vec3(1.0, 0.86, 0.72) * rimBand * uRimIntensity * 0.22;
+
+  /* Composition : la teinte entre dans l'albédo avant l'éclairage, donc
+     dans la réflexion métallique. Le PBR de Three fait le reste. */
+  vec3 foilTint = mix(vec3(1.0), foilColor * 1.55, clamp(F * mask, 0.0, 0.9));
+  foilTint *= mix(vec3(1.0), foilColor * 1.15, 0.25 * mask);
+  diffuseColor.rgb *= foilTint;
+  // Les stries de guilloche restent visibles sur l'argent, sans colorer le AAA
+  diffuseColor.rgb *= 1.0 + (guilloche - 0.5) * 0.14 * mask;
+
+  foilAdd = diffr * F * mask * 0.35;
+  foilAdd += glintCol * (0.25 + 0.75 * mask);
+  foilAdd += rimCol * (0.5 + 0.5 * mask);
+`;
+
+const FOIL_ADD = /* glsl */ `
+  // opaque_fragment a déjà écrit gl_FragColor : on agit dessus,
+  // puis Three applique son tonemapping ACES.
+  gl_FragColor.rgb = min(gl_FragColor.rgb + foilAdd, vec3(1.55));
+`;
+
 const passScene = document.getElementById('pass');
 const canvas = passScene ? passScene.querySelector('[data-pass-canvas]') : null;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -278,6 +468,8 @@ function initPass() {
     });
   }
 
+  // La base de la bande : argent, microtextes et AAA gravé.
+  // Aucun dégradé pastel ici : les couleurs viennent du shader.
   function drawFoil(paint) {
     const x = 74;
     const y = 1120;
@@ -297,21 +489,6 @@ function initPass() {
     paint.fillStyle = metalGradient;
     paint.fillRect(x, y, width, height);
 
-    const hues = ['#c2619b', '#b8923f', '#3f8fb5', '#4a9c7b', '#7563c9'];
-    paint.lineWidth = 2;
-    for (let i = 0; i < 15; i += 1) {
-      paint.globalAlpha = 0.28;
-      paint.strokeStyle = hues[i % hues.length];
-      paint.beginPath();
-      for (let xx = -20; xx <= width + 20; xx += 12) {
-        const yy = y + 18 + i * 13 + Math.sin(xx * 0.035 + i * 0.8) * 4;
-        if (xx === -20) paint.moveTo(x + xx, yy);
-        else paint.lineTo(x + xx, yy);
-      }
-      paint.stroke();
-    }
-    paint.globalAlpha = 1;
-
     paint.fillStyle = 'rgba(38,44,50,0.55)';
     paint.font = '500 13px "JetBrains Mono", monospace';
     paint.textAlign = 'center';
@@ -328,6 +505,55 @@ function initPass() {
     paint.lineWidth = 1.5;
     drawRoundRect(paint, x, y, width, height, 4);
     paint.stroke();
+  }
+
+  // La texture de la bande seule, pour le matériau PBR du foil.
+  function foilBaseTexture() {
+    const surface = document.createElement('canvas');
+    surface.width = 1024;
+    surface.height = 256;
+    const paint = surface.getContext('2d');
+
+    const metalGradient = paint.createLinearGradient(0, 0, 0, 256);
+    metalGradient.addColorStop(0, '#dde2e8');
+    metalGradient.addColorStop(0.28, '#b3bac2');
+    metalGradient.addColorStop(0.52, '#d6dbe1');
+    metalGradient.addColorStop(0.78, '#a8b0b8');
+    metalGradient.addColorStop(1, '#d8dde3');
+    paint.fillStyle = metalGradient;
+    paint.fillRect(0, 0, 1024, 256);
+
+    paint.fillStyle = 'rgba(38,44,50,0.55)';
+    paint.font = '500 15px "JetBrains Mono", monospace';
+    paint.textAlign = 'center';
+    paint.fillText('BACKSTAGE · MPRNL · 2027 · BACKSTAGE · MPRNL · BACKSTAGE', 512, 28);
+    paint.fillText('TOUR 2027 · ACCÈS PRODUCTION · MPRNL · BACKSTAGE', 512, 238);
+
+    // AAA gravé : liseré clair sous l'ombre, acier au milieu
+    const steel = paint.createLinearGradient(0, 80, 0, 160);
+    steel.addColorStop(0, '#333a41');
+    steel.addColorStop(0.28, '#525b64');
+    steel.addColorStop(0.5, '#262c32');
+    steel.addColorStop(0.72, '#464f57');
+    steel.addColorStop(1, '#1d2227');
+
+    paint.font = '700 88px "Space Grotesk", sans-serif';
+    paint.fillStyle = 'rgba(255,255,255,0.7)';
+    paint.fillText('AAA', 512, 153);
+    paint.fillStyle = 'rgba(10,13,16,0.55)';
+    paint.fillText('AAA', 512, 157);
+    paint.fillStyle = steel;
+    paint.fillText('AAA', 512, 155);
+
+    paint.strokeStyle = 'rgba(18,20,22,0.18)';
+    paint.lineWidth = 2;
+    drawRoundRect(paint, 1, 1, 1022, 254, 4);
+    paint.stroke();
+
+    const texture = new THREE.CanvasTexture(surface);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    return texture;
   }
 
   function drawBarcode(paint) {
@@ -436,6 +662,8 @@ function initPass() {
   /* ── Construction de la carte avec les textures ── */
 
   let cardReady = false;
+  const foilFaces = [];
+  const tangent = new THREE.Vector3();
 
   function loadImage(src) {
     return new Promise((resolve) => {
@@ -444,31 +672,6 @@ function initPass() {
       image.onerror = () => resolve(null);
       image.src = src;
     });
-  }
-
-  function foilMap() {
-    const surface = document.createElement('canvas');
-    surface.width = 512;
-    surface.height = 128;
-    const paint = surface.getContext('2d');
-    const rainbow = paint.createLinearGradient(0, 0, 512, 0);
-    ['#ff9ad5', '#ffd38a', '#9ef0c0', '#9fd0ff', '#c3a8ff', '#ffb0b0'].forEach(
-      (color, index) => rainbow.addColorStop(index / 5, color)
-    );
-    paint.fillStyle = rainbow;
-    paint.fillRect(0, 0, 512, 128);
-
-    const gloss = paint.createLinearGradient(0, 0, 0, 128);
-    gloss.addColorStop(0, 'rgba(255,255,255,0.8)');
-    gloss.addColorStop(0.4, 'rgba(255,255,255,0.1)');
-    gloss.addColorStop(0.6, 'rgba(0,0,0,0.12)');
-    gloss.addColorStop(1, 'rgba(255,255,255,0.55)');
-    paint.fillStyle = gloss;
-    paint.fillRect(0, 0, 512, 128);
-
-    const texture = new THREE.CanvasTexture(surface);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    return texture;
   }
 
   function addFaceTextures(frontCanvas, backCanvas) {
@@ -506,50 +709,133 @@ function initPass() {
     back.rotation.y = Math.PI;
     card.add(back);
 
-    const foilMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      map: foilMap(),
-      metalness: 0.9,
-      roughness: 0.16,
-      iridescence: 0.8,
-      iridescenceIOR: 1.35,
-      iridescenceThicknessRange: [120, 780],
-      clearcoat: 1,
-      clearcoatRoughness: 0.08,
-      envMapIntensity: 1.7,
-      transparent: true,
-      opacity: 0.5,
-      side: THREE.DoubleSide,
-    });
+    const foilBase = foilBaseTexture();
+
+    // Un matériau par face : le verso reçoit sa propre tangente et son
+    // propre sens d'UV, pour que les bandes défilent dans le même sens
+    // physique que sur le recto.
+    function createFoilMaterial(flip) {
+      const uniforms = {
+        uTime: { value: 0 },
+        uCardRotation: { value: new THREE.Vector2(0, 0) },
+        uHueShift: { value: 0.5 },
+        uGlintPosW: { value: glint.position.clone() },
+        uGlintUv: { value: new THREE.Vector2(0, 0) },
+        uRimPosW: { value: rim.position.clone() },
+        uGlintIntensity: { value: 0.7 },
+        uRimIntensity: { value: 0.7 },
+        uQuality: { value: 1 },
+        uReducedMotion: { value: reduceMotion.matches ? 1 : 0 },
+        uTangentW: { value: new THREE.Vector3(1, 0, 0) },
+        uFlip: { value: flip },
+      };
+
+      const material = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        map: foilBase,
+        metalness: 0.74,
+        roughness: 0.24,
+        clearcoat: 0.9,
+        clearcoatRoughness: 0.12,
+        envMapIntensity: 1.1,
+        side: THREE.DoubleSide,
+      });
+
+      material.onBeforeCompile = (shader) => {
+        Object.assign(shader.uniforms, uniforms);
+        shader.fragmentShader = shader.fragmentShader
+          .replace('#include <common>', `#include <common>\n${FOIL_UNIFORMS}`)
+          .replace(
+            '#include <normal_fragment_begin>',
+            `#include <normal_fragment_begin>\n${FOIL_EFFECT}`
+          )
+          .replace('#include <tonemapping_fragment>', `${FOIL_ADD}\n#include <tonemapping_fragment>`);
+      };
+      material.customProgramCacheKey = () => 'pass-foil';
+
+      return { material, uniforms };
+    }
 
     const foilWidth = 0.456;
     const foilHeight = 0.117;
 
+    const frontFoil = createFoilMaterial(0);
     const foilFront = new THREE.Mesh(
       new THREE.PlaneGeometry(foilWidth, foilHeight),
-      foilMaterial
+      frontFoil.material
     );
     foilFront.position.set(0, FOIL_Y, 0.026);
     card.add(foilFront);
 
+    const backFoil = createFoilMaterial(1);
     const foilBack = new THREE.Mesh(
       new THREE.PlaneGeometry(foilWidth, foilHeight),
-      foilMaterial
+      backFoil.material
     );
     foilBack.position.set(0, FOIL_Y, -0.026);
     foilBack.rotation.y = Math.PI;
     card.add(foilBack);
 
+    foilFaces.push({ mesh: foilFront, uniforms: frontFoil.uniforms });
+    foilFaces.push({ mesh: foilBack, uniforms: backFoil.uniforms });
+
     cardReady = true;
+  }
+
+  const clamp = (value) => Math.min(1, Math.max(0, value));
+  const pointer = { x: 0, y: 0 };
+  const pointerTarget = { x: 0, y: 0 };
+  // Le glint démarre hors de la bande : au repos, pas de reflet central
+  // qui mangerait le AAA. Il n'entre que quand le pointeur bouge.
+  const glintPointer = { x: -0.9, y: 0.15 };
+  const glintTarget = { x: -0.9, y: 0.15 };
+
+  // Pousse l'état de la carte et des lumières dans les uniforms du foil.
+  // Le foil reste calme : des intensités bornées, jamais un projecteur.
+  function updateFoil(time) {
+    const ryDeg = (card.rotation.y * 180) / Math.PI;
+    const rxDeg = (card.rotation.x * 180) / Math.PI;
+    const hue = clamp(0.5 + (ryDeg * 0.9 + rxDeg * 2.2) / 130);
+    const glintPower = 0.35 + clamp(glint.intensity / 18) * 0.65;
+    const rimPower = 0.3 + clamp(rim.intensity / 12) * 0.5;
+
+    tangent.set(
+      card.matrixWorld.elements[0],
+      card.matrixWorld.elements[1],
+      card.matrixWorld.elements[2]
+    ).normalize();
+
+    foilFaces.forEach(({ uniforms }) => {
+      uniforms.uTime.value = time;
+      uniforms.uCardRotation.value.set(card.rotation.x, card.rotation.y);
+      uniforms.uHueShift.value = hue;
+      uniforms.uGlintPosW.value.copy(glint.position);
+      uniforms.uGlintUv.value.set(glintPointer.x, glintPointer.y);
+      uniforms.uRimPosW.value.copy(rim.position);
+      uniforms.uGlintIntensity.value = glintPower;
+      uniforms.uRimIntensity.value = rimPower;
+      uniforms.uTangentW.value.copy(tangent);
+    });
+  }
+
+  function setFoilQuality() {
+    const quality = window.innerWidth < 900 ? 0.7 : 1;
+    foilFaces.forEach(({ uniforms }) => {
+      uniforms.uQuality.value = quality;
+    });
   }
 
   async function buildCard() {
     await document.fonts.ready;
     const image = await loadImage('/assets/photos/pass-portrait.webp');
     addFaceTextures(frontFace(image), backFace());
+    setFoilQuality();
 
     if (reduceMotion.matches) {
       card.rotation.set(0, 0, 0);
+      card.updateMatrixWorld(true);
+      // État figé mais coloré : le foil ne doit pas être gris ni vide
+      updateFoil(3.7);
       renderer.render(scene, camera);
     }
   }
@@ -574,6 +860,7 @@ function initPass() {
     const fitWidth = (CARD_W * 1.7) / (2 * halfFov * camera.aspect);
     camera.position.z = Math.max(3, fitHeight, fitWidth);
 
+    setFoilQuality();
     if (reduceMotion.matches && cardReady) renderer.render(scene, camera);
   }
 
@@ -598,12 +885,11 @@ function initPass() {
     });
   }
 
-  const pointer = { x: 0, y: 0 };
-  const pointerTarget = { x: 0, y: 0 };
-
   window.addEventListener('pointermove', (event) => {
     pointerTarget.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointerTarget.y = (event.clientY / window.innerHeight) * 2 - 1;
+    glintTarget.x = pointerTarget.x;
+    glintTarget.y = pointerTarget.y;
   });
 
   const observer = new IntersectionObserver(
@@ -618,8 +904,6 @@ function initPass() {
     const t = Math.min(1, Math.max(0, (value - a) / (b - a)));
     return t * t * (3 - 2 * t);
   };
-
-  const clamp = (value) => Math.min(1, Math.max(0, value));
 
   function updateStep(value) {
     passScene.dataset.step = value < 0.26 ? '1' : value < 0.56 ? '2' : '3';
@@ -640,6 +924,8 @@ function initPass() {
     progress += (target - progress) * (1 - Math.exp(-delta * 5));
     pointer.x += (pointerTarget.x - pointer.x) * (1 - Math.exp(-delta * 4));
     pointer.y += (pointerTarget.y - pointer.y) * (1 - Math.exp(-delta * 4));
+    glintPointer.x += (glintTarget.x - glintPointer.x) * (1 - Math.exp(-delta * 5));
+    glintPointer.y += (glintTarget.y - glintPointer.y) * (1 - Math.exp(-delta * 5));
 
     if (!cardReady) {
       renderer.render(scene, camera);
@@ -669,13 +955,21 @@ function initPass() {
     shadow.position.x = card.position.x * 0.4;
     shadow.rotation.z = -card.rotation.z * 0.5;
 
+    card.updateMatrixWorld();
+    updateFoil(elapsed);
+
     updateStep(progress);
     renderer.render(scene, camera);
   }
 
   if (reduceMotion.matches) {
     updateStep(0);
-    if (cardReady) renderer.render(scene, camera);
+    if (cardReady) {
+      card.rotation.set(0, 0, 0);
+      card.updateMatrixWorld(true);
+      updateFoil(3.7);
+      renderer.render(scene, camera);
+    }
   } else {
     frame();
   }
