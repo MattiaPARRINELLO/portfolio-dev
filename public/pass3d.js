@@ -16,8 +16,9 @@ uniform float uTime;
 uniform vec2 uCardRotation;
 uniform float uHueShift;
 uniform vec3 uGlintPosW;
-uniform vec2 uGlintUv;
 uniform vec3 uRimPosW;
+uniform vec3 uFoilCenterW;
+uniform float uGlintSweep;
 uniform float uGlintIntensity;
 uniform float uRimIntensity;
 uniform float uQuality;
@@ -53,11 +54,12 @@ vec3 foilDiffract(vec3 L, vec3 V, vec3 T, float gain, float orderLimit) {
   vec3 sum = vec3(0.0);
   for (int m = 1; m <= 2; m++) {
     float fm = float(m);
-    float lambda = abs(dsin) * 1600.0 / fm;
-    if (lambda > 380.0 && lambda < 720.0) {
-      float w = 1.0 - abs(lambda - 550.0) / 170.0;
-      sum += foilSpectrum(lambda) * (gain * max(w, 0.0) / fm);
-    }
+    float lambda = abs(dsin) * 1400.0 / fm;
+    // Fenêtre douce : pas de coupure binaire, les ordres apparaissent
+    // et disparaissent progressivement quand la carte tourne.
+    float w = smoothstep(370.0, 430.0, lambda) * (1.0 - smoothstep(660.0, 730.0, lambda));
+    float peak = max(1.0 - abs(lambda - 545.0) / 300.0, 0.12);
+    sum += foilSpectrum(lambda) * (gain * w * peak / fm);
     if (fm >= orderLimit) break;
   }
   return sum;
@@ -109,7 +111,7 @@ const FOIL_EFFECT = /* glsl */ `
   // c'est ce qui rend la rotation lisible, même presque de face.
   thickness += (fuv.x - 0.5) * 150.0;
   // Deux ou trois franges de diffraction en travers de la bande
-  thickness += sin(fuv.x * 11.0 + uHueShift * 5.0 + fuv.y * 1.6) * 55.0;
+  thickness += sin(fuv.x * 11.0 + uHueShift * 5.0 + fuv.y * 1.6) * 70.0;
   // L'angle de la carte décale l'épaisseur optique : la teinte change
   // franchement d'une progression à l'autre, comme sur l'ancien CSS.
   thickness += (uHueShift - 0.5) * 220.0;
@@ -124,10 +126,10 @@ const FOIL_EFFECT = /* glsl */ `
   vec3 holo = vec3(0.55, 0.55, 0.58)
     + vec3(0.22, 0.20, 0.24) * cos(6.2831853 * (vec3(x) + vec3(0.0, 0.15, 0.30)));
 
-  vec3 foilColor = mix(holo, irid, 0.34);
+  vec3 foilColor = mix(holo, irid, 0.35);
   float gray = dot(foilColor, vec3(0.299, 0.587, 0.114));
-  foilColor = mix(vec3(gray), foilColor, 0.7);
-  foilColor = mix(vec3(0.62), foilColor, 0.9);
+  foilColor = mix(vec3(gray), foilColor, 0.74);
+  foilColor = mix(vec3(0.58), foilColor, 0.9);
 
   float warm = clamp(uCardRotation.x * 3.0 + (uHueShift - 0.5) * 2.2, -0.6, 0.6);
   foilColor *= mix(vec3(1.07, 0.97, 0.88), vec3(1.0), clamp(0.5 + warm, 0.0, 1.0));
@@ -146,47 +148,63 @@ const FOIL_EFFECT = /* glsl */ `
   }
   diffr *= NdotV * 0.6 + 0.4;
 
-  /* Glint froid allongé et rim chaud */
-  vec3 Nspec = normalize(N + T * (guilloche - 0.5) * 0.08);
+  /* Glint froid et rim chaud : reflet d'un strip lumineux virtuel fixé
+     dans l'espace de la carte. On réfléchit la direction de vue sur la
+     normale de la surface, puis on mesure la distance
+     entre ce rayon et l'axe du strip. Rien n'est plaqué en coordonnées
+     écran : le reflet tourne avec la carte et suit le pointeur parce que
+     le strip se déplace le long de la tangente. */
+  vec3 B = normalize(cross(N, T));
+  vec3 Rv = reflect(-V, N);
+  vec3 Pv = -vViewPosition;
+  vec3 centerV = (viewMatrix * vec4(uFoilCenterW, 1.0)).xyz;
 
-  vec3 Hg = normalize(Lglint + V);
-  float NdotHg = clamp(dot(Nspec, Hg), 0.0, 1.0);
-  float TdotHg = dot(T, Hg);
-  float spec = pow(NdotHg, 48.0) * exp(-TdotHg * TdotHg * 12.0);
-  spec += 0.2 * pow(NdotHg, 8.0);
-  vec3 glintCol = vec3(0.85, 0.92, 1.0) * spec * uGlintIntensity * 0.45;
+  // strip vertical, à 0,55 au-dessus de la bande, décalé par le pointeur
+  vec3 strip = centerV + N * 0.55 + T * (uGlintSweep * 0.20 - 0.06);
+  vec3 w0 = Pv - strip;
+  float bAxis = dot(Rv, B);
+  float dRay = dot(Rv, w0);
+  float eAxis = dot(B, w0);
+  float den = max(1.0 - bAxis * bAxis, 1e-5);
+  float tAxis = clamp((eAxis - bAxis * dRay) / den, -0.15, 0.15);
+  vec3 nearest = strip + B * tAxis;
+  vec3 toRay = nearest - Pv;
+  float rayDist = length(toRay - Rv * dot(toRay, Rv));
+  float facing = step(0.0, dot(toRay, Rv));
+  // largeur adoucie par les dérivées : trait net sans crénelage
+  float glintWidth = max(0.014, fwidth(rayDist) * 1.6);
+  float glintCore = exp(-(rayDist * rayDist) / (2.0 * glintWidth * glintWidth));
+  float glintHalo = exp(-(rayDist * rayDist) / (2.0 * 0.06 * 0.06));
+  vec3 glintCol = vec3(0.85, 0.92, 1.0)
+    * (glintCore * 0.55 + glintHalo * 0.035) * facing * uGlintIntensity;
 
-  // Le reflet visible : une lame froide, fine, qui traverse la bande
-  // et suit le pointeur dans ses coordonnées.
-  float glintX = clamp(0.5 + uGlintUv.x * 1.3, -0.5, 1.5);
-  float gdy = (fuv.y - clamp(0.5 + uGlintUv.y * 0.35, 0.2, 0.8)) / 0.5;
-  float gdx = (fuv.x - glintX) / 0.04;
-  float streak = exp(-gdx * gdx - gdy * gdy * 0.3);
-  float halo = exp(-pow((fuv.x - glintX) / 0.16, 2.0) - gdy * gdy * 0.5);
-  glintCol += vec3(0.85, 0.92, 1.0) * streak * uGlintIntensity * 0.95;
-  glintCol += vec3(0.85, 0.92, 1.0) * halo * uGlintIntensity * 0.16;
-
-  vec3 Hr = normalize(Lrim + V);
-  float rimSpec = pow(clamp(dot(Nspec, Hr), 0.0, 1.0), 24.0)
-    * exp(-pow(dot(T, Hr), 2.0) * 12.0);
-  vec3 rimCol = vec3(1.0, 0.88, 0.75) * rimSpec * uRimIntensity;
-
-  // Le rim chaud se pose sur le bord opposé au glint
-  float rimX = 1.0 - glintX;
-  float rdx = (fuv.x - rimX) / 0.22;
-  float rimBand = exp(-rdx * rdx) * exp(-pow((fuv.y - 0.45) / 0.6, 2.0));
-  rimCol += vec3(1.0, 0.86, 0.72) * rimBand * uRimIntensity * 0.22;
+  // le rim chaud est le même strip, de l'autre côté, plus large
+  vec3 rimStrip = centerV + N * 0.6 - T * (uGlintSweep * 0.20 - 0.06);
+  vec3 rw0 = Pv - rimStrip;
+  float rbAxis = dot(Rv, B);
+  float rdRay = dot(Rv, rw0);
+  float reAxis = dot(B, rw0);
+  float rden = max(1.0 - rbAxis * rbAxis, 1e-5);
+  float rtAxis = clamp((reAxis - rbAxis * rdRay) / rden, -0.2, 0.2);
+  vec3 rnearest = rimStrip + B * rtAxis;
+  vec3 rToRay = rnearest - Pv;
+  float rDist = length(rToRay - Rv * dot(rToRay, Rv));
+  float rFacing = step(0.0, dot(rToRay, Rv));
+  float rimCore = exp(-(rDist * rDist) / (2.0 * 0.060 * 0.060));
+  vec3 rimCol = vec3(1.0, 0.88, 0.75)
+    * rimCore * rFacing * uRimIntensity * 0.22;
 
   /* Composition : la teinte entre dans l'albédo avant l'éclairage, donc
      dans la réflexion métallique. Le PBR de Three fait le reste. */
-  vec3 foilTint = mix(vec3(1.0), foilColor * 1.55, clamp(F * mask, 0.0, 0.9));
-  foilTint *= mix(vec3(1.0), foilColor * 1.15, 0.25 * mask);
+  float tintMix = clamp((F + 0.22) * mask, 0.0, 0.94);
+  vec3 foilTint = mix(vec3(1.0), foilColor * 1.9, tintMix);
+  foilTint *= mix(vec3(1.0), foilColor * 1.2, 0.3 * mask);
   diffuseColor.rgb *= foilTint;
   // Les stries de guilloche restent visibles sur l'argent, sans colorer le AAA
-  diffuseColor.rgb *= 1.0 + (guilloche - 0.5) * 0.14 * mask;
+  diffuseColor.rgb *= 1.0 + (guilloche - 0.5) * 0.16 * mask;
 
-  foilAdd = diffr * F * mask * 0.35;
-  foilAdd += glintCol * (0.25 + 0.75 * mask);
+  foilAdd = diffr * (F * 0.7 + 0.3) * mask * 0.5;
+  foilAdd += glintCol * (0.3 + 0.7 * mask);
   foilAdd += rimCol * (0.5 + 0.5 * mask);
 `;
 
@@ -515,11 +533,11 @@ function initPass() {
     const paint = surface.getContext('2d');
 
     const metalGradient = paint.createLinearGradient(0, 0, 0, 256);
-    metalGradient.addColorStop(0, '#dde2e8');
-    metalGradient.addColorStop(0.28, '#b3bac2');
-    metalGradient.addColorStop(0.52, '#d6dbe1');
-    metalGradient.addColorStop(0.78, '#a8b0b8');
-    metalGradient.addColorStop(1, '#d8dde3');
+    metalGradient.addColorStop(0, '#c9cfd6');
+    metalGradient.addColorStop(0.28, '#9aa2ab');
+    metalGradient.addColorStop(0.52, '#c0c7ce');
+    metalGradient.addColorStop(0.78, '#8d959e');
+    metalGradient.addColorStop(1, '#c3cad1');
     paint.fillStyle = metalGradient;
     paint.fillRect(0, 0, 1024, 256);
 
@@ -720,8 +738,9 @@ function initPass() {
         uCardRotation: { value: new THREE.Vector2(0, 0) },
         uHueShift: { value: 0.5 },
         uGlintPosW: { value: glint.position.clone() },
-        uGlintUv: { value: new THREE.Vector2(0, 0) },
         uRimPosW: { value: rim.position.clone() },
+        uFoilCenterW: { value: new THREE.Vector3(0, FOIL_Y, 0) },
+        uGlintSweep: { value: 0 },
         uGlintIntensity: { value: 0.7 },
         uRimIntensity: { value: 0.7 },
         uQuality: { value: 1 },
@@ -735,9 +754,9 @@ function initPass() {
         map: foilBase,
         metalness: 0.74,
         roughness: 0.24,
-        clearcoat: 0.9,
-        clearcoatRoughness: 0.12,
-        envMapIntensity: 1.1,
+        clearcoat: 0.35,
+        clearcoatRoughness: 0.18,
+        envMapIntensity: 0.9,
         side: THREE.DoubleSide,
       });
 
@@ -785,10 +804,6 @@ function initPass() {
   const clamp = (value) => Math.min(1, Math.max(0, value));
   const pointer = { x: 0, y: 0 };
   const pointerTarget = { x: 0, y: 0 };
-  // Le glint démarre hors de la bande : au repos, pas de reflet central
-  // qui mangerait le AAA. Il n'entre que quand le pointeur bouge.
-  const glintPointer = { x: -0.9, y: 0.15 };
-  const glintTarget = { x: -0.9, y: 0.15 };
 
   // Pousse l'état de la carte et des lumières dans les uniforms du foil.
   // Le foil reste calme : des intensités bornées, jamais un projecteur.
@@ -805,13 +820,14 @@ function initPass() {
       card.matrixWorld.elements[2]
     ).normalize();
 
-    foilFaces.forEach(({ uniforms }) => {
+    foilFaces.forEach(({ mesh, uniforms }) => {
       uniforms.uTime.value = time;
       uniforms.uCardRotation.value.set(card.rotation.x, card.rotation.y);
       uniforms.uHueShift.value = hue;
       uniforms.uGlintPosW.value.copy(glint.position);
-      uniforms.uGlintUv.value.set(glintPointer.x, glintPointer.y);
       uniforms.uRimPosW.value.copy(rim.position);
+      mesh.getWorldPosition(uniforms.uFoilCenterW.value);
+      uniforms.uGlintSweep.value = pointer.x;
       uniforms.uGlintIntensity.value = glintPower;
       uniforms.uRimIntensity.value = rimPower;
       uniforms.uTangentW.value.copy(tangent);
@@ -888,8 +904,6 @@ function initPass() {
   window.addEventListener('pointermove', (event) => {
     pointerTarget.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointerTarget.y = (event.clientY / window.innerHeight) * 2 - 1;
-    glintTarget.x = pointerTarget.x;
-    glintTarget.y = pointerTarget.y;
   });
 
   const observer = new IntersectionObserver(
@@ -924,8 +938,6 @@ function initPass() {
     progress += (target - progress) * (1 - Math.exp(-delta * 5));
     pointer.x += (pointerTarget.x - pointer.x) * (1 - Math.exp(-delta * 4));
     pointer.y += (pointerTarget.y - pointer.y) * (1 - Math.exp(-delta * 4));
-    glintPointer.x += (glintTarget.x - glintPointer.x) * (1 - Math.exp(-delta * 5));
-    glintPointer.y += (glintTarget.y - glintPointer.y) * (1 - Math.exp(-delta * 5));
 
     if (!cardReady) {
       renderer.render(scene, camera);
