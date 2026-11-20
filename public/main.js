@@ -304,14 +304,14 @@ function initTerminal() {
   const commands = {
     help: [
       'help    cette liste',
-      'stats   les chiffres de Backstage',
+      'usage   comment je m\'en sers',
       'memory  la mémoire persistante',
       'clear   effacer',
     ].join('\n'),
-    stats: [
-      '46 fichiers de tests',
-      '34 routes serveur',
-      '32 000 lignes de TypeScript',
+    usage: [
+      'Un outil que j\'utilise tous les jours,',
+      'pour moi uniquement : agenda, rappels, mémoire.',
+      'Il tourne en production depuis 2026.',
     ].join('\n'),
     memory: [
       "Backstage garde ce qui survit d'une session à l'autre :",

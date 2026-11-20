@@ -659,18 +659,17 @@ function initPass() {
 
     paint.fillStyle = '#101316';
     paint.font = '700 96px "Space Grotesk", sans-serif';
-    paint.fillText('Le second', 74, 300);
-    paint.fillText('cerveau', 74, 396);
+    paint.fillText('Backstage', 74, 340);
 
     paint.fillStyle = '#4d555d';
     paint.font = '500 31px "Inter", sans-serif';
-    paint.fillText('Une application en production depuis 2026.', 74, 492);
-    paint.fillText("Je m'en sers chaque matin.", 74, 538);
+    paint.fillText('Mon outil du quotidien, en production', 74, 440);
+    paint.fillText('depuis 2026.', 74, 486);
 
     drawFacts(paint, [
-      ['Tests', '46 fichiers'],
-      ['Routes', '34'],
+      ['Usage', 'quotidien'],
       ['Mémoire', 'persistante'],
+      ['Depuis', '2026'],
     ]);
 
     drawFoil(paint);
