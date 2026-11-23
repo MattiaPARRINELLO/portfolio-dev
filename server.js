@@ -99,6 +99,16 @@ app.get('/cv-alternance', (req, res) => {
   });
 });
 
+/* Toute route inconnue : 404 JSON pour un futur /api, page dédiée sinon.
+   Ce gestionnaire passe après les routes connues et le statique, et avant
+   le middleware d'erreur, qui ne traite donc que les vraies exceptions. */
+app.use((req, res) => {
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'Ressource introuvable' });
+  }
+  return res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+});
+
 // Middleware d'erreur terminal : log côté serveur, réponse générique.
 // Aucune pile, aucun chemin absolu, aucun détail interne ne sort au client.
 app.use((err, req, res, next) => {
