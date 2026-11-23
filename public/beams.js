@@ -15,7 +15,7 @@
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const headings = [
-    ...document.querySelectorAll('.poster__name, .pass-title, .track__title'),
+    ...document.querySelectorAll('.poster__name, .pass-title, .project__title, .track__title'),
   ];
   const sections = [...document.querySelectorAll('[data-cue]')];
 

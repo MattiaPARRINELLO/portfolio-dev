@@ -12,26 +12,28 @@
 ## 📋 Sommaire
 - [Présentation](#présentation)
 - [Fonctionnalités](#fonctionnalités)
+- [Routes](#routes)
 - [Technologies](#technologies)
 - [Auteur](#auteur)
 
 ---
 
 ## 🎯 Présentation
-Le portfolio est construit comme une setlist de concert : six morceaux, un rappel. Chaque morceau montre une preuve, une application en production, un parcours lu comme un `git log`, ou une série de photographies de concert. Deux faisceaux de projecteurs balaient l'affiche d'ouverture.
+Le portfolio est construit comme une setlist de concert : cinq morceaux, un rappel. L'affiche ouvre sur un pass d'accréditation en 3D, puis la setlist mène aux projets, au parcours lu comme un `git log`, aux photographies de concert et au contact. Les études de cas détaillées vivent sur `/projets`.
 
 ---
 
 ## ✨ Fonctionnalités
 - ✅ Affiche plein cadre, nom en pleine largeur
-- ✅ Pass backstage en 3D : épaisseur réelle, foil iridescent AAA, il se retourne au scroll
-- ✅ Lumière de salle en canvas, teintée par morceau (bleu sur Backstage, rouge sur le rappel)
-- ✅ Backstage en scène épinglée : accueil, puis un chat qui s'écrit au scroll (question, réflexion, réponse avec sa source)
-- ✅ Gymshark-Sync dans une fenêtre d'application à onglets (vraies captures)
-- ✅ Terminal de démonstration dans Backstage (`help`, `stats`, `memory`)
+- ✅ Pass backstage en 3D : épaisseur réelle, foil iridescent, il se retourne au scroll
+- ✅ Lumière de salle en canvas, teintée par morceau (bleu sur le pass, rouge sur le rappel)
+- ✅ Deux cartes projets sur la home, avec capture et liens
+- ✅ Étude de cas Backstage : interface de chat qui s'écrit au scroll (question, réflexion, réponse avec sa source)
+- ✅ Étude de cas Gymshark-Sync : scène 3D de neuf roues dentées
 - ✅ Parcours en `git log` avec branches colorées
 - ✅ Photos avec artiste, salle, date et réglages, fiche plein écran au clic
 - ✅ Contact : le nom de l'entreprise prépare le mail pré-rempli
+- ✅ Page 404 dédiée, et 404 JSON pour `/api/*`
 - ✅ Design responsive et `prefers-reduced-motion` respecté
 
 ---
@@ -46,11 +48,24 @@ npm start
 
 ---
 
+## 🗺️ Routes
+| URL | Contenu |
+|-----|---------|
+| `/` | Accueil, setlist et projets |
+| `/projets` | Index des études de cas |
+| `/projets/backstage` | Étude de cas Backstage |
+| `/projets/gymshark-sync` | Étude de cas Gymshark-Sync |
+| `/cv-alternance` | CV en PDF, URL stable |
+| inconnue | 404 HTML, ou 404 JSON sous `/api/*` |
+
+---
+
 ## 🛠️ Technologies
 | Technologie | Rôle |
 |-------------|------|
-| Express | Serveur et endpoint CV |
+| Express | Serveur, routes et endpoint CV |
 | HTML/CSS/JS | Frontend, sans dépendance |
+| Three.js | Pass et scène Gymshark, servi localement |
 | Canvas 2D | Faisceaux de projecteurs |
 | Polices auto-hébergées | Space Grotesk, Inter, JetBrains Mono |
 
