@@ -213,6 +213,24 @@ app.use((req, res, next) => {
 // Servir les fichiers statiques du dossier public
 // Le HTML et le JS sont revalidés à chaque requête ; les images, polices et
 // assets stables sont mises en cache longuement.
+/* Pages projets : une URL stable par étude de cas. Ces routes passent après
+   le blocage des fichiers sensibles mais avant le middleware statique, car
+   express.static redirige /projets vers /projets/ (301) ; ici la forme sans
+   slash final rend la page directement en 200. */
+app.get(['/projets', '/projets/'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'projets', 'index.html'));
+});
+
+app.get(['/projets/backstage', '/projets/backstage/'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'projets', 'backstage', 'index.html'));
+});
+
+app.get(['/projets/gymshark-sync', '/projets/gymshark-sync/'], (req, res) => {
+  res.sendFile(
+    path.join(__dirname, 'public', 'projets', 'gymshark-sync', 'index.html')
+  );
+});
+
 app.use(
   express.static(path.join(__dirname, 'public'), {
     etag: true,
