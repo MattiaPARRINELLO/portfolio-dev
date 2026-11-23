@@ -219,6 +219,15 @@ a:hover {
   margin-top: clamp(1.5rem, 2.5vw, 2rem);
 }
 
+/* Sur la home, la stack technique tient en une ligne sous les actions. */
+.poster__stack {
+  margin-top: clamp(1rem, 1.8vw, 1.35rem);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: var(--t-5);
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
 .button {
   display: inline-block;
   padding: 0.8em 1.35em;
@@ -1213,18 +1222,11 @@ a:hover {
   color: #8a939c;
 }
 
-.log__note {
-  grid-column: 2;
-  margin-top: 0;
-  font-size: var(--t-4);
-  color: var(--muted);
-  max-width: 40ch;
-}
-
 /* Le journal : le log se dessine au scroll */
 
 .journal {
   min-width: 0;
+  grid-column: 1 / -1;
 }
 
 .journal__list {
@@ -1969,10 +1971,6 @@ html.gsap .pass-step {
 
   .track--reverse .shot {
     order: initial;
-  }
-
-  .log__note {
-    grid-column: 1;
   }
 
   .setlist {
