@@ -685,60 +685,6 @@ a:hover {
   color: #7d8993;
 }
 
-.term {
-  margin: 0;
-  background: #0b0d0f;
-  color: #c7d0d8;
-  font-family: "JetBrains Mono", ui-monospace, monospace; /* taste-skill-ignore: sortie de terminal littérale */
-  font-size: 0.8125rem;
-  line-height: 1.7;
-}
-
-.term__out {
-  max-height: 11rem;
-  margin: 0;
-  padding: 1rem 1.1rem 0.4rem;
-  overflow: auto;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.term__form {
-  display: flex;
-  align-items: baseline;
-  gap: 0.55rem;
-  padding: 0.2rem 1.1rem 1rem;
-}
-
-.term__prompt {
-  color: #7d8993;
-}
-
-.term__form input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  background: transparent;
-  color: #e8eef3;
-  font: inherit;
-  padding: 0.2rem 0;
-  outline: none;
-}
-
-.term__form input::placeholder {
-  color: #5c666f;
-}
-
-.term__form:focus-within .term__prompt {
-  color: var(--accent);
-}
-
-.term__note {
-  margin-top: 0.6rem;
-  font-size: var(--t-5);
-  color: var(--muted);
-}
-
 /* ── Le pass ── */
 
 .pass-scene {
@@ -2153,7 +2099,4 @@ html.gsap .pass-step {
     line-height: 1.9;
   }
 
-  .term {
-    font-size: 0.75rem;
-  }
 }

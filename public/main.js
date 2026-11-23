@@ -1,7 +1,7 @@
 /* =========================================================
    Portfolio Mattia Parrinello, interactions
    GSAP + ScrollTrigger pour les entrées et le pass 3D,
-   puis les modules sans animation (photos, terminal, contact).
+   puis les modules sans animation (photos, contact).
    ========================================================= */
 
 document.documentElement.classList.add('js');
@@ -248,104 +248,6 @@ function initPhotos() {
   });
 }
 
-/* ── Fenêtres d'application : onglets accessibles ── */
-function initApps() {
-  document.querySelectorAll('[data-app]').forEach((app) => {
-    const tabs = [...app.querySelectorAll('[role="tab"]')];
-    const panels = [...app.querySelectorAll('[role="tabpanel"]')];
-    if (!tabs.length || !panels.length) return;
-
-    const select = (index) => {
-      tabs.forEach((tab, i) => {
-        const on = i === index;
-        tab.classList.toggle('is-on', on);
-        tab.setAttribute('aria-selected', on ? 'true' : 'false');
-        tab.tabIndex = on ? 0 : -1;
-      });
-      panels.forEach((panel, i) => {
-        panel.hidden = i !== index;
-      });
-      const image = panels[index].querySelector('img');
-      if (image && image.animate) {
-        image.animate(
-          [
-            { opacity: 0.35, transform: 'translateY(4px)' },
-            { opacity: 1, transform: 'none' },
-          ],
-          { duration: 260, easing: 'ease-out' }
-        );
-      }
-    };
-
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => select(i));
-      tab.addEventListener('keydown', (event) => {
-        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
-        event.preventDefault();
-        const next = (i + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-        select(next);
-        tabs[next].focus();
-      });
-    });
-  });
-}
-
-/* ── Terminal de démonstration, dans Backstage ── */
-function initTerminal() {
-  const root = document.querySelector('[data-term]');
-  if (!root) return;
-
-  const output = root.querySelector('.term__out code');
-  const form = root.querySelector('form');
-  const input = root.querySelector('input');
-  if (!output || !form || !input) return;
-
-  const intro = output.textContent;
-  const commands = {
-    help: [
-      'help    cette liste',
-      'usage   comment je m\'en sers',
-      'memory  la mémoire persistante',
-      'clear   effacer',
-    ].join('\n'),
-    usage: [
-      'Un outil que j\'utilise tous les jours,',
-      'pour moi uniquement : agenda, rappels, mémoire.',
-      'Il tourne en production depuis 2026.',
-    ].join('\n'),
-    memory: [
-      "Backstage garde ce qui survit d'une session à l'autre :",
-      'un souvenir, sa date, sa source.',
-      'Ce terminal, lui, ne retient rien.',
-    ].join('\n'),
-  };
-
-  let transcript = intro;
-
-  const print = (text) => {
-    transcript = `${transcript}\n${text}`.split('\n').slice(-26).join('\n');
-    output.textContent = transcript;
-    root.scrollTop = root.scrollHeight;
-  };
-
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const command = input.value.trim();
-    input.value = '';
-    if (!command) return;
-
-    if (command === 'clear') {
-      transcript = intro;
-      output.textContent = intro;
-      return;
-    }
-
-    const key = command.toLowerCase();
-    const answer = commands[key] || `commande inconnue : ${key}. tapez help.`;
-    print(`$ ${command}\n${answer}`);
-  });
-}
-
 /* ── Contact : un nom d'entreprise suffit pour préparer le message ── */
 function initContactForm() {
   const form = document.getElementById('contact-form');
@@ -385,9 +287,7 @@ function initContactForm() {
 
 function init() {
   initMotion();
-  initApps();
   initPhotos();
-  initTerminal();
   initContactForm();
 }
 
