@@ -311,6 +311,12 @@ a:hover {
   padding-bottom: 0.4rem;
 }
 
+/* Sur une page projet, le titre de section n'a plus d'horaire de setlist :
+   la colonne de gauche disparaît et le titre occupe la place. */
+.track__head--projet {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+}
+
 .track__body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1993,6 +1999,14 @@ html.gsap .pass-step {
 
   .track__note {
     grid-column: 2;
+  }
+
+  .track__head--projet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .track__head--projet .track__note {
+    grid-column: 1;
   }
 
   .track__body,
