@@ -311,6 +311,12 @@ a:hover {
   padding-bottom: 0.4rem;
 }
 
+/* Sur une page projet, le titre de section n'a plus d'horaire de setlist :
+   la colonne de gauche disparaît et le titre occupe la place. */
+.track__head--projet {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+}
+
 .track__body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1760,7 +1766,121 @@ a:hover {
   color: var(--accent);
 }
 
+/* ── Pages projets ── */
 
+.project {
+  position: relative;
+  min-height: 68svh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: calc(var(--pad) * 0.65) var(--pad) clamp(2rem, 5vw, 4rem);
+  overflow: clip;
+}
+
+.project__main {
+  align-self: end;
+  max-width: 64rem;
+  padding-block: clamp(2.5rem, 7vh, 5rem);
+}
+
+.project__eyebrow {
+  margin-bottom: 1rem;
+  font-size: var(--t-5);
+  color: var(--cue, var(--accent));
+}
+
+.project__eyebrow a {
+  text-decoration: none;
+}
+
+.project__eyebrow a:hover {
+  text-decoration: underline;
+}
+
+.project__title {
+  font-size: clamp(2.8rem, 1rem + 8vw, 7.5rem);
+}
+
+.project__sub {
+  margin-top: clamp(1rem, 2.5vw, 1.75rem);
+  max-width: 48ch;
+  font-size: var(--t-3);
+  line-height: 1.4;
+  color: #ded9d1;
+}
+
+.project__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.75rem;
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-size: var(--t-5);
+}
+
+.projets {
+  padding: clamp(1rem, 3vw, 2rem) var(--pad) clamp(4rem, 8vw, 7rem);
+}
+
+.projets__list {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.projet {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.projet__media {
+  display: block;
+  overflow: hidden;
+  background: #0e1012;
+}
+
+.projet__media img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.6s var(--ease);
+}
+
+.projet__media:hover img,
+.projet__media:focus-visible img {
+  transform: scale(1.02);
+}
+
+.projet__body {
+  max-width: 42ch;
+}
+
+.projet__name {
+  margin: 0;
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  font-weight: 700;
+  font-size: var(--t-2);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+
+.projet__desc {
+  margin-top: 0.9rem;
+  color: var(--muted);
+}
+
+.projet__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.5rem;
+  font-size: var(--t-5);
+}
 
 /* ── Entrées ── */
 
@@ -1856,6 +1976,7 @@ html.gsap .pass-step {
   .pass-step {
     position: static;
     opacity: 1;
+    visibility: visible;
     transform: none;
     margin-top: 1rem;
   }
@@ -1864,12 +1985,28 @@ html.gsap .pass-step {
 /* ── Adaptations ── */
 
 @media (max-width: 1000px) {
+  .project {
+    min-height: auto;
+  }
+
+  .projet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .track__head {
     grid-template-columns: 4rem minmax(0, 1fr);
   }
 
   .track__note {
     grid-column: 2;
+  }
+
+  .track__head--projet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .track__head--projet .track__note {
+    grid-column: 1;
   }
 
   .track__body,
@@ -1987,6 +2124,14 @@ html.gsap .pass-step {
   .track__note {
     grid-column: 1 / -1;
     margin-top: 0.75rem;
+  }
+
+  .track__head--projet {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .track__head--projet .track__note {
+    grid-column: 1;
   }
 
   .big {

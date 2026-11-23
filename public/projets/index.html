@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Deux études de cas : Backstage, l'outil du quotidien, et Gymshark-Sync, l'assistant interne sur LLM local."
+    />
+    <meta name="darkreader-lock" />
+    <meta name="author" content="Mattia Parrinello" />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://dev.mprnl.fr/projets" />
+    <meta name="theme-color" content="#070607" />
+    <title>Projets et études de cas · Mattia Parrinello</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="Mattia Parrinello" />
+    <meta property="og:title" content="Projets et études de cas · Mattia Parrinello" />
+    <meta
+      property="og:description"
+      content="Deux études de cas : Backstage, l'outil du quotidien, et Gymshark-Sync, l'assistant interne sur LLM local."
+    />
+    <meta property="og:url" content="https://dev.mprnl.fr/projets" />
+    <meta property="og:image" content="https://dev.mprnl.fr/assets/images/og-cover.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Projets et études de cas de Mattia Parrinello" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Projets et études de cas · Mattia Parrinello" />
+    <meta
+      name="twitter:description"
+      content="Backstage, l'outil du quotidien, et Gymshark-Sync, l'assistant interne sur LLM local."
+    />
+    <meta name="twitter:image" content="https://dev.mprnl.fr/assets/images/og-cover.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Polices auto-hébergées : aucun DNS externe au premier écran -->
+    <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+    <link
+      rel="preload"
+      href="/assets/fonts/space-grotesk-700-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/styles.css?v=20261123b" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Mattia Parrinello",
+        "jobTitle": "Développeur Full-Stack",
+        "url": "https://dev.mprnl.fr/",
+        "description": "Portfolio de Mattia Parrinello, développeur full-stack JS/TS à Paris. Applications Next.js, React, TypeScript et Node.js en production.",
+        "knowsAbout": ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL", "WebAuthn", "SSE"],
+        "sameAs": [
+          "https://github.com/MattiaPARRINELLO",
+          "https://www.linkedin.com/in/mattia-parrinello-015382208/",
+          "https://photo.mprnl.fr"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Projets et études de cas",
+        "description": "Deux études de cas : Backstage, l'outil du quotidien, et Gymshark-Sync, l'assistant interne sur LLM local.",
+        "url": "https://dev.mprnl.fr/projets",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Mattia Parrinello",
+          "url": "https://dev.mprnl.fr/"
+        },
+        "hasPart": [
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "Backstage, outil personnel du quotidien",
+            "description": "PWA installable : chat IA à mémoire persistante, agenda synchronisé, rappels, notifications push, authentification passkey, streaming SSE. Déployée en production.",
+            "programmingLanguage": ["TypeScript", "React", "Next.js", "Node.js"],
+            "codeRepository": "https://github.com/MattiaPARRINELLO/backstage",
+            "url": "https://dev.mprnl.fr/projets/backstage",
+            "author": { "@type": "Person", "name": "Mattia Parrinello" }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "Gymshark-Sync, assistant interne sur LLM local",
+            "description": "Serveur Node.js / Express relié à un modèle local via Ollama : neuf workflows métier, streaming SSE, API documentée avec Swagger.",
+            "programmingLanguage": ["JavaScript", "Node.js", "Express"],
+            "codeRepository": "https://github.com/mattia-school/gymshark-sync",
+            "url": "https://dev.mprnl.fr/projets/gymshark-sync",
+            "author": { "@type": "Person", "name": "Mattia Parrinello" }
+          }
+        ]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu</a>
+
+    <canvas class="room" aria-hidden="true"></canvas>
+
+    <header class="project" id="top" data-cue="#dfe8ff">
+      <nav class="bar" aria-label="Navigation principale">
+        <a class="bar__name" href="/">Mattia Parrinello</a>
+        <p class="bar__meta">Développeur full-stack, Paris</p>
+        <a class="bar__action" href="/#rappel">Contact</a>
+      </nav>
+
+      <div class="project__main">
+        <p class="project__eyebrow">Études de cas</p>
+        <h1 class="project__title">Projets</h1>
+        <p class="project__sub">
+          Deux projets, deux pages : Backstage, l'outil que j'utilise tous les matins, et
+          Gymshark-Sync, l'assistant interne sur modèle local.
+        </p>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="projets" aria-labelledby="projets-title">
+        <h2 class="sr-only" id="projets-title">Les deux études de cas</h2>
+
+        <ul class="projets__list">
+          <li class="projet">
+            <a class="projet__media" href="/projets/backstage">
+              <img
+                src="/assets/projects/backstage-console.webp"
+                alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
+                width="1400"
+                height="1067"
+              />
+            </a>
+            <div class="projet__body">
+              <h3 class="projet__name">Backstage</h3>
+              <p class="projet__desc">
+                Le chat, l'agenda et les rappels au même endroit. Un outil que j'utilise
+                tous les matins, en production depuis 2026.
+              </p>
+              <p class="projet__links">
+                <a class="link" href="/projets/backstage">Voir l'étude de cas</a>
+                <a
+                  class="link"
+                  href="https://backstage.mprnl.fr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Ouvrir l'app</a
+                >
+              </p>
+            </div>
+          </li>
+
+          <li class="projet">
+            <a class="projet__media" href="/projets/gymshark-sync">
+              <img
+                src="/assets/projects/gymshark-home.webp"
+                alt="Accueil de Gymshark-Sync : l'assistant et sa barre de conversation"
+                width="1400"
+                height="757"
+              />
+            </a>
+            <div class="projet__body">
+              <h3 class="projet__name">Gymshark-Sync</h3>
+              <p class="projet__desc">
+                Un assistant interne sur un modèle local : neuf tâches métier, une seule
+                interface, et rien à installer. J'ai écrit tout le backend.
+              </p>
+              <p class="projet__links">
+                <a class="link" href="/projets/gymshark-sync">Voir l'étude de cas</a>
+                <a
+                  class="link"
+                  href="https://github.com/mattia-school/gymshark-sync"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Code source</a
+                >
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__id">
+        <p>Mattia Parrinello, développeur full-stack</p>
+      </div>
+      <ul class="footer__links">
+        <li><a href="/">Accueil</a></li>
+        <li><a href="/#journal">Le journal</a></li>
+        <li><a href="/#projections">Photos</a></li>
+        <li><a href="/#rappel">Contact</a></li>
+      </ul>
+    </footer>
+
+    <script src="/vendor/gsap.min.js"></script>
+    <script src="/vendor/ScrollTrigger.min.js"></script>
+    <script src="/beams.js?v=20261119f" defer></script>
+    <script src="/main.js?v=20261119g"></script>
+  </body>
+</html>
