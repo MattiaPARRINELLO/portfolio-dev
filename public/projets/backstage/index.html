@@ -125,45 +125,7 @@
     </header>
 
     <main id="main">
-      <!-- ═══════════════ INTERLUDE : LE PASS ═══════════════ -->
-      <section class="pass-scene" id="pass" data-cue="#dfe8ff" data-step="1" aria-labelledby="pass-title">
-        <div class="pass-photo" aria-hidden="true">
-          <img
-            src="/assets/photos/concert-2.webp"
-            alt=""
-            width="1100"
-            height="1956"
-            loading="lazy"
-          />
-        </div>
-
-        <div class="pass-stage">
-          <div class="pass-copy">
-            <h2 class="pass-title" id="pass-title">Le pass</h2>
-            <div class="pass-steps">
-              <p class="pass-step pass-step--1">
-                Pour entrer en fosse, il faut une accréditation : un nom, une date, un
-                laissez-passer. C'est ce qui permet d'être là avant le public.
-              </p>
-              <p class="pass-step pass-step--2">
-                Au dos, il y a Backstage. L'outil que j'ai écrit pour arrêter de me perdre
-                entre les accréditations, les relances et mon planning.
-              </p>
-              <p class="pass-step pass-step--3">
-                Il tourne depuis 2026 et je m'en sers tous les matins. Il se souvient de ce
-                que je lui ai dit la veille, et il retrouve la source.
-              </p>
-            </div>
-          </div>
-
-          <div class="pass-wrap" aria-hidden="true">
-            <canvas class="pass3d" data-pass-canvas role="img" aria-label="Le pass d'accréditation Backstage, recto et verso, dans la lumière de la scène"></canvas>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ═══════════════ 2. BACKSTAGE ═══════════════ -->
+      <!-- ═══════════════ 1. BACKSTAGE ═══════════════ -->
       <section class="track track--split" id="backstage" data-cue="#9fd0ff" style="--cue: #9fd0ff">
         <header class="track__head track__head--projet" data-reveal>
           <h2 class="track__title">L'usage</h2>
@@ -259,7 +221,6 @@
     <footer class="footer">
       <div class="footer__id">
         <p>Mattia Parrinello, développeur full-stack</p>
-        <p>Photographies : Mattia Parrinello, 2026.</p>
       </div>
       <ul class="footer__links">
         <li><a href="/">Accueil</a></li>
@@ -273,6 +234,5 @@
     <script src="/vendor/ScrollTrigger.min.js"></script>
     <script src="/beams.js?v=20261119f" defer></script>
     <script src="/main.js?v=20261119g"></script>
-    <script type="module" src="/pass3d.js"></script>
   </body>
 </html>
