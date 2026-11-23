@@ -1769,9 +1769,94 @@ a:hover {
   padding: clamp(1rem, 3vw, 2rem) var(--pad) clamp(4rem, 8vw, 7rem);
 }
 
-/* Sur la home, le bloc projets vit dans un morceau qui porte déjà les marges. */
-.track > .projets {
+/* La setlist des projets : deux morceaux sur la home, pas deux cartes. */
+.set {
+  margin: 0;
   padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(242, 241, 238, 0.16);
+}
+
+.set__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  padding: clamp(2rem, 4.5vw, 3.5rem) 0;
+  border-bottom: 1px solid rgba(242, 241, 238, 0.16);
+}
+
+.set__media {
+  order: 2;
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(242, 241, 238, 0.18);
+  border-radius: 10px;
+  background: #0d0b0c;
+  box-shadow: 0 30px 60px -40px rgba(0, 0, 0, 0.95);
+}
+
+.set__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.7s var(--ease);
+}
+
+.set__item:hover .set__media img,
+.set__item:focus-within .set__media img {
+  transform: scale(1.03);
+}
+
+.set__body {
+  max-width: 46ch;
+}
+
+.set__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: var(--t-5);
+  color: var(--muted);
+}
+
+.set__num {
+  font-size: var(--t-3);
+  color: var(--cue, var(--accent));
+  font-variant-numeric: tabular-nums;
+}
+
+.set__name {
+  margin-top: 0.85rem;
+  font-size: clamp(2.4rem, 1rem + 3.6vw, 4.2rem);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+}
+
+.set__name a {
+  text-decoration: none;
+}
+
+.set__name a:hover {
+  color: var(--cue, var(--accent));
+}
+
+.set__desc {
+  margin-top: 1rem;
+  max-width: 40ch;
+  color: var(--muted);
+}
+
+.set__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.5rem;
+  font-size: var(--t-5);
 }
 
 .projets__list {
@@ -1853,6 +1938,15 @@ html.gsap .pass-step {
 
   .poster__photo img {
     animation: none;
+  }
+
+  .set__media img {
+    transition: none;
+  }
+
+  .set__item:hover .set__media img,
+  .set__item:focus-within .set__media img {
+    transform: none;
   }
 
   [data-reveal],
@@ -2064,6 +2158,14 @@ html.gsap .pass-step {
 
   .setlist {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .set__item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .set__media {
+    order: -1;
   }
 
   .track__head {
