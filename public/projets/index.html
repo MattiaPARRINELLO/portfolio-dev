@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Deux études de cas : Backstage, l'outil du quotidien, et Gymshark-Sync, l'assistant interne sur LLM local."
+    />
+    <meta name="darkreader-lock" />
+    <meta name="author" content="Mattia Parrinello" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#070607" />
+    <title>Projets et études de cas · Mattia Parrinello</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Polices auto-hébergées : aucun DNS externe au premier écran -->
+    <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+    <link
+      rel="preload"
+      href="/assets/fonts/space-grotesk-700-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/styles.css?v=20261123a" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu</a>
+
+    <canvas class="room" aria-hidden="true"></canvas>
+
+    <header class="project" id="top" data-cue="#dfe8ff">
+      <nav class="bar" aria-label="Navigation principale">
+        <a class="bar__name" href="/">Mattia Parrinello</a>
+        <p class="bar__meta">Développeur full-stack, Paris</p>
+        <a class="bar__action" href="/#rappel">Contact</a>
+      </nav>
+
+      <div class="project__main">
+        <p class="project__eyebrow">Études de cas</p>
+        <h1 class="project__title">Projets</h1>
+        <p class="project__sub">
+          Deux projets, deux pages : Backstage, l'outil que j'utilise tous les matins, et
+          Gymshark-Sync, l'assistant interne sur modèle local.
+        </p>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="projets" aria-labelledby="projets-title">
+        <h2 class="sr-only" id="projets-title">Les deux études de cas</h2>
+
+        <ul class="projets__list">
+          <li class="projet">
+            <a class="projet__media" href="/projets/backstage">
+              <img
+                src="/assets/projects/backstage-console.webp"
+                alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
+                width="1400"
+                height="1067"
+              />
+            </a>
+            <div class="projet__body">
+              <h3 class="projet__name">Backstage</h3>
+              <p class="projet__desc">
+                Le chat, l'agenda et les rappels au même endroit. Un outil que j'utilise
+                tous les matins, en production depuis 2026.
+              </p>
+              <p class="projet__links">
+                <a class="link" href="/projets/backstage">Voir l'étude de cas</a>
+                <a
+                  class="link"
+                  href="https://backstage.mprnl.fr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Ouvrir l'app</a
+                >
+              </p>
+            </div>
+          </li>
+
+          <li class="projet">
+            <a class="projet__media" href="/projets/gymshark-sync">
+              <img
+                src="/assets/projects/gymshark-home.webp"
+                alt="Accueil de Gymshark-Sync : l'assistant et sa barre de conversation"
+                width="1400"
+                height="757"
+              />
+            </a>
+            <div class="projet__body">
+              <h3 class="projet__name">Gymshark-Sync</h3>
+              <p class="projet__desc">
+                Un assistant interne sur un modèle local : neuf tâches métier, une seule
+                interface, et rien à installer. J'ai écrit tout le backend.
+              </p>
+              <p class="projet__links">
+                <a class="link" href="/projets/gymshark-sync">Voir l'étude de cas</a>
+                <a
+                  class="link"
+                  href="https://github.com/mattia-school/gymshark-sync"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Code source</a
+                >
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__id">
+        <p>Mattia Parrinello, développeur full-stack</p>
+        <p>Photographies : Mattia Parrinello, 2026.</p>
+      </div>
+      <ul class="footer__links">
+        <li><a href="/">Accueil</a></li>
+        <li><a href="/#journal">Le journal</a></li>
+        <li><a href="/#projections">Photos</a></li>
+        <li><a href="/#rappel">Contact</a></li>
+      </ul>
+    </footer>
+
+    <script src="/vendor/gsap.min.js"></script>
+    <script src="/vendor/ScrollTrigger.min.js"></script>
+    <script src="/beams.js?v=20261119f" defer></script>
+    <script src="/main.js?v=20261119g"></script>
+  </body>
+</html>
