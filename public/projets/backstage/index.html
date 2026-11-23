@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Étude de cas Backstage : chat IA à mémoire persistante, agenda synchronisé et rappels. Une PWA en production, en TypeScript, React et Next.js."
+    />
+    <meta name="darkreader-lock" />
+    <meta name="author" content="Mattia Parrinello" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#070607" />
+    <title>Backstage, l'outil du quotidien · Mattia Parrinello</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Polices auto-hébergées : aucun DNS externe au premier écran -->
+    <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+    <link
+      rel="preload"
+      href="/assets/fonts/space-grotesk-700-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/styles.css?v=20261123a" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu</a>
+
+    <canvas class="room" aria-hidden="true"></canvas>
+
+    <header class="project" id="top" data-cue="#dfe8ff">
+      <nav class="bar" aria-label="Navigation principale">
+        <a class="bar__name" href="/">Mattia Parrinello</a>
+        <p class="bar__meta">Étude de cas</p>
+        <a class="bar__action" href="/#rappel">Contact</a>
+      </nav>
+
+      <div class="project__main">
+        <p class="project__eyebrow"><a href="/projets">Retour aux projets</a></p>
+        <h1 class="project__title">Backstage</h1>
+        <p class="project__sub">
+          L'outil que j'utilise tous les matins : le chat, l'agenda et les rappels au même
+          endroit. En production depuis 2026.
+        </p>
+        <p class="project__links">
+          <a
+            class="link"
+            href="https://backstage.mprnl.fr"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Ouvrir l'app</a
+          >
+          <a
+            class="link"
+            href="https://github.com/MattiaPARRINELLO/backstage"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Code source</a
+          >
+        </p>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ═══════════════ INTERLUDE : LE PASS ═══════════════ -->
+      <section class="pass-scene" id="pass" data-cue="#dfe8ff" data-step="1" aria-labelledby="pass-title">
+        <div class="pass-photo" aria-hidden="true">
+          <img
+            src="/assets/photos/concert-2.webp"
+            alt=""
+            width="1100"
+            height="1956"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="pass-stage">
+          <div class="pass-copy">
+            <h2 class="pass-title" id="pass-title">Le pass</h2>
+            <div class="pass-steps">
+              <p class="pass-step pass-step--1">
+                Pour entrer en fosse, il faut une accréditation : un nom, une date, un
+                laissez-passer. C'est ce qui permet d'être là avant le public.
+              </p>
+              <p class="pass-step pass-step--2">
+                Au dos, il y a Backstage. L'outil que j'ai écrit pour arrêter de me perdre
+                entre les accréditations, les relances et mon planning.
+              </p>
+              <p class="pass-step pass-step--3">
+                Il tourne depuis 2026 et je m'en sers tous les matins. Il se souvient de ce
+                que je lui ai dit la veille, et il retrouve la source.
+              </p>
+            </div>
+          </div>
+
+          <div class="pass-wrap" aria-hidden="true">
+            <canvas class="pass3d" data-pass-canvas role="img" aria-label="Le pass d'accréditation Backstage, recto et verso, dans la lumière de la scène"></canvas>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══════════════ 2. BACKSTAGE ═══════════════ -->
+      <section class="track track--split" id="backstage" data-cue="#9fd0ff" style="--cue: #9fd0ff">
+        <header class="track__head" data-reveal>
+          <p class="track__time">21:04</p>
+          <h2 class="track__title">Backstage</h2>
+          <p class="track__note">Le morceau que je joue tous les matins.</p>
+        </header>
+        <div class="story" data-story>
+          <div class="story__stage">
+            <div class="story__copy">
+              <div class="story__steps">
+                <p class="story__step" data-step="1">
+                  <span>Le matin</span>
+                  J'ouvre un seul écran : le chat, l'agenda et les rappels sont au même
+                  endroit. Je n'ai plus cinq onglets ouverts.
+                </p>
+                <p class="story__step" data-step="2">
+                  <span>La question</span>
+                  Je pose la question comme je la poserais à quelqu'un. Pas de formulaire,
+                  pas de menu, pas de dossier à retrouver.
+                </p>
+                <p class="story__step" data-step="3">
+                  <span>La réponse</span>
+                  Il regarde mon agenda, vérifie la salle, et retrouve ce que je lui avais
+                  dit. Il me donne la source, pour que je puisse vérifier.
+                </p>
+              </div>
+              <p class="story__links">
+                <a class="link" href="https://backstage.mprnl.fr" target="_blank" rel="noopener noreferrer">Ouvrir l'app</a>
+                <a class="link" href="https://github.com/MattiaPARRINELLO/backstage" target="_blank" rel="noopener noreferrer">Code source</a>
+              </p>
+            </div>
+
+            <div class="story__app">
+              <div class="app app--story" data-ui>
+                <div class="app__bar">
+                  <div class="app__tabs" aria-hidden="true">
+                    <span class="app__tab is-on" data-tab="0">Accueil</span>
+                    <span class="app__tab" data-tab="1">Chat</span>
+                  </div>
+                  <p class="app__url"><span class="app__dot" aria-hidden="true"></span>backstage.mprnl.fr</p>
+                </div>
+                <div class="app__panels app__panels--story">
+                  <div class="app__panel" data-panel="0">
+                    <img
+                      src="/assets/projects/backstage-console.webp"
+                      alt="Console d'accueil de Backstage : salutation, prochain cours et raccourcis"
+                      width="1400"
+                      height="1067"
+                    />
+                  </div>
+                  <div class="app__panel app__panel--chat" data-panel="1">
+                    <div class="chat">
+                      <div class="chat__thread">
+                        <div class="chat__msg chat__msg--user">
+                          <p data-user-text>Qu'est-ce que j'ai à 13h30 aujourd'hui ?</p>
+                        </div>
+
+                        <div class="chat__reason" data-reason>
+                          <p class="chat__label">Réflexion</p>
+                          <p class="chat__reason-line">Je regarde l'agenda du jour, autour de 13h30.</p>
+                          <p class="chat__reason-line">Un événement. Je vérifie la salle et l'heure avant de répondre.</p>
+                        </div>
+
+                        <div class="chat__tool" data-tool>
+                          <p class="chat__tool-name">agenda.lookup</p>
+                          <p class="chat__tool-args">{ "date": "jeudi 1 octobre", "heure": "13:30" }</p>
+                          <p class="chat__tool-result"><span class="chat__ok">ok</span> 1 événement · E25 Personal Branding</p>
+                        </div>
+
+                        <div class="chat__msg chat__msg--ai" data-ai>
+                          <p data-ai-text>E25 Personal Branding, salle 05. Tu m'avais demandé de te prévenir 30 minutes avant.</p>
+                          <p class="chat__source" data-source>Souvenir du 3 octobre · agenda synchronisé</p>
+                        </div>
+                      </div>
+                      <div class="chat__input">
+                        <span>Demander à Backstage…</span>
+                        <span class="chat__caret" aria-hidden="true"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="app__status">
+                  <span>en production</span>
+                  <span>mono-utilisateur</span>
+                  <span>usage quotidien</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__id">
+        <p>Mattia Parrinello, développeur full-stack</p>
+        <p>Photographies : Mattia Parrinello, 2026.</p>
+      </div>
+      <ul class="footer__links">
+        <li><a href="/">Accueil</a></li>
+        <li><a href="/projets">Tous les projets</a></li>
+        <li><a href="/projets/gymshark-sync">Gymshark-Sync</a></li>
+        <li><a href="/#rappel">Contact</a></li>
+      </ul>
+    </footer>
+
+    <script src="/vendor/gsap.min.js"></script>
+    <script src="/vendor/ScrollTrigger.min.js"></script>
+    <script src="/beams.js?v=20261119f" defer></script>
+    <script src="/main.js?v=20261119g"></script>
+    <script type="module" src="/pass3d.js"></script>
+  </body>
+</html>
