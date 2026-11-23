@@ -1821,6 +1821,11 @@ a:hover {
   padding: clamp(1rem, 3vw, 2rem) var(--pad) clamp(4rem, 8vw, 7rem);
 }
 
+/* Sur la home, le bloc projets vit dans un morceau qui porte déjà les marges. */
+.track > .projets {
+  padding: 0;
+}
+
 .projets__list {
   display: grid;
   gap: clamp(2.5rem, 6vw, 4.5rem);
