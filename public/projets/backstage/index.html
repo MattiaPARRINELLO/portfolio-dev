@@ -10,8 +10,31 @@
     <meta name="darkreader-lock" />
     <meta name="author" content="Mattia Parrinello" />
     <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://dev.mprnl.fr/projets/backstage" />
     <meta name="theme-color" content="#070607" />
     <title>Backstage, l'outil du quotidien · Mattia Parrinello</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="Mattia Parrinello" />
+    <meta property="og:title" content="Backstage, l'outil du quotidien · Mattia Parrinello" />
+    <meta
+      property="og:description"
+      content="Étude de cas Backstage : chat IA à mémoire persistante, agenda synchronisé et rappels. Une PWA en production, en TypeScript, React et Next.js."
+    />
+    <meta property="og:url" content="https://dev.mprnl.fr/projets/backstage" />
+    <meta property="og:image" content="https://dev.mprnl.fr/assets/projects/backstage-console.webp" />
+    <meta property="og:image:alt" content="Console d'accueil de Backstage : salutation, prochain cours et raccourcis" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Backstage, l'outil du quotidien · Mattia Parrinello" />
+    <meta
+      name="twitter:description"
+      content="Chat IA à mémoire persistante, agenda synchronisé et rappels. Une PWA en production, en TypeScript, React et Next.js."
+    />
+    <meta name="twitter:image" content="https://dev.mprnl.fr/assets/projects/backstage-console.webp" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -29,6 +52,35 @@
       crossorigin
     />
     <link rel="stylesheet" href="/styles.css?v=20261123a" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Mattia Parrinello",
+        "jobTitle": "Développeur Full-Stack",
+        "url": "https://dev.mprnl.fr/",
+        "description": "Portfolio de Mattia Parrinello, développeur full-stack JS/TS à Paris. Applications Next.js, React, TypeScript et Node.js en production.",
+        "knowsAbout": ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL", "WebAuthn", "SSE"],
+        "sameAs": [
+          "https://github.com/MattiaPARRINELLO",
+          "https://www.linkedin.com/in/mattia-parrinello-015382208/",
+          "https://photo.mprnl.fr"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "Backstage, outil personnel du quotidien",
+        "description": "PWA installable : chat IA à mémoire persistante, agenda synchronisé, rappels, notifications push, authentification passkey, streaming SSE. Déployée en production.",
+        "programmingLanguage": ["TypeScript", "React", "Next.js", "Node.js"],
+        "codeRepository": "https://github.com/MattiaPARRINELLO/backstage",
+        "url": "https://backstage.mprnl.fr",
+        "author": { "@type": "Person", "name": "Mattia Parrinello" }
+      }
+    </script>
   </head>
 
   <body>

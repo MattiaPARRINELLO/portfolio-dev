@@ -10,8 +10,31 @@
     <meta name="darkreader-lock" />
     <meta name="author" content="Mattia Parrinello" />
     <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://dev.mprnl.fr/projets" />
     <meta name="theme-color" content="#070607" />
     <title>Projets et études de cas · Mattia Parrinello</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content="Mattia Parrinello" />
+    <meta property="og:title" content="Projets et études de cas · Mattia Parrinello" />
+    <meta
+      property="og:description"
+      content="Deux études de cas : Backstage, l'outil du quotidien, et Gymshark-Sync, l'assistant interne sur LLM local."
+    />
+    <meta property="og:url" content="https://dev.mprnl.fr/projets" />
+    <meta property="og:image" content="https://dev.mprnl.fr/assets/images/og-cover.png" />
+    <meta property="og:image:alt" content="Projets et études de cas de Mattia Parrinello" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Projets et études de cas · Mattia Parrinello" />
+    <meta
+      name="twitter:description"
+      content="Backstage, l'outil du quotidien, et Gymshark-Sync, l'assistant interne sur LLM local."
+    />
+    <meta name="twitter:image" content="https://dev.mprnl.fr/assets/images/og-cover.png" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -29,6 +52,57 @@
       crossorigin
     />
     <link rel="stylesheet" href="/styles.css?v=20261123a" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Mattia Parrinello",
+        "jobTitle": "Développeur Full-Stack",
+        "url": "https://dev.mprnl.fr/",
+        "description": "Portfolio de Mattia Parrinello, développeur full-stack JS/TS à Paris. Applications Next.js, React, TypeScript et Node.js en production.",
+        "knowsAbout": ["Next.js", "React", "TypeScript", "Node.js", "PostgreSQL", "WebAuthn", "SSE"],
+        "sameAs": [
+          "https://github.com/MattiaPARRINELLO",
+          "https://www.linkedin.com/in/mattia-parrinello-015382208/",
+          "https://photo.mprnl.fr"
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Projets et études de cas",
+        "description": "Deux études de cas : Backstage, l'outil du quotidien, et Gymshark-Sync, l'assistant interne sur LLM local.",
+        "url": "https://dev.mprnl.fr/projets",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Mattia Parrinello",
+          "url": "https://dev.mprnl.fr/"
+        },
+        "hasPart": [
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "Backstage, outil personnel du quotidien",
+            "description": "PWA installable : chat IA à mémoire persistante, agenda synchronisé, rappels, notifications push, authentification passkey, streaming SSE. Déployée en production.",
+            "programmingLanguage": ["TypeScript", "React", "Next.js", "Node.js"],
+            "codeRepository": "https://github.com/MattiaPARRINELLO/backstage",
+            "url": "https://dev.mprnl.fr/projets/backstage",
+            "author": { "@type": "Person", "name": "Mattia Parrinello" }
+          },
+          {
+            "@type": "SoftwareSourceCode",
+            "name": "Gymshark-Sync, assistant interne sur LLM local",
+            "description": "Serveur Node.js / Express relié à un modèle local via Ollama : neuf workflows métier, streaming SSE, API documentée avec Swagger.",
+            "programmingLanguage": ["JavaScript", "Node.js", "Express"],
+            "codeRepository": "https://github.com/mattia-school/gymshark-sync",
+            "url": "https://dev.mprnl.fr/projets/gymshark-sync",
+            "author": { "@type": "Person", "name": "Mattia Parrinello" }
+          }
+        ]
+      }
+    </script>
   </head>
 
   <body>
