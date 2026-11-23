@@ -478,43 +478,6 @@ async function fetchGitHubStats(username) {
   };
 }
 
-app.get('/api/github-stats/:username?', async (req, res) => {
-  try {
-    const rawUsername =
-      req.params.username === undefined ? GITHUB_USERNAME : req.params.username;
-    if (!isValidGitHubUsername(rawUsername)) {
-      return res.status(400).json({
-        error: 'Nom de compte GitHub invalide'
-      });
-    }
-    const username = rawUsername;
-
-    /* Le front n'utilise pas ?refresh=true. Un rafraîchissement forcé exige
-       désormais un secret serveur (x-refresh-secret) et reste borné par un
-       intervalle minimal global. Sinon la requête est servie depuis le cache. */
-    const forcedRefresh =
-      req.query.refresh === 'true' &&
-      hasValidRefreshSecret(req) &&
-      claimForcedRefresh();
-
-    if (!forcedRefresh) {
-      const cached = await readCache(username);
-      if (cached) {
-        return res.json(cached);
-      }
-    }
-
-    const stats = await fetchGitHubStats(username);
-    await writeCache(username, stats);
-    return res.json(stats);
-  } catch (error) {
-    console.error('Erreur API GitHub:', error.message);
-    return res.status(500).json({
-      error: 'Erreur lors de la récupération des stats GitHub'
-    });
-  }
-});
-
 // Route principale
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
